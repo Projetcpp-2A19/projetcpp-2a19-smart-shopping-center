@@ -31,7 +31,7 @@
       <x>210</x>
       <y>110</y>
       <width>271</width>
-      <height>441</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -53,7 +53,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>90</y>
+       <y>60</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -76,7 +76,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>140</y>
+       <y>320</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -99,7 +99,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>240</y>
+       <y>360</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -118,37 +118,11 @@
       <string>             PRIX</string>
      </property>
     </widget>
-    <widget class="QDateTimeEdit" name="date_Debut">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>320</y>
-       <width>191</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QDateTimeEdit  {
-	font: 8pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: white;
-    selection-background-color: darkgray;
-}</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>289</y>
+       <x>10</x>
+       <y>140</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -160,8 +134,8 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>349</y>
+       <x>10</x>
+       <y>200</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -170,37 +144,11 @@
       <string>Date fin</string>
      </property>
     </widget>
-    <widget class="QDateTimeEdit" name="date_fin">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>380</y>
-       <width>191</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QDateTimeEdit  {
-	font: 8pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: white;
-    selection-background-color: darkgray;
-}</string>
-     </property>
-    </widget>
     <widget class="QLineEdit" name="line_TYPEevent">
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>190</y>
+       <y>100</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -223,7 +171,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>40</y>
+       <y>20</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -240,6 +188,49 @@
      </property>
      <property name="placeholderText">
       <string>               ID</string>
+     </property>
+    </widget>
+    <widget class="QDateEdit" name="dateEditDebut">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>251</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QDateEdit" name="dateEditFin">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>251</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_LIEU">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>280</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: darkgray;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>         LIEU</string>
      </property>
     </widget>
    </widget>
@@ -388,19 +379,6 @@ QPushButton:default {
      <string notr="true">QListView {
     alternate-background-color:  yellow;
 }</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>460</y>
-      <width>118</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
@@ -878,6 +856,16 @@ QPushButton:default {
     </property>
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="Line_DeleteID">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>460</y>
+      <width>113</width>
+      <height>26</height>
+     </rect>
     </property>
    </widget>
   </widget>

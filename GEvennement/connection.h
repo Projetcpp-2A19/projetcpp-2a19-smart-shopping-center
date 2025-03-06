@@ -3,8 +3,6 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QDebug>
-#include <QMessageBox> // For showing error messages
 
 class Connection
 {

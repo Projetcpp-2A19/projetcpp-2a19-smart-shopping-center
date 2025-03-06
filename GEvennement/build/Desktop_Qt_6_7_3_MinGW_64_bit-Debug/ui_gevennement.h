@@ -20,7 +20,6 @@
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
@@ -47,7 +46,6 @@ public:
     QPushButton *pushButton_Modifier;
     QLabel *label_TITLE;
     QListView *listView;
-    QProgressBar *progressBar;
     QLineEdit *lineEdit;
     QComboBox *comboBox_tri;
     QCommandLinkButton *commandLinkButton;
@@ -64,6 +62,7 @@ public:
     QFrame *frame_2;
     QLineEdit *lineEdit_exporter;
     QFrame *frame_3;
+    QLineEdit *Line_DeleteID;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -261,10 +260,6 @@ public:
         listView->setStyleSheet(QString::fromUtf8("QListView {\n"
 "    alternate-background-color:  yellow;\n"
 "}"));
-        progressBar = new QProgressBar(centralwidget);
-        progressBar->setObjectName("progressBar");
-        progressBar->setGeometry(QRect(680, 460, 118, 23));
-        progressBar->setValue(24);
         lineEdit = new QLineEdit(centralwidget);
         lineEdit->setObjectName("lineEdit");
         lineEdit->setEnabled(false);
@@ -544,10 +539,13 @@ public:
 ""));
         frame_3->setFrameShape(QFrame::Shape::StyledPanel);
         frame_3->setFrameShadow(QFrame::Shadow::Raised);
+        Line_DeleteID = new QLineEdit(centralwidget);
+        Line_DeleteID->setObjectName("Line_DeleteID");
+        Line_DeleteID->setGeometry(QRect(670, 460, 113, 26));
         GEvennement->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GEvennement);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 800, 26));
         GEvennement->setMenuBar(menubar);
         statusbar = new QStatusBar(GEvennement);
         statusbar->setObjectName("statusbar");
