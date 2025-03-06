@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     connection.cpp \
     main.cpp \
-    gevennement.cpp
+    gevennement.cpp \
+    modif_boutique.cpp
 
 HEADERS += \
     connection.h \
-    gevennement.h
+    gevennement.h \
+    modif_boutique.h
 
 FORMS += \
     gevennement.ui \

@@ -1,14 +1,13 @@
 #include "gevennement.h"
 #include "ui_gevennement.h"
-#include <QMessageBox> // Pour afficher un message en cas d'erreur de chargement d'image
-#include <QSqlDatabase> // Pour gérer la connexion à la base de données
-#include <QSqlQuery>    // Pour exécuter des requêtes SQL
-#include <QSqlError>    // Pour gérer les erreurs SQL
+#include <QMessageBox>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QTableWidgetItem>
 
 GEvennement::GEvennement(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::GEvennement)
-{
+    : QMainWindow(parent), ui(new Ui::GEvennement) {
     ui->setupUi(this);
 
     // Activer l'adaptation des images à la taille des labels
@@ -36,10 +35,10 @@ GEvennement::GEvennement(QWidget *parent)
     ui->lbl_Logo_Display->setAlignment(Qt::AlignCenter);
 
     // Configurer la connexion à la base de données
-    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
-    db.setDatabaseName("Source_Projet2A");//inserer le nom de la source de données
-    db.setUserName("EYK");//inserer nom de l'utilisateur
-    db.setPassword("EYK123");//inserer mot de passe de cet utilisateur
+    db = QSqlDatabase::addDatabase("QODBC", "boutiques_connection"); // Nom unique pour la connexion
+    db.setDatabaseName("Source_Projet2A"); // Nom de la source de données ODBC
+    db.setUserName("EYK"); // Nom d'utilisateur
+    db.setPassword("EYK123"); // Mot de passe
 
     if (!db.open()) {
         QMessageBox::critical(this, "Erreur", "Erreur de connexion à la base de données : " + db.lastError().text());
@@ -49,16 +48,26 @@ GEvennement::GEvennement(QWidget *parent)
 
     // Connecter le bouton "Ajouter" à la fonction on_pushButton_Ajouter_clicked
     connect(ui->pushButton_Ajouter, &QPushButton::clicked, this, &GEvennement::on_pushButton_Ajouter_clicked);
+
+    // Connecter le bouton "Boutiques" à la fonction loadBoutiques
+    connect(ui->pushButton_Boutiques, &QPushButton::clicked, this, &GEvennement::loadBoutiques);
+
+    // Connecter le bouton "Afficher" à la fonction on_pushButton_Afficher_clicked
+    connect(ui->pushButton_Afficher, &QPushButton::clicked, this, &GEvennement::on_pushButton_Afficher_clicked);
+
+    // Connecter le bouton "Supprimer" à la fonction on_pushButton_Supprimer_clicked
+    connect(ui->pushButton_Supprimer, &QPushButton::clicked, this, &GEvennement::on_pushButton_Supprimer_clicked);
+
+    // Charger les boutiques au démarrage de l'application (optionnel)
+    loadBoutiques();
 }
 
-GEvennement::~GEvennement()
-{
+GEvennement::~GEvennement() {
     delete ui;
     db.close(); // Fermer la connexion à la base de données
 }
 
-void GEvennement::on_pushButton_Ajouter_clicked()
-{
+void GEvennement::on_pushButton_Ajouter_clicked() {
     // Récupérer les données saisies dans les champs
     QString id = ui->line_IDboutique->text();
     QString nom = ui->line_NOMboutique->text();
@@ -69,15 +78,15 @@ void GEvennement::on_pushButton_Ajouter_clicked()
     QString etat = ui->line_ETATboutique->text();
     QString horaire = ui->timeEdit_HORAIRE->time().toString("HH:mm");
 
-    // Vérifier que tous les champs sont remplis
+    // Vérifier que tous les champs obligatoires sont remplis
     if (id.isEmpty() || nom.isEmpty() || type.isEmpty() || localisation.isEmpty() ||
         surface.isEmpty() || montant.isEmpty() || etat.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
+        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs obligatoires !");
         return;
     }
 
     // Préparer la requête SQL
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("INSERT INTO boutiques (ID_BOUTIQUE, NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT, HORAIRE_OUVERTURE) "
                   "VALUES (:id, :nom, :type, :localisation, :surface, :montant, :etat, :horaire)");
     query.bindValue(":id", id.toInt());
@@ -101,7 +110,79 @@ void GEvennement::on_pushButton_Ajouter_clicked()
         ui->line_MONTANTboutique->clear();
         ui->line_ETATboutique->clear();
         ui->timeEdit_HORAIRE->setTime(QTime(0, 0));
+
+        // Actualiser le tableau des boutiques
+        loadBoutiques();
     } else {
         QMessageBox::critical(this, "Erreur", "Erreur lors de l'ajout : " + query.lastError().text());
+    }
+}
+
+void GEvennement::loadBoutiques() {
+    // Effacer le contenu actuel du QTableWidget
+    ui->tableWidget_Boutique->clearContents();
+    ui->tableWidget_Boutique->setRowCount(0);
+
+    // Définir les en-têtes de colonnes
+    QStringList headers = {"ID", "Nom", "Type", "Localisation", "Surface", "Montant", "État", "Horaire"};
+    ui->tableWidget_Boutique->setColumnCount(headers.size());
+    ui->tableWidget_Boutique->setHorizontalHeaderLabels(headers);
+
+    // Exécuter une requête SQL pour récupérer les boutiques
+    QSqlQuery query(db);
+    if (!query.exec("SELECT ID_BOUTIQUE, NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT, HORAIRE_OUVERTURE FROM boutiques")) {
+        QMessageBox::critical(this, "Erreur", "Erreur lors de la récupération des boutiques : " + query.lastError().text());
+        return;
+    }
+
+    // Remplir le QTableWidget avec les données de la base de données
+    int row = 0;
+    while (query.next()) {
+        ui->tableWidget_Boutique->insertRow(row);
+        for (int col = 0; col < headers.size(); ++col) {
+            QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
+            ui->tableWidget_Boutique->setItem(row, col, item);
+        }
+        row++;
+    }
+}
+
+void GEvennement::on_pushButton_Afficher_clicked() {
+    // Appeler la fonction pour charger et afficher les boutiques
+    loadBoutiques();
+}
+
+void GEvennement::on_pushButton_Supprimer_clicked() {
+    // Récupérer la ligne sélectionnée dans le QTableWidget
+    int selectedRow = ui->tableWidget_Boutique->currentRow();
+
+    // Vérifier si une ligne est sélectionnée
+    if (selectedRow == -1) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une boutique à supprimer !");
+        return;
+    }
+
+    // Récupérer l'ID de la boutique sélectionnée
+    QString id = ui->tableWidget_Boutique->item(selectedRow, 0)->text();
+
+    // Demander une confirmation avant de supprimer
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirmation", "Êtes-vous sûr de vouloir supprimer cette boutique ?",
+                                  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) {
+        return; // Annuler la suppression
+    }
+
+    // Exécuter la requête SQL pour supprimer la boutique
+    QSqlQuery query(db);
+    query.prepare("DELETE FROM boutiques WHERE ID_BOUTIQUE = :id");
+    query.bindValue(":id", id.toInt());
+
+    if (query.exec()) {
+        QMessageBox::information(this, "Succès", "Boutique supprimée avec succès !");
+        // Actualiser le tableau des boutiques
+        loadBoutiques();
+    } else {
+        QMessageBox::critical(this, "Erreur", "Erreur lors de la suppression : " + query.lastError().text());
     }
 }
