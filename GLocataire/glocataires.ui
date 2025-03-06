@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1012</width>
     <height>599</height>
    </rect>
   </property>
@@ -49,7 +49,7 @@
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
     </property>
-    <widget class="QLineEdit" name="line_NOMevent">
+    <widget class="QLineEdit" name="line_NOMLoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -72,7 +72,7 @@
       <string>            NOM</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_CAPACITEevent">
+    <widget class="QLineEdit" name="line_CAPACITELoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -95,7 +95,7 @@
       <string>             TEL</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_PRIXevent">
+    <widget class="QLineEdit" name="line_CONTRATLoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -121,7 +121,7 @@
       <string>          CONTRAT</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_TYPEevent">
+    <widget class="QLineEdit" name="line_MAILLoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -144,7 +144,10 @@
       <string>             MAIL</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_IDevent">
+    <widget class="QLineEdit" name="line_IDLoc">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -167,7 +170,7 @@
       <string>               ID</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_PRIXevent_2">
+    <widget class="QLineEdit" name="line_Statut_PAIEMENTLoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -190,7 +193,7 @@
       <string>   STATUT PAIEMENT</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_PRIXevent_3">
+    <widget class="QLineEdit" name="line_MONTANT_LOYERLOC">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -213,7 +216,7 @@
       <string>    MONTAN_LOYER</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="line_PRIXevent_4">
+    <widget class="QLineEdit" name="line_TYPELoc">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -374,7 +377,7 @@ QPushButton:default {
      <rect>
       <x>500</x>
       <y>230</y>
-      <width>291</width>
+      <width>391</width>
       <height>192</height>
      </rect>
     </property>
@@ -382,19 +385,6 @@ QPushButton:default {
      <string notr="true">QListView {
     alternate-background-color:  yellow;
 }</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>460</y>
-      <width>118</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
@@ -874,13 +864,23 @@ QPushButton:default {
      <enum>QFrame::Shadow::Raised</enum>
     </property>
    </widget>
+   <widget class="QLineEdit" name="Line_DeleteID">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>460</y>
+      <width>113</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1012</width>
      <height>26</height>
     </rect>
    </property>

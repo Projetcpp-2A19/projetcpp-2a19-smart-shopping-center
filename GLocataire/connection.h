@@ -3,8 +3,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QMessageBox>
-#include <QDebug>
+
 class Connection
 {
 public:

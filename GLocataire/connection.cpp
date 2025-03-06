@@ -1,23 +1,30 @@
 #include "connection.h"
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QDebug>
 
 Connection::Connection()
 {
-
 }
 
 bool Connection::createconnect()
-{bool test=false;
+{
+    bool test = false;
+
+    // Initialize the database connection with QODBC
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
-    db.setDatabaseName("Source_Projet2A");//inserer le nom de la source de données
-    db.setUserName("EYK");//inserer nom de l'utilisateur
-    db.setPassword("EYK123");//inserer mot de passe de cet utilisateur
+    // Set the database name (this should match the ODBC data source name)
+    db.setDatabaseName("Source_Projet2A");  // Ensure the ODBC DSN is configured properly in your system
+    db.setUserName("EYK");
+    db.setPassword("EYK123");
 
-    if (db.open())
-        test=true;
-
-
-
+    // Attempt to open the database
+    if (db.open()) {
 
 
-    return  test;
+        test = true;
+    }
+
+    // Return the connection status
+    return test;
 }

@@ -1,0 +1,607 @@
+/********************************************************************************
+** Form generated from reading UI file 'glocataires.ui'
+**
+** Created by: Qt User Interface Compiler version 6.8.2
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef UI_GLOCATAIRES_H
+#define UI_GLOCATAIRES_H
+
+#include <QtCore/QVariant>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QCommandLinkButton>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListView>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_GLocataire
+{
+public:
+    QWidget *centralwidget;
+    QFrame *frame;
+    QLineEdit *line_NOMLoc;
+    QLineEdit *line_CAPACITELoc;
+    QLineEdit *line_CONTRATLoc;
+    QLineEdit *line_MAILLoc;
+    QLineEdit *line_IDLoc;
+    QLineEdit *line_Statut_PAIEMENTLoc;
+    QLineEdit *line_MONTANT_LOYERLOC;
+    QLineEdit *line_TYPELoc;
+    QPushButton *pushButton_Ajouter;
+    QPushButton *pushButton_Supprimer;
+    QPushButton *pushButton_Modifier;
+    QLabel *label_TITLE;
+    QListView *listView;
+    QProgressBar *progressBar;
+    QLineEdit *lineEdit;
+    QComboBox *comboBox_tri;
+    QCommandLinkButton *commandLinkButton;
+    QLabel *lbl_Image_Display;
+    QFrame *frame_gestions;
+    QPushButton *pushButton_Dashboard;
+    QPushButton *pushButton_Employes;
+    QPushButton *pushButton_Boutiques;
+    QPushButton *pushButton_Locataires;
+    QPushButton *pushButton_Services;
+    QPushButton *pushButton_Evennements;
+    QPushButton *pushButton_deconnecter;
+    QLabel *lbl_Logo_Display;
+    QFrame *frame_2;
+    QLineEdit *lineEdit_exporter;
+    QFrame *frame_3;
+    QMenuBar *menubar;
+    QStatusBar *statusbar;
+
+    void setupUi(QMainWindow *GLocataire)
+    {
+        if (GLocataire->objectName().isEmpty())
+            GLocataire->setObjectName("GLocataire");
+        GLocataire->resize(905, 599);
+        GLocataire->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
+"    background: #f0c1cd;  \n"
+"}\n"
+"\n"
+"\n"
+""));
+        GLocataire->setAnimated(true);
+        centralwidget = new QWidget(GLocataire);
+        centralwidget->setObjectName("centralwidget");
+        frame = new QFrame(centralwidget);
+        frame->setObjectName("frame");
+        frame->setGeometry(QRect(210, 110, 271, 441));
+        frame->setStyleSheet(QString::fromUtf8("QFrame{\n"
+"    border: 3px solid grey;\n"
+"    border-radius: 4px;\n"
+"    padding: 2px;\n"
+"     border-radius: 10px;\n"
+"    background-color:  rgb(0, 162, 198);\n"
+"}"));
+        frame->setFrameShape(QFrame::Shape::StyledPanel);
+        frame->setFrameShadow(QFrame::Shadow::Raised);
+        line_NOMLoc = new QLineEdit(frame);
+        line_NOMLoc->setObjectName("line_NOMLoc");
+        line_NOMLoc->setGeometry(QRect(40, 90, 191, 26));
+        line_NOMLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_CAPACITELoc = new QLineEdit(frame);
+        line_CAPACITELoc->setObjectName("line_CAPACITELoc");
+        line_CAPACITELoc->setGeometry(QRect(40, 140, 191, 26));
+        line_CAPACITELoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_CONTRATLoc = new QLineEdit(frame);
+        line_CONTRATLoc->setObjectName("line_CONTRATLoc");
+        line_CONTRATLoc->setGeometry(QRect(40, 240, 191, 26));
+        line_CONTRATLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_MAILLoc = new QLineEdit(frame);
+        line_MAILLoc->setObjectName("line_MAILLoc");
+        line_MAILLoc->setGeometry(QRect(40, 190, 191, 26));
+        line_MAILLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_IDLoc = new QLineEdit(frame);
+        line_IDLoc->setObjectName("line_IDLoc");
+        line_IDLoc->setEnabled(false);
+        line_IDLoc->setGeometry(QRect(40, 40, 191, 26));
+        line_IDLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_Statut_PAIEMENTLoc = new QLineEdit(frame);
+        line_Statut_PAIEMENTLoc->setObjectName("line_Statut_PAIEMENTLoc");
+        line_Statut_PAIEMENTLoc->setGeometry(QRect(40, 340, 191, 26));
+        line_Statut_PAIEMENTLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_MONTANT_LOYERLOC = new QLineEdit(frame);
+        line_MONTANT_LOYERLOC->setObjectName("line_MONTANT_LOYERLOC");
+        line_MONTANT_LOYERLOC->setGeometry(QRect(40, 290, 191, 26));
+        line_MONTANT_LOYERLOC->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_TYPELoc = new QLineEdit(frame);
+        line_TYPELoc->setObjectName("line_TYPELoc");
+        line_TYPELoc->setGeometry(QRect(40, 390, 191, 26));
+        line_TYPELoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        pushButton_Ajouter = new QPushButton(centralwidget);
+        pushButton_Ajouter->setObjectName("pushButton_Ajouter");
+        pushButton_Ajouter->setGeometry(QRect(520, 460, 121, 31));
+        pushButton_Ajouter->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_Supprimer = new QPushButton(centralwidget);
+        pushButton_Supprimer->setObjectName("pushButton_Supprimer");
+        pushButton_Supprimer->setGeometry(QRect(520, 510, 121, 31));
+        pushButton_Supprimer->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_Modifier = new QPushButton(centralwidget);
+        pushButton_Modifier->setObjectName("pushButton_Modifier");
+        pushButton_Modifier->setGeometry(QRect(670, 510, 121, 31));
+        pushButton_Modifier->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        label_TITLE = new QLabel(centralwidget);
+        label_TITLE->setObjectName("label_TITLE");
+        label_TITLE->setGeometry(QRect(190, 20, 581, 81));
+        label_TITLE->setStyleSheet(QString::fromUtf8("QLabel {\n"
+"	font: 36pt \"Imprint MT Shadow\";\n"
+"    color: rgb(0, 162, 198);\n"
+"    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */\n"
+"}\n"
+""));
+        listView = new QListView(centralwidget);
+        listView->setObjectName("listView");
+        listView->setGeometry(QRect(500, 230, 391, 192));
+        listView->setStyleSheet(QString::fromUtf8("QListView {\n"
+"    alternate-background-color:  yellow;\n"
+"}"));
+        progressBar = new QProgressBar(centralwidget);
+        progressBar->setObjectName("progressBar");
+        progressBar->setGeometry(QRect(680, 460, 118, 23));
+        progressBar->setValue(24);
+        lineEdit = new QLineEdit(centralwidget);
+        lineEdit->setObjectName("lineEdit");
+        lineEdit->setEnabled(false);
+        lineEdit->setGeometry(QRect(500, 190, 191, 26));
+        lineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 9pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 20px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        comboBox_tri = new QComboBox(centralwidget);
+        comboBox_tri->setObjectName("comboBox_tri");
+        comboBox_tri->setGeometry(QRect(690, 190, 91, 26));
+        commandLinkButton = new QCommandLinkButton(centralwidget);
+        commandLinkButton->setObjectName("commandLinkButton");
+        commandLinkButton->setGeometry(QRect(500, 140, 151, 41));
+        commandLinkButton->setStyleSheet(QString::fromUtf8("QCommandLinkButton {\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        lbl_Image_Display = new QLabel(centralwidget);
+        lbl_Image_Display->setObjectName("lbl_Image_Display");
+        lbl_Image_Display->setEnabled(true);
+        lbl_Image_Display->setGeometry(QRect(660, 20, 151, 121));
+        lbl_Image_Display->setPixmap(QPixmap(QString::fromUtf8("../../../photo.jpg")));
+        lbl_Image_Display->setScaledContents(true);
+        frame_gestions = new QFrame(centralwidget);
+        frame_gestions->setObjectName("frame_gestions");
+        frame_gestions->setGeometry(QRect(0, 0, 181, 571));
+        frame_gestions->setStyleSheet(QString::fromUtf8("QFrame {\n"
+"    background: rgb(0, 162, 198);\n"
+"    border: 2px solid #00a2c6;\n"
+"    border-radius: 4px;\n"
+"    padding: 2px;\n"
+"}\n"
+""));
+        frame_gestions->setFrameShape(QFrame::Shape::StyledPanel);
+        frame_gestions->setFrameShadow(QFrame::Shadow::Raised);
+        pushButton_Dashboard = new QPushButton(frame_gestions);
+        pushButton_Dashboard->setObjectName("pushButton_Dashboard");
+        pushButton_Dashboard->setGeometry(QRect(0, 100, 181, 51));
+        pushButton_Dashboard->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_Employes = new QPushButton(frame_gestions);
+        pushButton_Employes->setObjectName("pushButton_Employes");
+        pushButton_Employes->setGeometry(QRect(0, 150, 181, 51));
+        pushButton_Employes->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_Boutiques = new QPushButton(frame_gestions);
+        pushButton_Boutiques->setObjectName("pushButton_Boutiques");
+        pushButton_Boutiques->setGeometry(QRect(0, 200, 181, 51));
+        pushButton_Boutiques->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_Locataires = new QPushButton(frame_gestions);
+        pushButton_Locataires->setObjectName("pushButton_Locataires");
+        pushButton_Locataires->setGeometry(QRect(0, 250, 181, 51));
+        pushButton_Locataires->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_Services = new QPushButton(frame_gestions);
+        pushButton_Services->setObjectName("pushButton_Services");
+        pushButton_Services->setGeometry(QRect(0, 300, 181, 51));
+        pushButton_Services->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_Evennements = new QPushButton(frame_gestions);
+        pushButton_Evennements->setObjectName("pushButton_Evennements");
+        pushButton_Evennements->setGeometry(QRect(0, 350, 181, 51));
+        pushButton_Evennements->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    font: 16pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: #00a2c6;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 18pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        pushButton_deconnecter = new QPushButton(frame_gestions);
+        pushButton_deconnecter->setObjectName("pushButton_deconnecter");
+        pushButton_deconnecter->setGeometry(QRect(0, 500, 181, 51));
+        pushButton_deconnecter->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"  \n"
+"    font: 9pt \"Segoe UI\";\n"
+"    color: rgb(255, 255, 255);\n"
+"    border-radius: 6px;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    font: 12pt \"Segoe UI\"; /* Agrandir le texte au survol */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* pas de bordure pour un bouton plat */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
+"}\n"
+""));
+        lbl_Logo_Display = new QLabel(frame_gestions);
+        lbl_Logo_Display->setObjectName("lbl_Logo_Display");
+        lbl_Logo_Display->setGeometry(QRect(0, 0, 181, 91));
+        lbl_Logo_Display->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/debug/logo.gif")));
+        lbl_Logo_Display->setScaledContents(true);
+        frame_2 = new QFrame(frame_gestions);
+        frame_2->setObjectName("frame_2");
+        frame_2->setGeometry(QRect(120, 540, 120, 80));
+        frame_2->setFrameShape(QFrame::Shape::StyledPanel);
+        frame_2->setFrameShadow(QFrame::Shadow::Raised);
+        lineEdit_exporter = new QLineEdit(centralwidget);
+        lineEdit_exporter->setObjectName("lineEdit_exporter");
+        lineEdit_exporter->setEnabled(false);
+        lineEdit_exporter->setGeometry(QRect(680, 150, 101, 26));
+        lineEdit_exporter->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 9pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 20px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        frame_3 = new QFrame(centralwidget);
+        frame_3->setObjectName("frame_3");
+        frame_3->setGeometry(QRect(180, -10, 621, 31));
+        frame_3->setStyleSheet(QString::fromUtf8("QFrame {\n"
+"    background: rgb(0, 162, 198);\n"
+"    border: 2px solid #00a2c6;\n"
+"    border-radius: 4px;\n"
+"    padding: 2px;\n"
+"}\n"
+""));
+        frame_3->setFrameShape(QFrame::Shape::StyledPanel);
+        frame_3->setFrameShadow(QFrame::Shadow::Raised);
+        GLocataire->setCentralWidget(centralwidget);
+        menubar = new QMenuBar(GLocataire);
+        menubar->setObjectName("menubar");
+        menubar->setGeometry(QRect(0, 0, 905, 22));
+        GLocataire->setMenuBar(menubar);
+        statusbar = new QStatusBar(GLocataire);
+        statusbar->setObjectName("statusbar");
+        GLocataire->setStatusBar(statusbar);
+
+        retranslateUi(GLocataire);
+
+        QMetaObject::connectSlotsByName(GLocataire);
+    } // setupUi
+
+    void retranslateUi(QMainWindow *GLocataire)
+    {
+        GLocataire->setWindowTitle(QCoreApplication::translate("GLocataire", "GEvennement", nullptr));
+        line_NOMLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "            NOM", nullptr));
+        line_CAPACITELoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             TEL", nullptr));
+        line_CONTRATLoc->setText(QString());
+        line_CONTRATLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "          CONTRAT", nullptr));
+        line_MAILLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             MAIL", nullptr));
+        line_IDLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "               ID", nullptr));
+        line_Statut_PAIEMENTLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "   STATUT PAIEMENT", nullptr));
+        line_MONTANT_LOYERLOC->setPlaceholderText(QCoreApplication::translate("GLocataire", "    MONTAN_LOYER", nullptr));
+        line_TYPELoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             TYPE", nullptr));
+        pushButton_Ajouter->setText(QCoreApplication::translate("GLocataire", "Ajouter", nullptr));
+        pushButton_Supprimer->setText(QCoreApplication::translate("GLocataire", "Supprimer", nullptr));
+        pushButton_Modifier->setText(QCoreApplication::translate("GLocataire", "Modifier", nullptr));
+        label_TITLE->setText(QCoreApplication::translate("GLocataire", "Gestion des locataires", nullptr));
+        lineEdit->setPlaceholderText(QCoreApplication::translate("GLocataire", "Trier les locataires", nullptr));
+        commandLinkButton->setText(QString());
+        lbl_Image_Display->setText(QString());
+        pushButton_Dashboard->setText(QCoreApplication::translate("GLocataire", "Dashboard", nullptr));
+        pushButton_Employes->setText(QCoreApplication::translate("GLocataire", "Employ\303\251s", nullptr));
+        pushButton_Boutiques->setText(QCoreApplication::translate("GLocataire", "Boutiques", nullptr));
+        pushButton_Locataires->setText(QCoreApplication::translate("GLocataire", "Locataires", nullptr));
+        pushButton_Services->setText(QCoreApplication::translate("GLocataire", "Services", nullptr));
+        pushButton_Evennements->setText(QCoreApplication::translate("GLocataire", "Evennements", nullptr));
+        pushButton_deconnecter->setText(QCoreApplication::translate("GLocataire", "se d\303\251connecter", nullptr));
+        lbl_Logo_Display->setText(QString());
+        lineEdit_exporter->setPlaceholderText(QCoreApplication::translate("GLocataire", "    Exporter", nullptr));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class GLocataire: public Ui_GLocataire {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // UI_GLOCATAIRES_H
