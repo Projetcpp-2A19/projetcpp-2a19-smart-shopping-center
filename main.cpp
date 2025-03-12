@@ -21,6 +21,9 @@ int main(int argc, char *argv[])
     GEvennement w;
     w.show();
 
-    return a.exec();
-}
+    int result = a.exec();
 
+    // Fermer la connexion à la base de données avant de quitter
+    QSqlDatabase::database().close();
+    return result;
+}

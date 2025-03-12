@@ -25,11 +25,14 @@ public:
 private slots:
     void on_pushButton_Ajouter_clicked(); // Slot pour le bouton "Ajouter"
     void loadBoutiques(); // Slot pour charger et afficher les boutiques
-    void on_pushButton_Afficher_clicked();
-    void on_pushButton_Supprimer_clicked();
+    void on_pushButton_Supprimer_clicked(); // Slot pour le bouton "Supprimer"
+
 private:
     Ui::GEvennement *ui; // Interface utilisateur
     QSqlDatabase db; // Objet pour gérer la connexion à la base de données
+
+    // Méthode pour vérifier si une boutique existe déjà
+    bool boutiqueExists(int id);
 };
 
 #endif // GEVENNEMENT_H

@@ -46,16 +46,9 @@ GEvennement::GEvennement(QWidget *parent)
         QMessageBox::information(this, "Succès", "Connexion à la base de données réussie !");
     }
 
-    // Connecter le bouton "Ajouter" à la fonction on_pushButton_Ajouter_clicked
+    // Connecter les boutons à leurs slots respectifs
     connect(ui->pushButton_Ajouter, &QPushButton::clicked, this, &GEvennement::on_pushButton_Ajouter_clicked);
-
-    // Connecter le bouton "Boutiques" à la fonction loadBoutiques
     connect(ui->pushButton_Boutiques, &QPushButton::clicked, this, &GEvennement::loadBoutiques);
-
-    // Connecter le bouton "Afficher" à la fonction on_pushButton_Afficher_clicked
-    connect(ui->pushButton_Afficher, &QPushButton::clicked, this, &GEvennement::on_pushButton_Afficher_clicked);
-
-    // Connecter le bouton "Supprimer" à la fonction on_pushButton_Supprimer_clicked
     connect(ui->pushButton_Supprimer, &QPushButton::clicked, this, &GEvennement::on_pushButton_Supprimer_clicked);
 
     // Charger les boutiques au démarrage de l'application (optionnel)
@@ -67,6 +60,16 @@ GEvennement::~GEvennement() {
     db.close(); // Fermer la connexion à la base de données
 }
 
+bool GEvennement::boutiqueExists(int id) {
+    QSqlQuery query(db);
+    query.prepare("SELECT ID_BOUTIQUE FROM boutiques WHERE ID_BOUTIQUE = :id");
+    query.bindValue(":id", id);
+    if (query.exec() && query.next()) {
+        return true; // La boutique existe déjà
+    }
+    return false; // La boutique n'existe pas
+}
+
 void GEvennement::on_pushButton_Ajouter_clicked() {
     // Récupérer les données saisies dans les champs
     QString id = ui->line_IDboutique->text();
@@ -75,13 +78,19 @@ void GEvennement::on_pushButton_Ajouter_clicked() {
     QString localisation = ui->line_LOCALISATIONboutique->text();
     QString surface = ui->line_SURFACEboutique->text();
     QString montant = ui->line_MONTANTboutique->text();
-    QString etat = ui->line_ETATboutique->text();
+    QString etat = ui->comboBox_ETATboutique->currentText(); // Récupérer la valeur du QComboBox
     QString horaire = ui->timeEdit_HORAIRE->time().toString("HH:mm");
 
     // Vérifier que tous les champs obligatoires sont remplis
     if (id.isEmpty() || nom.isEmpty() || type.isEmpty() || localisation.isEmpty() ||
         surface.isEmpty() || montant.isEmpty() || etat.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs obligatoires !");
+        return;
+    }
+
+    // Vérifier si la boutique existe déjà
+    if (boutiqueExists(id.toInt())) {
+        QMessageBox::warning(this, "Erreur", "Une boutique avec cet ID existe déjà !");
         return;
     }
 
@@ -95,7 +104,7 @@ void GEvennement::on_pushButton_Ajouter_clicked() {
     query.bindValue(":localisation", localisation);
     query.bindValue(":surface", surface.toInt());
     query.bindValue(":montant", montant.toInt());
-    query.bindValue(":etat", etat);
+    query.bindValue(":etat", etat); // Utiliser la valeur du QComboBox
     query.bindValue(":horaire", horaire);
 
     // Exécuter la requête
@@ -108,7 +117,7 @@ void GEvennement::on_pushButton_Ajouter_clicked() {
         ui->line_LOCALISATIONboutique->clear();
         ui->line_SURFACEboutique->clear();
         ui->line_MONTANTboutique->clear();
-        ui->line_ETATboutique->clear();
+        ui->comboBox_ETATboutique->setCurrentIndex(0); // Réinitialiser le QComboBox
         ui->timeEdit_HORAIRE->setTime(QTime(0, 0));
 
         // Actualiser le tableau des boutiques
@@ -147,10 +156,7 @@ void GEvennement::loadBoutiques() {
     }
 }
 
-void GEvennement::on_pushButton_Afficher_clicked() {
-    // Appeler la fonction pour charger et afficher les boutiques
-    loadBoutiques();
-}
+
 
 void GEvennement::on_pushButton_Supprimer_clicked() {
     // Récupérer la ligne sélectionnée dans le QTableWidget

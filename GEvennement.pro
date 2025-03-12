@@ -12,16 +12,13 @@ SOURCES += \
     connection.cpp \
     main.cpp \
     gevennement.cpp \
-    modif_boutique.cpp
 
 HEADERS += \
     connection.h \
     gevennement.h \
-    modif_boutique.h
 
 FORMS += \
     gevennement.ui \
-    modifier.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
