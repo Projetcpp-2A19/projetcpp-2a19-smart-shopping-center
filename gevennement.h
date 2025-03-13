@@ -27,7 +27,7 @@ private slots:
     void loadBoutiques(); // Slot pour charger et afficher les boutiques
     void on_pushButton_Supprimer_clicked(); // Slot pour le bouton "Supprimer"
     void on_pushButton_Modifier_clicked(); // Slot pour le bouton "Modifier"
-void on_tableWidget_Boutique_cellClicked(int row); // Supprimer 'int column'
+    void on_tableWidget_Boutique_cellClicked(int row); // Supprimer 'int column'
 private:
     Ui::GEvennement *ui; // Interface utilisateur
     QSqlDatabase db; // Objet pour gérer la connexion à la base de données
