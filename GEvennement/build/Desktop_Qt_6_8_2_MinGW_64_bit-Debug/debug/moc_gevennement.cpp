@@ -8,6 +8,30 @@
 
 #include "../../../gevennement.h"
 #include <QtGui/qtextcursor.h>
+#include <QtGui/qscreen.h>
+#include <QtCharts/qlineseries.h>
+#include <QtCharts/qabstractbarseries.h>
+#include <QtCharts/qvbarmodelmapper.h>
+#include <QtCharts/qboxplotseries.h>
+#include <QtCharts/qcandlestickseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qpieseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qboxplotseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qpieseries.h>
+#include <QtCharts/qpieseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qxyseries.h>
+#include <QtCharts/qxyseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qboxplotseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qpieseries.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCharts/qxyseries.h>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -40,7 +64,15 @@ struct qt_meta_tag_ZN11GEvennementE_t {};
 static constexpr auto qt_meta_stringdata_ZN11GEvennementE = QtMocHelpers::stringData(
     "GEvennement",
     "on_pushButton_Ajouter_clicked",
-    ""
+    "",
+    "on_pushButton_Supprimer_clicked",
+    "on_listView_clicked",
+    "QModelIndex",
+    "index",
+    "on_pushButton_Modifier_clicked",
+    "onSearchInitiated",
+    "onSortChanged",
+    "on_pushButton_Statistique_clicked"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -52,7 +84,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN11GEvennementE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -60,9 +92,21 @@ Q_CONSTINIT static const uint qt_meta_data_ZN11GEvennementE[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   20,    2, 0x08,    1 /* Private */,
+       1,    0,   56,    2, 0x08,    1 /* Private */,
+       3,    0,   57,    2, 0x08,    2 /* Private */,
+       4,    1,   58,    2, 0x08,    3 /* Private */,
+       7,    0,   61,    2, 0x08,    5 /* Private */,
+       8,    0,   62,    2, 0x08,    6 /* Private */,
+       9,    1,   63,    2, 0x08,    7 /* Private */,
+      10,    0,   66,    2, 0x08,    9 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 5,    6,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    6,
     QMetaType::Void,
 
        0        // eod
@@ -78,6 +122,20 @@ Q_CONSTINIT const QMetaObject GEvennement::staticMetaObject = { {
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<GEvennement, std::true_type>,
         // method 'on_pushButton_Ajouter_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_pushButton_Supprimer_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_listView_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QModelIndex &, std::false_type>,
+        // method 'on_pushButton_Modifier_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onSearchInitiated'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onSortChanged'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'on_pushButton_Statistique_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -89,10 +147,15 @@ void GEvennement::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->on_pushButton_Ajouter_clicked(); break;
+        case 1: _t->on_pushButton_Supprimer_clicked(); break;
+        case 2: _t->on_listView_clicked((*reinterpret_cast< std::add_pointer_t<QModelIndex>>(_a[1]))); break;
+        case 3: _t->on_pushButton_Modifier_clicked(); break;
+        case 4: _t->onSearchInitiated(); break;
+        case 5: _t->onSortChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 6: _t->on_pushButton_Statistique_clicked(); break;
         default: ;
         }
     }
-    (void)_a;
 }
 
 const QMetaObject *GEvennement::metaObject() const
@@ -114,14 +177,14 @@ int GEvennement::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 7;
     }
     return _id;
 }

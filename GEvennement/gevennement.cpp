@@ -9,6 +9,14 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
+#include <QtCharts> // Include Qt Charts
+
+#include <QPrinter>       // For PDF generation
+#include <QPainter>       // For drawing on the PDF
+#include <QFileDialog>    // For file save dialog
+#include <QDateTime>      // For adding a timestamp to the PDF
+
+
 GEvennement::GEvennement(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GEvennement), model(new QSqlQueryModel(this))
@@ -34,15 +42,87 @@ GEvennement::GEvennement(QWidget *parent)
 
     // Connect UI signals to slots
     connect(ui->pushButton_Ajouter, SIGNAL(clicked()), this, SLOT(on_pushButton_Ajouter_clicked()));
-    connect(ui->pushButton_Supprimer, SIGNAL(clicked()), this, SLOT(on_pushButton_Supprimer_clicked()));
+
+connect(ui->pushButton_Supprimer, &QPushButton::clicked, this, &GEvennement::on_pushButton_Supprimer_clicked);
+
+
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(on_listView_clicked(QModelIndex)));
+
+    connect(ui->searchBar, &QLineEdit::textChanged, this, &GEvennement::onSearchInitiated);
+    ui->comboBox_tri->addItem("Low to High");
+    ui->comboBox_tri->addItem("High to Low");
+    connect(ui->comboBox_tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GEvennement::onSortChanged);
+    connect(ui->pushButton_PDF, &QPushButton::clicked, this, &GEvennement::exportToPDF);
+
+
+    connect(ui->pushButton_Statistique, &QPushButton::clicked, this, &GEvennement::on_pushButton_Statistique_clicked);
+
+
 }
+
+
 
 GEvennement::~GEvennement()
 {
     // Clean up any allocated memory or resources if needed
     delete model;
     delete ui;
+}
+
+
+int GEvennement::countEvents() {
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM EVENEMENTS");
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt(); // Return the count of events
+    } else {
+        qDebug() << "Error counting events: " << query.lastError().text();
+        return -1; // Return -1 to indicate an error
+    }
+}
+
+
+
+void GEvennement::showEventsChart() {
+    int count = countEvents();
+    if (count < 0) {
+        QMessageBox::critical(this, "Error", "Failed to fetch events count.");
+        return;
+    }
+
+    // Create a bar series and add the count
+    QBarSeries *series = new QBarSeries();
+    QBarSet *set = new QBarSet("Events");
+    *set << count; // Add the count to the bar set
+    series->append(set);
+
+    // Create a chart and add the series
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Number of Events");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+
+    // Create axes
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append("Events"); // X-axis label
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setRange(0, count + 10); // Y-axis range (add some padding)
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    // Create a chart view to display the chart
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Create a new window to display the chart
+    QMainWindow *chartWindow = new QMainWindow();
+    chartWindow->setCentralWidget(chartView);
+    chartWindow->resize(800, 600);
+    chartWindow->show();
 }
 
 
@@ -87,107 +167,101 @@ void GEvennement::showEvennements()
     }
 }
 
+void GEvennement::ajout(const QString& nom, const QString& capacite, const QString& type,
+                        const QString& prix, const QDate& dateDebut, const QDate& dateFin, const QString& lieu)
+{
+    QString errorMessage;
+
+    // Vérification que tous les champs sont remplis
+    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
+        errorMessage += "All fields must be filled.\n";
+    }
+
+    // Vérification que capacité et prix sont des nombres valides
+    bool okCapacite, okPrix;
+    int capaciteInt = capacite.toInt(&okCapacite);
+    double prixDouble = prix.toDouble(&okPrix);
+
+    if (!okCapacite || capaciteInt <= 0) {
+        errorMessage += "Capacity must be a valid positive number.\n";
+    }
+
+    if (!okPrix || prixDouble <= 0) {
+        errorMessage += "Price must be a valid positive number.\n";
+    }
+
+    // Vérification que la date de fin est après la date de début
+    if (dateFin <= dateDebut) {
+        errorMessage += "End date must be after the start date.\n";
+    }
+
+    // Vérification si l'événement existe déjà
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT COUNT(*) FROM EVENEMENTS WHERE NOM = :nom AND DATE_DEBUT = :dateDebut");
+    checkQuery.bindValue(":nom", nom);
+    checkQuery.bindValue(":dateDebut", dateDebut.toString("yyyy-MM-dd"));
+
+    if (checkQuery.exec() && checkQuery.next() && checkQuery.value(0).toInt() > 0) {
+        errorMessage += "An event with this name and start date already exists.\n";
+    }
+
+    // Affichage unique des erreurs
+    if (!errorMessage.isEmpty()) {
+        //QMessageBox::warning(this, "Input Error", errorMessage);
+        return; // On arrête ici
+
+    }
+
+    // Insérer l'événement dans la base de données
+    QSqlQuery query;
+    query.prepare("INSERT INTO EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX) "
+                  "VALUES (:nom, :type, :dateDebut, :dateFin, :lieu, :capacite, :prix)");
+
+    query.bindValue(":nom", nom);
+    query.bindValue(":type", type);
+    query.bindValue(":dateDebut", dateDebut.toString("yyyy-MM-dd"));
+    query.bindValue(":dateFin", dateFin.toString("yyyy-MM-dd"));
+    query.bindValue(":lieu", lieu);
+    query.bindValue(":capacite", capaciteInt);
+    query.bindValue(":prix", prixDouble);
+
+    if (query.exec()) {
+        QMessageBox::information(this, "Success", "Event added successfully!");
+        showEvennements();
+    } else {
+        QMessageBox::critical(this, "Database Error", "Failed to add event to the database.");
+    }
+}
+
+
 void GEvennement::on_pushButton_Ajouter_clicked()
 {
-    // Disable the button to prevent double-clicks
-    ui->pushButton_Ajouter->setEnabled(false);
+    qDebug() << "on_pushButton_Ajouter_clicked called";
 
     // Get the values from the input fields
-    QString nom = ui->line_NOMevent->text().trimmed(); // Trim whitespace
+    QString nom = ui->line_NOMevent->text().trimmed();
     QString capacite = ui->line_CAPACITEevent->text().trimmed();
     QString type = ui->line_TYPEevent->text().trimmed();
     QString prix = ui->line_PRIXevent->text().trimmed();
     QDate dateDebut = ui->dateEditDebut->date();
     QDate dateFin = ui->dateEditFin->date();
-    QString lieu = ui->line_LIEU->text().trimmed(); // Get the LIEU value
+    QString lieu = ui->line_LIEU->text().trimmed();
 
-    // Validate input (check if fields are empty first)
-    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "All fields must be filled.");
-        ui->pushButton_Ajouter->setEnabled(true); // Re-enable button
-        return;
-    }
-
-    // Ensure that "prix" and "capacite" are valid numbers
-    bool isPrixValid, isCapaciteValid;
-    double prixValue = prix.toDouble(&isPrixValid);
-    int capaciteValue = capacite.toInt(&isCapaciteValid);
-
-    if (!isPrixValid || !isCapaciteValid) {
-        QMessageBox::warning(this, "Input Error", "Capacité and Prix must be valid numbers.");
-        ui->pushButton_Ajouter->setEnabled(true);
-        return;
-    }
-
-    // Ensure the start date is before the end date
-    if (dateDebut > dateFin) {
-        QMessageBox::warning(this, "Input Error", "The start date must be before the end date.");
-        ui->pushButton_Ajouter->setEnabled(true);
-        return;
-    }
-
-    // Check if the event already exists in the database (based on NOM and DATE_DEBUT)
-    QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT COUNT(*) FROM EVENEMENTS WHERE NOM = :nom AND DATE_DEBUT = :dateDebut");
-    checkQuery.bindValue(":nom", nom);
-    checkQuery.bindValue(":dateDebut", dateDebut);
-
-    if (!checkQuery.exec()) {
-        qDebug() << "Error checking for existing event: " << checkQuery.lastError().text();
-        QMessageBox::critical(this, "Error", "Failed to check for existing event.");
-        ui->pushButton_Ajouter->setEnabled(true); // Re-enable button
-        return;
-    }
-
-    if (checkQuery.next() && checkQuery.value(0).toInt() > 0) {
-        QMessageBox::warning(this, "Duplicate Entry", "This event already exists in the database.");
-        ui->pushButton_Ajouter->setEnabled(true);
-        return;
-    }
-
-    // Prepare the SQL query for inserting a new event (exclude ID_EVENT because it's auto-increment)
-    QSqlQuery query;
-    query.prepare("INSERT INTO EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX) "
-                  "VALUES (:nom, :type, TO_DATE(:dateDebut, 'YYYY-MM-DD'), TO_DATE(:dateFin, 'YYYY-MM-DD'), :lieu, :capacite, :prix)");
-
-    // Bind the values to the query, but ensure the dates are in 'YYYY-MM-DD' format
-    query.bindValue(":dateDebut", dateDebut.toString("yyyy-MM-dd"));
-    query.bindValue(":dateFin", dateFin.toString("yyyy-MM-dd"));
-
-    qDebug() << "Date Debut: " << dateDebut.toString("yyyy-MM-dd");
-    qDebug() << "Date Fin: " << dateFin.toString("yyyy-MM-dd");
-
-    // Bind the other parameters
-    query.bindValue(":nom", nom);
-    query.bindValue(":type", type);
-    query.bindValue(":lieu", lieu);
-    query.bindValue(":capacite", capaciteValue);
-    query.bindValue(":prix", prixValue);
-
-    // Execute the query
-    if (query.exec()) {
-        qDebug() << "Event added successfully!";
-        QMessageBox::information(this, "Success", "Event added successfully!");
-
-        // Optionally, refresh the list view to show the newly added event
-        showEvennements();
-    } else {
-        qDebug() << "Error adding event: " << query.lastError().text();
-        QMessageBox::critical(this, "Error", "Failed to add event to the database.");
-    }
-
-    // Re-enable the button after execution
-    ui->pushButton_Ajouter->setEnabled(true);
+    // Call the ajout() method to insert the event
+    ajout(nom, capacite, type, prix, dateDebut, dateFin, lieu);
+    return;
 }
 
 
-void GEvennement::on_pushButton_Supprimer_clicked()
-{
-    // Get the name entered by the user in the Line_DeleteID field
-    QString deletenom = ui->Line_DeleteID->text();
 
-    // Check if the name field is empty
-    if (deletenom.isEmpty()) {
+
+
+void GEvennement::supprimer(const QString& nom)
+{
+    qDebug() << "supprimer method called with nom:" << nom;
+
+    // Check if the name is empty
+    if (nom.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please enter a name to delete.");
         return;
     }
@@ -196,13 +270,13 @@ void GEvennement::on_pushButton_Supprimer_clicked()
     QSqlQuery query;
     query.prepare("DELETE FROM EVENEMENTS WHERE NOM = :nom");
 
-    // Bind the 'nom' parameter to the value entered by the user
-    query.bindValue(":nom", deletenom);
+    // Bind the 'nom' parameter to the value passed to the function
+    query.bindValue(":nom", nom);
 
     // Execute the query to delete the event
     if (query.exec()) {
         // Inform the user if the deletion was successful
-        QMessageBox::information(this, "Success", "Event deleted successfully.");
+     //   QMessageBox::information(this, "Success", "Event deleted successfully.");
 
         // Optionally, refresh the list view to show the updated event list
         showEvennements();
@@ -211,6 +285,14 @@ void GEvennement::on_pushButton_Supprimer_clicked()
         QMessageBox::critical(this, "Error", "Failed to delete the event: " + query.lastError().text());
     }
 }
+
+void GEvennement::on_pushButton_Supprimer_clicked()
+{
+    QString nom = ui->Line_DeleteID->text().trimmed(); // Get the name from the input field
+    supprimer(nom); // Call the supprimer method
+}
+
+
 
 
 void GEvennement::on_listView_clicked(const QModelIndex &index)
@@ -267,42 +349,9 @@ void GEvennement::on_listView_clicked(const QModelIndex &index)
     selectedEventNom = nom; // Save the selected event's NOM to use it in the modification/update process
 }
 
-void GEvennement::on_pushButton_Modifier_clicked()
+void GEvennement::modifier(const QString& nom, const QString& capacite, const QString& type,
+                           const QString& prix, const QDate& dateDebut, const QDate& dateFin, const QString& lieu)
 {
-    // Get the values from the input fields
-    QString nom = ui->line_NOMevent->text().trimmed();    // Trim whitespace
-    QString capacite = ui->line_CAPACITEevent->text().trimmed();
-    QString type = ui->line_TYPEevent->text().trimmed();
-    QString prix = ui->line_PRIXevent->text().trimmed();
-    QDate dateDebut = ui->dateEditDebut->date();
-    QDate dateFin = ui->dateEditFin->date();
-    QString lieu = ui->line_LIEU->text().trimmed();  // Get the LIEU value
-
-    // Check if the required fields are not empty
-    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "Please fill in all fields to modify the event.");
-        return;
-    }
-
-    // Convert string values to appropriate types
-    bool capaciteValid = false;
-    int capaciteInt = capacite.toInt(&capaciteValid);  // Validate capacite as integer
-    bool prixValid = false;
-    float prixFloat = prix.toFloat(&prixValid);  // Validate prix as float
-
-    // If capacite or prix is invalid, show an error message
-    if (!capaciteValid || !prixValid) {
-        QMessageBox::warning(this, "Input Error", "Invalid value for Capacite or Prix.");
-        return;
-    }
-
-    // Get the selected event's name from the LineEdit
-    QString selectedEventNom = ui->line_NOMevent->text().trimmed();  // Assuming you're modifying the current event
-
-    // Format the date as string (Oracle expects YYYY-MM-DD)
-    QString dateDebutStr = dateDebut.toString("yyyy-MM-dd");
-    QString dateFinStr = dateFin.toString("yyyy-MM-dd");
-
     // Prepare the SQL query to update the event in the database
     QSqlQuery query;
     query.prepare("UPDATE EVENEMENTS SET NOM = :nom, TYPE = :type, DATE_DEBUT = TO_DATE(:date_debut, 'YYYY-MM-DD'), "
@@ -312,12 +361,12 @@ void GEvennement::on_pushButton_Modifier_clicked()
     // Bind the values to the query
     query.bindValue(":nom", nom);
     query.bindValue(":type", type);
-    query.bindValue(":date_debut", dateDebutStr);
-    query.bindValue(":date_fin", dateFinStr);
+    query.bindValue(":date_debut", dateDebut.toString("yyyy-MM-dd"));
+    query.bindValue(":date_fin", dateFin.toString("yyyy-MM-dd"));
     query.bindValue(":lieu", lieu);
-    query.bindValue(":capacite", capaciteInt);
-    query.bindValue(":prix", prixFloat);
-    query.bindValue(":selected_nom", selectedEventNom); // Assuming you're modifying by the original name
+    query.bindValue(":capacite", capacite.toInt());
+    query.bindValue(":prix", prix.toFloat());
+    query.bindValue(":selected_nom", nom); // Assuming you're modifying by the original name
 
     // Execute the query to update the event in the database
     if (query.exec()) {
@@ -328,4 +377,217 @@ void GEvennement::on_pushButton_Modifier_clicked()
     }
 }
 
+void GEvennement::on_pushButton_Modifier_clicked()
+{
+    // Get the values from the input fields
+    QString nom = ui->line_NOMevent->text().trimmed();
+    QString capacite = ui->line_CAPACITEevent->text().trimmed();
+    QString type = ui->line_TYPEevent->text().trimmed();
+    QString prix = ui->line_PRIXevent->text().trimmed();
+    QDate dateDebut = ui->dateEditDebut->date();
+    QDate dateFin = ui->dateEditFin->date();
+    QString lieu = ui->line_LIEU->text().trimmed();
+
+    // Check if the required fields are not empty
+    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Please fill in all fields to modify the event.");
+        return;
+    }
+
+    // Call the modifier() method with the updated values
+    modifier(nom, capacite, type, prix, dateDebut, dateFin, lieu);
+}
+
+
+void GEvennement::onSearchInitiated()
+{
+    // Get the text from the search bar for the event name (NOM)
+    QString nom = ui->searchBar->text();  // Assuming you have a search bar for NOM (QLineEdit)
+
+    // Prepare the SQL query to search by NOM
+    QString queryStr = "SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX "
+                       "FROM EVENEMENTS "
+                       "WHERE NOM LIKE :nom";  // Search by NOM
+
+    QSqlQuery query;
+    query.prepare(queryStr);
+    query.bindValue(":nom", nom.isEmpty() ? "%" : "%" + nom + "%");  // Use LIKE for partial matching
+
+    if (!query.exec()) {
+        qDebug() << "Query failed:" << query.lastError();
+        return;
+    }
+
+    // Create a QStandardItemModel to display the results in the listView
+    QStandardItemModel *model = new QStandardItemModel();
+
+    // Loop through the query results and add each row to the model
+    while (query.next()) {
+        QString eventString = query.value(0).toString() + " | "  // NOM
+                              + query.value(1).toString() + " | "  // TYPE
+                              + query.value(2).toString() + " | "  // DATE_DEBUT
+                              + query.value(3).toString() + " | "  // DATE_FIN
+                              + query.value(4).toString() + " | "  // LIEU
+                              + query.value(5).toString() + " | "  // CAPACITE
+                              + query.value(6).toString();         // PRIX
+
+        // Add the formatted event string to the model as a new item
+        QStandardItem *item = new QStandardItem(eventString);
+        model->appendRow(item);
+    }
+
+    // Set the model to the ListView widget
+    ui->listView->setModel(model);
+    qDebug() << "Setting model to listView...";
+}
+
+
+void GEvennement::onSortChanged(int index)
+{
+    // Determine the sort order based on the selected item
+    QString sortOrder = (index == 0) ? "ASC" : "DESC";  // "Low to High" is ASC, "High to Low" is DESC
+
+    // Prepare the SQL query to sort by CAPACITE
+    QString queryStr = QString("SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX "
+                               "FROM EVENEMENTS "
+                               "ORDER BY CAPACITE %1").arg(sortOrder);  // Sorting by CAPACITE
+
+    QSqlQuery query;
+    if (!query.exec(queryStr)) {
+        qDebug() << "Query failed:" << query.lastError();
+        return;
+    }
+
+    // Create a QStandardItemModel to display the sorted results
+    QStandardItemModel *model = new QStandardItemModel();
+
+    // Loop through the query results and add each row to the model
+    while (query.next()) {
+        QString eventString = query.value(0).toString() + " | "  // NOM
+                              + query.value(1).toString() + " | "  // TYPE
+                              + query.value(2).toString() + " | "  // DATE_DEBUT
+                              + query.value(3).toString() + " | "  // DATE_FIN
+                              + query.value(4).toString() + " | "  // LIEU
+                              + query.value(5).toString() + " | "  // CAPACITE
+                              + query.value(6).toString();         // PRIX
+
+        // Add the formatted event string to the model as a new item
+        QStandardItem *item = new QStandardItem(eventString);
+        model->appendRow(item);
+    }
+
+    // Set the model to the ListView widget
+    ui->listView->setModel(model);
+    qDebug() << "Setting sorted model to listView...";
+}
+
+
+void GEvennement::exportToPDF() {
+    // Open a file dialog to choose the save location and file name
+    QString fileName = QFileDialog::getSaveFileName(this, "Export PDF", "", "PDF Files (*.pdf)");
+    if (fileName.isEmpty()) {
+        QMessageBox::warning(this, "Error", "No file name specified.");
+        return;
+    }
+
+    // Create a QPrinter object to handle PDF generation
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+
+    // Create a QPainter object to draw on the PDF
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        QMessageBox::warning(this, "Error", "Could not create PDF file.");
+        return;
+    }
+
+    // Set up fonts
+    QFont titleFont = painter.font();
+    titleFont.setPointSize(18);
+    titleFont.setBold(true);
+
+    QFont headerFont = painter.font();
+    headerFont.setPointSize(12);
+    headerFont.setBold(true);
+
+    QFont dataFont = painter.font();
+    dataFont.setPointSize(10);
+
+    // Define margins and spacing
+    int margin = 50;
+    int yPos = margin;
+    int lineHeight = 20;
+    int columnWidth = 100;
+
+    // Draw the title
+    painter.setFont(titleFont);
+    painter.drawText(margin, yPos, "Events Report");
+    yPos += lineHeight * 2;
+
+    // Draw the table headers
+    painter.setFont(headerFont);
+    painter.drawText(margin, yPos, "Name");
+    painter.drawText(margin + columnWidth, yPos, "Type");
+    painter.drawText(margin + 2 * columnWidth, yPos, "Start Date");
+    painter.drawText(margin + 3 * columnWidth, yPos, "End Date");
+    painter.drawText(margin + 4 * columnWidth, yPos, "Location");
+    painter.drawText(margin + 5 * columnWidth, yPos, "Capacity");
+    painter.drawText(margin + 6 * columnWidth, yPos, "Price");
+    yPos += lineHeight;
+
+    // Draw a line under the headers
+    painter.drawLine(margin, yPos, margin + 7 * columnWidth, yPos);
+    yPos += lineHeight;
+
+    // Fetch data from the database
+    QSqlQuery query;
+    query.prepare("SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX FROM EVENEMENTS");
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Database Error", "Failed to fetch data: " + query.lastError().text());
+        return;
+    }
+
+    // Draw the data rows
+    painter.setFont(dataFont);
+    while (query.next()) {
+        QString nom = query.value(0).toString(); // NOM
+        QString type = query.value(1).toString(); // TYPE
+        QString dateDebut = query.value(2).toDate().toString("yyyy-MM-dd"); // DATE_DEBUT
+        QString dateFin = query.value(3).toDate().toString("yyyy-MM-dd"); // DATE_FIN
+        QString lieu = query.value(4).toString(); // LIEU
+        QString capacite = QString::number(query.value(5).toInt()); // CAPACITE
+        QString prix = QString::number(query.value(6).toDouble(), 'f', 2); // PRIX
+
+        // Draw each column
+        painter.drawText(margin, yPos, nom);
+        painter.drawText(margin + columnWidth, yPos, type);
+        painter.drawText(margin + 2 * columnWidth, yPos, dateDebut);
+        painter.drawText(margin + 3 * columnWidth, yPos, dateFin);
+        painter.drawText(margin + 4 * columnWidth, yPos, lieu);
+        painter.drawText(margin + 5 * columnWidth, yPos, capacite);
+        painter.drawText(margin + 6 * columnWidth, yPos, prix);
+
+        // Move to the next line
+        yPos += lineHeight;
+
+        // Draw a line between rows
+        painter.drawLine(margin, yPos, margin + 7 * columnWidth, yPos);
+        yPos += lineHeight;
+    }
+
+    // End the painting process
+    painter.end();
+
+    // Notify the user that the PDF has been created
+    QMessageBox::information(this, "Success", "PDF exported successfully to " + fileName);
+}
+
+
+
+void GEvennement::on_pushButton_Statistique_clicked()
+{
+    showEventsChart();
+
+}
 

@@ -12,7 +12,6 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QCommandLinkButton>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
@@ -20,7 +19,6 @@
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
@@ -47,10 +45,6 @@ public:
     QPushButton *pushButton_Modifier;
     QLabel *label_TITLE;
     QListView *listView;
-    QProgressBar *progressBar;
-    QLineEdit *lineEdit;
-    QComboBox *comboBox_tri;
-    QCommandLinkButton *commandLinkButton;
     QLabel *lbl_Image_Display;
     QFrame *frame_gestions;
     QPushButton *pushButton_Dashboard;
@@ -62,8 +56,12 @@ public:
     QPushButton *pushButton_deconnecter;
     QLabel *lbl_Logo_Display;
     QFrame *frame_2;
-    QLineEdit *lineEdit_exporter;
     QFrame *frame_3;
+    QLineEdit *Line_DeleteID;
+    QComboBox *comboBox_tri;
+    QPushButton *pushButton_PDF;
+    QLineEdit *searchBar;
+    QPushButton *pushButton_Statistique;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -71,7 +69,7 @@ public:
     {
         if (GEvennement->objectName().isEmpty())
             GEvennement->setObjectName("GEvennement");
-        GEvennement->resize(800, 599);
+        GEvennement->resize(1028, 599);
         GEvennement->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
 "    background: #f0c1cd;  \n"
 "}\n"
@@ -257,38 +255,9 @@ public:
 ""));
         listView = new QListView(centralwidget);
         listView->setObjectName("listView");
-        listView->setGeometry(QRect(500, 230, 291, 192));
+        listView->setGeometry(QRect(500, 230, 471, 192));
         listView->setStyleSheet(QString::fromUtf8("QListView {\n"
 "    alternate-background-color:  yellow;\n"
-"}"));
-        progressBar = new QProgressBar(centralwidget);
-        progressBar->setObjectName("progressBar");
-        progressBar->setGeometry(QRect(680, 460, 118, 23));
-        progressBar->setValue(24);
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setEnabled(false);
-        lineEdit->setGeometry(QRect(500, 190, 191, 26));
-        lineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
-        comboBox_tri = new QComboBox(centralwidget);
-        comboBox_tri->setObjectName("comboBox_tri");
-        comboBox_tri->setGeometry(QRect(690, 190, 91, 26));
-        commandLinkButton = new QCommandLinkButton(centralwidget);
-        commandLinkButton->setObjectName("commandLinkButton");
-        commandLinkButton->setGeometry(QRect(500, 140, 151, 41));
-        commandLinkButton->setStyleSheet(QString::fromUtf8("QCommandLinkButton {\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 10px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
 "}"));
         lbl_Image_Display = new QLabel(centralwidget);
         lbl_Image_Display->setObjectName("lbl_Image_Display");
@@ -520,18 +489,6 @@ public:
         frame_2->setGeometry(QRect(120, 540, 120, 80));
         frame_2->setFrameShape(QFrame::Shape::StyledPanel);
         frame_2->setFrameShadow(QFrame::Shadow::Raised);
-        lineEdit_exporter = new QLineEdit(centralwidget);
-        lineEdit_exporter->setObjectName("lineEdit_exporter");
-        lineEdit_exporter->setEnabled(false);
-        lineEdit_exporter->setGeometry(QRect(680, 150, 101, 26));
-        lineEdit_exporter->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
         frame_3 = new QFrame(centralwidget);
         frame_3->setObjectName("frame_3");
         frame_3->setGeometry(QRect(180, -10, 621, 31));
@@ -544,10 +501,25 @@ public:
 ""));
         frame_3->setFrameShape(QFrame::Shape::StyledPanel);
         frame_3->setFrameShadow(QFrame::Shadow::Raised);
+        Line_DeleteID = new QLineEdit(centralwidget);
+        Line_DeleteID->setObjectName("Line_DeleteID");
+        Line_DeleteID->setGeometry(QRect(670, 460, 113, 26));
+        comboBox_tri = new QComboBox(centralwidget);
+        comboBox_tri->setObjectName("comboBox_tri");
+        comboBox_tri->setGeometry(QRect(510, 190, 431, 26));
+        pushButton_PDF = new QPushButton(centralwidget);
+        pushButton_PDF->setObjectName("pushButton_PDF");
+        pushButton_PDF->setGeometry(QRect(510, 150, 431, 24));
+        searchBar = new QLineEdit(centralwidget);
+        searchBar->setObjectName("searchBar");
+        searchBar->setGeometry(QRect(510, 110, 431, 22));
+        pushButton_Statistique = new QPushButton(centralwidget);
+        pushButton_Statistique->setObjectName("pushButton_Statistique");
+        pushButton_Statistique->setGeometry(QRect(920, 50, 75, 24));
         GEvennement->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GEvennement);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 1028, 22));
         GEvennement->setMenuBar(menubar);
         statusbar = new QStatusBar(GEvennement);
         statusbar->setObjectName("statusbar");
@@ -573,8 +545,6 @@ public:
         pushButton_Supprimer->setText(QCoreApplication::translate("GEvennement", "Supprimer", nullptr));
         pushButton_Modifier->setText(QCoreApplication::translate("GEvennement", "Modifier", nullptr));
         label_TITLE->setText(QCoreApplication::translate("GEvennement", "Gestion des \303\251v\303\251nements", nullptr));
-        lineEdit->setPlaceholderText(QCoreApplication::translate("GEvennement", "Trier les \303\251v\303\251nements ", nullptr));
-        commandLinkButton->setText(QString());
         lbl_Image_Display->setText(QString());
         pushButton_Dashboard->setText(QCoreApplication::translate("GEvennement", "Dashboard", nullptr));
         pushButton_Employes->setText(QCoreApplication::translate("GEvennement", "Employ\303\251s", nullptr));
@@ -584,7 +554,11 @@ public:
         pushButton_Evennements->setText(QCoreApplication::translate("GEvennement", "Evennements", nullptr));
         pushButton_deconnecter->setText(QCoreApplication::translate("GEvennement", "se d\303\251connecter", nullptr));
         lbl_Logo_Display->setText(QString());
-        lineEdit_exporter->setPlaceholderText(QCoreApplication::translate("GEvennement", "    Exporter", nullptr));
+        comboBox_tri->setPlaceholderText(QCoreApplication::translate("GEvennement", "                                                                Filter", nullptr));
+        pushButton_PDF->setText(QCoreApplication::translate("GEvennement", "Export To PDF", nullptr));
+        searchBar->setText(QString());
+        searchBar->setPlaceholderText(QCoreApplication::translate("GEvennement", "SEARCH BAR", nullptr));
+        pushButton_Statistique->setText(QCoreApplication::translate("GEvennement", "Stat", nullptr));
     } // retranslateUi
 
 };
