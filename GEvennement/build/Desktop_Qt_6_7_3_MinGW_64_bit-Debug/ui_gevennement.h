@@ -12,16 +12,16 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QCommandLinkButton>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -41,14 +41,20 @@ public:
     QDateEdit *dateEditDebut;
     QDateEdit *dateEditFin;
     QLineEdit *line_LIEU;
+    QComboBox *comboBox_LOC;
+    QLineEdit *lineEdit_IDENTIFIANT;
+    QLineEdit *line_LOCATIONevent;
+    QPushButton *pushButton_Map;
+    QFrame *frame_recherche;
+    QLineEdit *lineEdit_Recherche;
+    QPushButton *pushButton_Rechercher;
+    QPushButton *pushButton_TriType;
+    QPushButton *pushButton_TriDate;
     QPushButton *pushButton_Ajouter;
     QPushButton *pushButton_Supprimer;
     QPushButton *pushButton_Modifier;
     QLabel *label_TITLE;
-    QListView *listView;
-    QLineEdit *lineEdit;
-    QComboBox *comboBox_tri;
-    QCommandLinkButton *commandLinkButton;
+    QTableView *tableView;
     QLabel *lbl_Image_Display;
     QFrame *frame_gestions;
     QPushButton *pushButton_Dashboard;
@@ -60,9 +66,12 @@ public:
     QPushButton *pushButton_deconnecter;
     QLabel *lbl_Logo_Display;
     QFrame *frame_2;
-    QLineEdit *lineEdit_exporter;
     QFrame *frame_3;
-    QLineEdit *Line_DeleteID;
+    QPushButton *pushButton_Retreive;
+    QPushButton *pushButton_PDF;
+    QPushButton *pushButton_Modifier_2;
+    QPushButton *pushButton_Modifier_3;
+    QPushButton *MAP;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -70,7 +79,7 @@ public:
     {
         if (GEvennement->objectName().isEmpty())
             GEvennement->setObjectName("GEvennement");
-        GEvennement->resize(800, 599);
+        GEvennement->resize(1028, 599);
         GEvennement->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
 "    background: #f0c1cd;  \n"
 "}\n"
@@ -90,8 +99,7 @@ public:
 "     border-radius: 10px;\n"
 "    background-color:  rgb(0, 162, 198);\n"
 "}"));
-        frame->setFrameShape(QFrame::Shape::StyledPanel);
-        frame->setFrameShadow(QFrame::Shadow::Raised);
+        frame->setFrameShape(QFrame::NoFrame);
         line_NOMevent = new QLineEdit(frame);
         line_NOMevent->setObjectName("line_NOMevent");
         line_NOMevent->setGeometry(QRect(40, 60, 191, 26));
@@ -105,7 +113,7 @@ public:
 "}"));
         line_CAPACITEevent = new QLineEdit(frame);
         line_CAPACITEevent->setObjectName("line_CAPACITEevent");
-        line_CAPACITEevent->setGeometry(QRect(40, 320, 191, 26));
+        line_CAPACITEevent->setGeometry(QRect(40, 290, 191, 26));
         line_CAPACITEevent->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -116,7 +124,7 @@ public:
 "}"));
         line_PRIXevent = new QLineEdit(frame);
         line_PRIXevent->setObjectName("line_PRIXevent");
-        line_PRIXevent->setGeometry(QRect(40, 360, 191, 26));
+        line_PRIXevent->setGeometry(QRect(40, 330, 191, 26));
         line_PRIXevent->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -144,6 +152,7 @@ public:
 "}"));
         line_IDevent = new QLineEdit(frame);
         line_IDevent->setObjectName("line_IDevent");
+        line_IDevent->setEnabled(false);
         line_IDevent->setGeometry(QRect(40, 20, 191, 26));
         line_IDevent->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
@@ -161,14 +170,145 @@ public:
         dateEditFin->setGeometry(QRect(10, 230, 251, 22));
         line_LIEU = new QLineEdit(frame);
         line_LIEU->setObjectName("line_LIEU");
-        line_LIEU->setGeometry(QRect(40, 280, 191, 26));
+        line_LIEU->setGeometry(QRect(40, 260, 191, 26));
         line_LIEU->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"    font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        comboBox_LOC = new QComboBox(frame);
+        comboBox_LOC->setObjectName("comboBox_LOC");
+        comboBox_LOC->setGeometry(QRect(40, 360, 181, 22));
+        lineEdit_IDENTIFIANT = new QLineEdit(frame);
+        lineEdit_IDENTIFIANT->setObjectName("lineEdit_IDENTIFIANT");
+        lineEdit_IDENTIFIANT->setGeometry(QRect(40, 390, 181, 22));
+        line_LOCATIONevent = new QLineEdit(frame);
+        line_LOCATIONevent->setObjectName("line_LOCATIONevent");
+        line_LOCATIONevent->setGeometry(QRect(40, 250, 191, 26));
+        line_LOCATIONevent->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"    font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_LOCATIONevent->setReadOnly(true);
+        pushButton_Map = new QPushButton(frame);
+        pushButton_Map->setObjectName("pushButton_Map");
+        pushButton_Map->setGeometry(QRect(240, 250, 25, 25));
+        pushButton_Map->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    background-color: #4CAF50;\n"
+"    border: none;\n"
+"    color: white;\n"
+"    border-radius: 12px;\n"
+"    padding: 5px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #45a049;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #3d8b40;\n"
+"}"));
+        frame_recherche = new QFrame(centralwidget);
+        frame_recherche->setObjectName("frame_recherche");
+        frame_recherche->setGeometry(QRect(500, 110, 501, 41));
+        frame_recherche->setStyleSheet(QString::fromUtf8("QFrame{\n"
+"    border: 3px solid grey;\n"
+"    border-radius: 4px;\n"
+"    padding: 2px;\n"
+"    border-radius: 10px;\n"
+"    background-color:  rgb(0, 162, 198);\n"
+"}"));
+        frame_recherche->setFrameShape(QFrame::NoFrame);
+        lineEdit_Recherche = new QLineEdit(frame_recherche);
+        lineEdit_Recherche->setObjectName("lineEdit_Recherche");
+        lineEdit_Recherche->setGeometry(QRect(10, 5, 180, 30));
+        lineEdit_Recherche->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
 "    border-radius: 10px;\n"
 "    padding: 0 8px;\n"
 "    background: white;\n"
 "    selection-background-color: darkgray;\n"
+"}"));
+        pushButton_Rechercher = new QPushButton(frame_recherche);
+        pushButton_Rechercher->setObjectName("pushButton_Rechercher");
+        pushButton_Rechercher->setGeometry(QRect(200, 5, 91, 30));
+        pushButton_Rechercher->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy;\n"
+"}"));
+        pushButton_TriType = new QPushButton(frame_recherche);
+        pushButton_TriType->setObjectName("pushButton_TriType");
+        pushButton_TriType->setGeometry(QRect(300, 5, 91, 30));
+        pushButton_TriType->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy;\n"
+"}"));
+        pushButton_TriDate = new QPushButton(frame_recherche);
+        pushButton_TriDate->setObjectName("pushButton_TriDate");
+        pushButton_TriDate->setGeometry(QRect(400, 5, 91, 30));
+        pushButton_TriDate->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy;\n"
 "}"));
         pushButton_Ajouter = new QPushButton(centralwidget);
         pushButton_Ajouter->setObjectName("pushButton_Ajouter");
@@ -249,41 +389,26 @@ public:
         label_TITLE->setObjectName("label_TITLE");
         label_TITLE->setGeometry(QRect(190, 20, 581, 81));
         label_TITLE->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"	font: 36pt \"Imprint MT Shadow\";\n"
-"    color: rgb(0, 162, 198);\n"
-"    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */\n"
+"    color: white;\n"
+"    font-weight: bold;\n"
+"    background-color: transparent;\n"
+"}"));
+        tableView = new QTableView(centralwidget);
+        tableView->setObjectName("tableView");
+        tableView->setGeometry(QRect(500, 161, 501, 261));
+        tableView->setStyleSheet(QString::fromUtf8("QTableView {\n"
+"    background-color: #f0f0f0;\n"
+"    border: 1px solid #999;\n"
+"    selection-background-color: #0078d7;\n"
+"    selection-color: white;\n"
+"    gridline-color: #ccc;\n"
 "}\n"
-""));
-        listView = new QListView(centralwidget);
-        listView->setObjectName("listView");
-        listView->setGeometry(QRect(500, 230, 291, 192));
-        listView->setStyleSheet(QString::fromUtf8("QListView {\n"
-"    alternate-background-color:  yellow;\n"
-"}"));
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setEnabled(false);
-        lineEdit->setGeometry(QRect(500, 190, 191, 26));
-        lineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
-        comboBox_tri = new QComboBox(centralwidget);
-        comboBox_tri->setObjectName("comboBox_tri");
-        comboBox_tri->setGeometry(QRect(690, 190, 91, 26));
-        commandLinkButton = new QCommandLinkButton(centralwidget);
-        commandLinkButton->setObjectName("commandLinkButton");
-        commandLinkButton->setGeometry(QRect(500, 140, 151, 41));
-        commandLinkButton->setStyleSheet(QString::fromUtf8("QCommandLinkButton {\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 10px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
+"\n"
+"QHeaderView::section {\n"
+"    background-color: #e0e0e0;\n"
+"    padding: 4px;\n"
+"    border: 1px solid #999;\n"
+"    font-weight: bold;\n"
 "}"));
         lbl_Image_Display = new QLabel(centralwidget);
         lbl_Image_Display->setObjectName("lbl_Image_Display");
@@ -301,8 +426,7 @@ public:
 "    padding: 2px;\n"
 "}\n"
 ""));
-        frame_gestions->setFrameShape(QFrame::Shape::StyledPanel);
-        frame_gestions->setFrameShadow(QFrame::Shadow::Raised);
+        frame_gestions->setFrameShape(QFrame::NoFrame);
         pushButton_Dashboard = new QPushButton(frame_gestions);
         pushButton_Dashboard->setObjectName("pushButton_Dashboard");
         pushButton_Dashboard->setGeometry(QRect(0, 100, 181, 51));
@@ -513,20 +637,7 @@ public:
         frame_2 = new QFrame(frame_gestions);
         frame_2->setObjectName("frame_2");
         frame_2->setGeometry(QRect(120, 540, 120, 80));
-        frame_2->setFrameShape(QFrame::Shape::StyledPanel);
-        frame_2->setFrameShadow(QFrame::Shadow::Raised);
-        lineEdit_exporter = new QLineEdit(centralwidget);
-        lineEdit_exporter->setObjectName("lineEdit_exporter");
-        lineEdit_exporter->setEnabled(false);
-        lineEdit_exporter->setGeometry(QRect(680, 150, 101, 26));
-        lineEdit_exporter->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
+        frame_2->setFrameShape(QFrame::NoFrame);
         frame_3 = new QFrame(centralwidget);
         frame_3->setObjectName("frame_3");
         frame_3->setGeometry(QRect(180, -10, 621, 31));
@@ -537,15 +648,136 @@ public:
 "    padding: 2px;\n"
 "}\n"
 ""));
-        frame_3->setFrameShape(QFrame::Shape::StyledPanel);
-        frame_3->setFrameShadow(QFrame::Shadow::Raised);
-        Line_DeleteID = new QLineEdit(centralwidget);
-        Line_DeleteID->setObjectName("Line_DeleteID");
-        Line_DeleteID->setGeometry(QRect(670, 460, 113, 26));
+        frame_3->setFrameShape(QFrame::NoFrame);
+        pushButton_Retreive = new QPushButton(centralwidget);
+        pushButton_Retreive->setObjectName("pushButton_Retreive");
+        pushButton_Retreive->setGeometry(QRect(670, 460, 121, 31));
+        pushButton_Retreive->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_PDF = new QPushButton(centralwidget);
+        pushButton_PDF->setObjectName("pushButton_PDF");
+        pushButton_PDF->setGeometry(QRect(820, 460, 171, 31));
+        pushButton_PDF->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_Modifier_2 = new QPushButton(centralwidget);
+        pushButton_Modifier_2->setObjectName("pushButton_Modifier_2");
+        pushButton_Modifier_2->setGeometry(QRect(820, 510, 171, 31));
+        pushButton_Modifier_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_Modifier_3 = new QPushButton(centralwidget);
+        pushButton_Modifier_3->setObjectName("pushButton_Modifier_3");
+        pushButton_Modifier_3->setGeometry(QRect(830, 60, 171, 31));
+        pushButton_Modifier_3->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        MAP = new QPushButton(centralwidget);
+        MAP->setObjectName("MAP");
+        MAP->setGeometry(QRect(830, 20, 171, 31));
+        MAP->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
         GEvennement->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GEvennement);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 26));
+        menubar->setGeometry(QRect(0, 0, 1028, 26));
         GEvennement->setMenuBar(menubar);
         statusbar = new QStatusBar(GEvennement);
         statusbar->setObjectName("statusbar");
@@ -567,12 +799,18 @@ public:
         line_TYPEevent->setPlaceholderText(QCoreApplication::translate("GEvennement", "             TYPE", nullptr));
         line_IDevent->setPlaceholderText(QCoreApplication::translate("GEvennement", "               ID", nullptr));
         line_LIEU->setPlaceholderText(QCoreApplication::translate("GEvennement", "         LIEU", nullptr));
+        comboBox_LOC->setProperty("placeholderText", QVariant(QCoreApplication::translate("GEvennement", "       Choisir Un Locataire", nullptr)));
+        lineEdit_IDENTIFIANT->setPlaceholderText(QCoreApplication::translate("GEvennement", "         IDENTIFIANT", nullptr));
+        line_LOCATIONevent->setPlaceholderText(QCoreApplication::translate("GEvennement", "         LOCATION", nullptr));
+        pushButton_Map->setText(QCoreApplication::translate("GEvennement", "\360\237\223\215", nullptr));
+        lineEdit_Recherche->setPlaceholderText(QCoreApplication::translate("GEvennement", "Rechercher par identifiant...", nullptr));
+        pushButton_Rechercher->setText(QCoreApplication::translate("GEvennement", "Rechercher", nullptr));
+        pushButton_TriType->setText(QCoreApplication::translate("GEvennement", "Tri Type", nullptr));
+        pushButton_TriDate->setText(QCoreApplication::translate("GEvennement", "Tri Date", nullptr));
         pushButton_Ajouter->setText(QCoreApplication::translate("GEvennement", "Ajouter", nullptr));
         pushButton_Supprimer->setText(QCoreApplication::translate("GEvennement", "Supprimer", nullptr));
         pushButton_Modifier->setText(QCoreApplication::translate("GEvennement", "Modifier", nullptr));
         label_TITLE->setText(QCoreApplication::translate("GEvennement", "Gestion des \303\251v\303\251nements", nullptr));
-        lineEdit->setPlaceholderText(QCoreApplication::translate("GEvennement", "Trier les \303\251v\303\251nements ", nullptr));
-        commandLinkButton->setText(QString());
         lbl_Image_Display->setText(QString());
         pushButton_Dashboard->setText(QCoreApplication::translate("GEvennement", "Dashboard", nullptr));
         pushButton_Employes->setText(QCoreApplication::translate("GEvennement", "Employ\303\251s", nullptr));
@@ -582,7 +820,11 @@ public:
         pushButton_Evennements->setText(QCoreApplication::translate("GEvennement", "Evennements", nullptr));
         pushButton_deconnecter->setText(QCoreApplication::translate("GEvennement", "se d\303\251connecter", nullptr));
         lbl_Logo_Display->setText(QString());
-        lineEdit_exporter->setPlaceholderText(QCoreApplication::translate("GEvennement", "    Exporter", nullptr));
+        pushButton_Retreive->setText(QCoreApplication::translate("GEvennement", "Retreive", nullptr));
+        pushButton_PDF->setText(QCoreApplication::translate("GEvennement", "PDF", nullptr));
+        pushButton_Modifier_2->setText(QCoreApplication::translate("GEvennement", "STATISTIQUES", nullptr));
+        pushButton_Modifier_3->setText(QCoreApplication::translate("GEvennement", "SCAN", nullptr));
+        MAP->setText(QCoreApplication::translate("GEvennement", "MAP", nullptr));
     } // retranslateUi
 
 };

@@ -1,593 +1,999 @@
 #include "gevennement.h"
 #include "ui_gevennement.h"
-#include "connection.h"
-#include <QMessageBox> // For showing error messages
 #include <QSqlQuery>
 #include <QSqlQueryModel>
-#include <QDebug>
-#include <QSqlError>
+#include <QMessageBox>
 #include <QStandardItemModel>
-#include <QStandardItem>
-
-#include <QtCharts> // Include Qt Charts
-
-#include <QPrinter>       // For PDF generation
-#include <QPainter>       // For drawing on the PDF
-#include <QFileDialog>    // For file save dialog
-#include <QDateTime>      // For adding a timestamp to the PDF
-
+#include <QFileDialog>
+#include <QtCharts/QChartView>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QPieSlice>
+#include <QSqlError>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QQuickWidget>
+#include <QQuickItem>
+#include <QHBoxLayout>
+#include <QDebug>
+#include <QGeoPositionInfoSource>
+#include <QGeoServiceProvider>
+#include <QRegularExpression>
 
 GEvennement::GEvennement(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::GEvennement), model(new QSqlQueryModel(this))
+    , ui(new Ui::GEvennement)
+    , mapWidget(nullptr)
 {
     ui->setupUi(this);
-
-    // Create a Connection object to verify the database connection
-    Connection conn;
-
-    // Check if the database connection is successful
-    if (!conn.createconnect()) {
-        qDebug() << "Database connection failed!";
-        // Access the last error directly from the database connection
-        QMessageBox::critical(this, "Database Error", "Failed to connect to the database: " + QSqlDatabase::database().lastError().text());
-        return;  // Exit the constructor if the connection fails
-    }
-
-    // If the connection is successful, proceed to display the data in the list view
-    qDebug() << "Database connected successfully!";
-
-    // Call the method to show events from the database
-    showEvennements();
-
-    // Connect UI signals to slots
-    connect(ui->pushButton_Ajouter, SIGNAL(clicked()), this, SLOT(on_pushButton_Ajouter_clicked()));
-
-connect(ui->pushButton_Supprimer, &QPushButton::clicked, this, &GEvennement::on_pushButton_Supprimer_clicked);
-
-
-    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(on_listView_clicked(QModelIndex)));
-
-    connect(ui->searchBar, &QLineEdit::textChanged, this, &GEvennement::onSearchInitiated);
-    ui->comboBox_tri->addItem("Low to High");
-    ui->comboBox_tri->addItem("High to Low");
-    connect(ui->comboBox_tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GEvennement::onSortChanged);
-    connect(ui->pushButton_PDF, &QPushButton::clicked, this, &GEvennement::exportToPDF);
-
-
-    connect(ui->pushButton_Statistique, &QPushButton::clicked, this, &GEvennement::on_pushButton_Statistique_clicked);
-
-
+    setupUi();
+    
+    // Enregistrer les types QML nécessaires
+    qRegisterMetaType<QGeoCoordinate>();
+    
+    // Initialiser le modèle avec QStandardItemModel au lieu de QSqlQueryModel
+    model = new QStandardItemModel(this);
+    
+    // Afficher les événements au démarrage
+    populateLocatairesComboBox();
+    on_pushButton_Retreive_clicked();
 }
-
-
 
 GEvennement::~GEvennement()
 {
-    // Clean up any allocated memory or resources if needed
-    delete model;
     delete ui;
 }
 
-
-int GEvennement::countEvents() {
-    QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM EVENEMENTS");
-
-    if (query.exec() && query.next()) {
-        return query.value(0).toInt(); // Return the count of events
-    } else {
-        qDebug() << "Error counting events: " << query.lastError().text();
-        return -1; // Return -1 to indicate an error
-    }
+void GEvennement::on_pushButton_PDF_clicked()
+{
+    generatePDF();
 }
 
-
-
-void GEvennement::showEventsChart() {
-    int count = countEvents();
-    if (count < 0) {
-        QMessageBox::critical(this, "Error", "Failed to fetch events count.");
+void GEvennement::generatePDF()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, 
+        "Enregistrer le PDF", QString(), "Fichiers PDF (*.pdf)");
+    
+    if (fileName.isEmpty())
         return;
-    }
 
-    // Create a bar series and add the count
-    QBarSeries *series = new QBarSeries();
-    QBarSet *set = new QBarSet("Events");
-    *set << count; // Add the count to the bar set
-    series->append(set);
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    printer.setPageSize(QPageSize(QPageSize::A4));
 
-    // Create a chart and add the series
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Number of Events");
-    chart->setAnimationOptions(QChart::SeriesAnimations);
-
-    // Create axes
-    QBarCategoryAxis *axisX = new QBarCategoryAxis();
-    axisX->append("Events"); // X-axis label
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
-
-    QValueAxis *axisY = new QValueAxis();
-    axisY->setRange(0, count + 10); // Y-axis range (add some padding)
-    chart->addAxis(axisY, Qt::AlignLeft);
-    series->attachAxis(axisY);
-
-    // Create a chart view to display the chart
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-
-    // Create a new window to display the chart
-    QMainWindow *chartWindow = new QMainWindow();
-    chartWindow->setCentralWidget(chartView);
-    chartWindow->resize(800, 600);
-    chartWindow->show();
-}
-
-
-
-void GEvennement::showEvennements()
-{
-    qDebug() << "Fetching events data...";
+    QTextDocument doc;
+    QString html = "<h1 align='center'>Liste des Événements</h1>";
+    html += "<table width='100%' border='1' cellspacing='0'>";
+    html += "<tr bgcolor='#f0f0f0'>";
+    html += "<th>ID</th><th>Type</th><th>Nom</th><th>Date Début</th><th>Date Fin</th><th>Lieu</th><th>Capacité</th><th>Prix</th>";
+    html += "</tr>";
 
     QSqlQuery query;
-    query.prepare("SELECT ID_EVENT, NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX FROM EVENEMENTS");
-
-    // Execute the query
+    query.prepare("SELECT * FROM EVENEMENTS ORDER BY DATE_DEBUT");
+    
     if (query.exec()) {
-        qDebug() << "Query executed successfully!";
-
-        // Create a QStandardItemModel for QListView
-        QStandardItemModel *model = new QStandardItemModel();
-
-        // Loop through the query results and add each row to the model
         while (query.next()) {
-            // Create a string that combines the columns for this row
-            QString eventString = query.value(1).toString() + " | "   // NOM
-                                  + query.value(2).toString() + " | " // TYPE
-                                  + query.value(3).toDate().toString("yyyy-MM-dd") + " | " // DATE_DEBUT
-                                  + query.value(4).toDate().toString("yyyy-MM-dd") + " | " // DATE_FIN
-                                  + query.value(5).toString() + " | "  // LIEU
-                                  + QString::number(query.value(6).toInt()) + " | "  // CAPACITE
-                                  + QString::number(query.value(7).toFloat(), 'f', 2);  // PRIX
-
-            // Add the formatted string to the model as a new item
-            QStandardItem *item = new QStandardItem(eventString);
-            model->appendRow(item);
+            html += "<tr>";
+            html += "<td>" + query.value("IDENTIFIANT").toString() + "</td>";
+            html += "<td>" + query.value("TYPE").toString() + "</td>";
+            html += "<td>" + query.value("NOM").toString() + "</td>";
+            html += "<td>" + formatDate(query.value("DATE_DEBUT").toDateTime()) + "</td>";
+            html += "<td>" + formatDate(query.value("DATE_FIN").toDateTime()) + "</td>";
+            html += "<td>" + query.value("LIEU").toString() + "</td>";
+            html += "<td>" + query.value("CAPACITE").toString() + "</td>";
+            html += "<td>" + query.value("PRIX").toString() + "</td>";
+            html += "</tr>";
         }
-
-        // Set the model to the ListView widget
-        ui->listView->setModel(model);
-        qDebug() << "Setting model to listView...";
-
-    } else {
-        qDebug() << "Query failed: " << query.lastError().text();
-        QMessageBox::critical(this, "Error", "Failed to retrieve event data: " + query.lastError().text());
     }
+
+    html += "</table>";
+    doc.setHtml(html);
+    doc.print(&printer);
+
+    QMessageBox::information(this, "Succès", "Le PDF a été généré avec succès !");
 }
 
-void GEvennement::ajout(const QString& nom, const QString& capacite, const QString& type,
-                        const QString& prix, const QDate& dateDebut, const QDate& dateFin, const QString& lieu)
+QString GEvennement::formatDate(const QDateTime &date)
 {
-    QString errorMessage;
-
-    // Vérification que tous les champs sont remplis
-    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
-        errorMessage += "All fields must be filled.\n";
-    }
-
-    // Vérification que capacité et prix sont des nombres valides
-    bool okCapacite, okPrix;
-    int capaciteInt = capacite.toInt(&okCapacite);
-    double prixDouble = prix.toDouble(&okPrix);
-
-    if (!okCapacite || capaciteInt <= 0) {
-        errorMessage += "Capacity must be a valid positive number.\n";
-    }
-
-    if (!okPrix || prixDouble <= 0) {
-        errorMessage += "Price must be a valid positive number.\n";
-    }
-
-    // Vérification que la date de fin est après la date de début
-    if (dateFin <= dateDebut) {
-        errorMessage += "End date must be after the start date.\n";
-    }
-
-    // Vérification si l'événement existe déjà
-    QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT COUNT(*) FROM EVENEMENTS WHERE NOM = :nom AND DATE_DEBUT = :dateDebut");
-    checkQuery.bindValue(":nom", nom);
-    checkQuery.bindValue(":dateDebut", dateDebut.toString("yyyy-MM-dd"));
-
-    if (checkQuery.exec() && checkQuery.next() && checkQuery.value(0).toInt() > 0) {
-        errorMessage += "An event with this name and start date already exists.\n";
-    }
-
-    // Affichage unique des erreurs
-    if (!errorMessage.isEmpty()) {
-        //QMessageBox::warning(this, "Input Error", errorMessage);
-        return; // On arrête ici
-
-    }
-
-    // Insérer l'événement dans la base de données
-    QSqlQuery query;
-    query.prepare("INSERT INTO EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX) "
-                  "VALUES (:nom, :type, :dateDebut, :dateFin, :lieu, :capacite, :prix)");
-
-    query.bindValue(":nom", nom);
-    query.bindValue(":type", type);
-    query.bindValue(":dateDebut", dateDebut.toString("yyyy-MM-dd"));
-    query.bindValue(":dateFin", dateFin.toString("yyyy-MM-dd"));
-    query.bindValue(":lieu", lieu);
-    query.bindValue(":capacite", capaciteInt);
-    query.bindValue(":prix", prixDouble);
-
-    if (query.exec()) {
-        QMessageBox::information(this, "Success", "Event added successfully!");
-        showEvennements();
-    } else {
-        QMessageBox::critical(this, "Database Error", "Failed to add event to the database.");
-    }
+    return date.toString("dd/MM/yyyy hh:mm");
 }
 
+void GEvennement::setupUi()
+{
+    setWindowTitle("Gestion des Événements");
+    
+    // Appliquer les styles avec texte noir
+    setStyleSheet(R"(
+        QLineEdit, QDateEdit, QComboBox {
+            color: black;
+            font: 11pt "Segoe UI";
+            border: 2px solid gray;
+            border-radius: 10px;
+            padding: 0 8px;
+            background: white;
+            selection-background-color: darkgray;
+        }
+        QDateEdit::drop-down, QComboBox::drop-down {
+            subcontrol-origin: padding;
+            subcontrol-position: top right;
+            width: 20px;
+            border-left-width: 1px;
+            border-left-color: darkgray;
+            border-left-style: solid;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        QDateEdit::down-arrow, QComboBox::down-arrow {
+            image: url(:/icons/down_arrow.png);
+        }
+    )");
+}
+
+// Implémentation des slots manquants
+void GEvennement::on_pushButton_Employes_clicked()
+{
+    // Fonction vide pour le moment
+    QMessageBox::information(this, "Navigation", "Navigation vers la section Employés");
+}
+
+void GEvennement::on_pushButton_Boutiques_clicked()
+{
+    // Fonction vide pour le moment
+    QMessageBox::information(this, "Navigation", "Navigation vers la section Boutiques");
+}
 
 void GEvennement::on_pushButton_Ajouter_clicked()
 {
-    qDebug() << "on_pushButton_Ajouter_clicked called";
-
-    // Get the values from the input fields
-    QString nom = ui->line_NOMevent->text().trimmed();
-    QString capacite = ui->line_CAPACITEevent->text().trimmed();
-    QString type = ui->line_TYPEevent->text().trimmed();
-    QString prix = ui->line_PRIXevent->text().trimmed();
+    // Récupérer les données du formulaire
+    QString nom = ui->line_NOMevent->text();
+    QString capacite = ui->line_CAPACITEevent->text();
+    QString type = ui->line_TYPEevent->text();
+    QString prix = ui->line_PRIXevent->text();
     QDate dateDebut = ui->dateEditDebut->date();
     QDate dateFin = ui->dateEditFin->date();
-    QString lieu = ui->line_LIEU->text().trimmed();
-
-    // Call the ajout() method to insert the event
-    ajout(nom, capacite, type, prix, dateDebut, dateFin, lieu);
-    return;
-}
-
-
-
-
-
-void GEvennement::supprimer(const QString& nom)
-{
-    qDebug() << "supprimer method called with nom:" << nom;
-
-    // Check if the name is empty
-    if (nom.isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "Please enter a name to delete.");
+    QString lieu = ui->line_LIEU->text();
+    QString idLocataire = ui->comboBox_LOC->currentData().toString();
+    QString identifiant = ui->lineEdit_IDENTIFIANT->text();
+    
+    // Validation des données
+    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || 
+        idLocataire.isEmpty() || identifiant.isEmpty() || lieu.isEmpty()) {
+        QMessageBox::warning(this, "Attention", "Veuillez remplir tous les champs obligatoires.");
+        return;
+    }
+    
+    // Valider les dates
+    if (dateDebut > dateFin) {
+        QMessageBox::warning(this, "Erreur de date", "La date de début doit être antérieure à la date de fin.");
         return;
     }
 
-    // Prepare the DELETE query to remove the event by its name
-    QSqlQuery query;
-    query.prepare("DELETE FROM EVENEMENTS WHERE NOM = :nom");
-
-    // Bind the 'nom' parameter to the value passed to the function
-    query.bindValue(":nom", nom);
-
-    // Execute the query to delete the event
-    if (query.exec()) {
-        // Inform the user if the deletion was successful
-     //   QMessageBox::information(this, "Success", "Event deleted successfully.");
-
-        // Optionally, refresh the list view to show the updated event list
-        showEvennements();
+    // Vérifier si l'identifiant existe déjà
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT COUNT(*) FROM EVENEMENTS WHERE IDENTIFIANT = :id");
+    checkQuery.bindValue(":id", identifiant);
+    
+    if (checkQuery.exec() && checkQuery.next()) {
+        if (checkQuery.value(0).toInt() > 0) {
+            QMessageBox::warning(this, "Erreur", "Un événement avec cet identifiant existe déjà. Veuillez en choisir un autre.");
+            return;
+        }
+    }
+    
+    // Ajouter l'événement
+    if (E.ajout(nom, capacite, type, prix, dateDebut, dateFin, lieu, idLocataire, identifiant)) {
+        QMessageBox::information(this, "Succès", "Événement ajouté avec succès!");
+        
+        // Effacer les champs du formulaire
+        ui->line_NOMevent->clear();
+        ui->line_CAPACITEevent->clear();
+        ui->line_TYPEevent->clear();
+        ui->line_PRIXevent->clear();
+        ui->line_LIEU->clear();
+        ui->line_LOCATIONevent->clear();
+        ui->comboBox_LOC->setCurrentIndex(0);
+        ui->lineEdit_IDENTIFIANT->clear();
+        
+        // Actualiser la liste des événements
+        on_pushButton_Retreive_clicked();
     } else {
-        // If the query fails, show an error message with the error text
-        QMessageBox::critical(this, "Error", "Failed to delete the event: " + query.lastError().text());
+        QMessageBox::critical(this, "Erreur", "Échec de l'ajout de l'événement. Vérifiez vos données.");
     }
 }
 
 void GEvennement::on_pushButton_Supprimer_clicked()
 {
-    QString nom = ui->Line_DeleteID->text().trimmed(); // Get the name from the input field
-    supprimer(nom); // Call the supprimer method
-}
-
-
-
-
-void GEvennement::on_listView_clicked(const QModelIndex &index)
-{
-    // Get the full text of the selected item
-    QString selectedItem = ui->listView->model()->data(index).toString();
-
-    qDebug() << "Selected Item: " << selectedItem; // Debugging: output the selected item to check its format
-
-    // Assuming the selected item contains all the relevant columns (like NOM, TYPE, DATE_DEBUT, etc.)
-    QStringList itemData = selectedItem.split(" | ");
-
-    // Debugging: check the size and content of the split data
-    qDebug() << "Item Data Size: " << itemData.size();
-    for (const QString &data : itemData) {
-        qDebug() << "Data: " << data;
-    }
-
-    if (itemData.size() < 7) {
-        // Ensure we have all the expected fields
-        QMessageBox::warning(this, "Error", "Invalid selection format.");
+    // Vérifier si une ligne est sélectionnée
+    if (!ui->tableView->selectionModel()->hasSelection()) {
+        QMessageBox::warning(this, "Attention", "Veuillez sélectionner un événement à supprimer.");
         return;
     }
-
-    // Extract the event's details from the selected item
-    QString nom = itemData.at(0); // NOM (first column)
-    QString type = itemData.at(1); // TYPE (second column)
-    QString dateDebut = itemData.at(2); // DATE_DEBUT (third column)
-    QString dateFin = itemData.at(3); // DATE_FIN (fourth column)
-    QString lieu = itemData.at(4); // LIEU (fifth column)
-    QString capacite = itemData.at(5); // CAPACITE (sixth column)
-    QString prix = itemData.at(6); // PRIX (seventh column)
-
-    // Debugging: check if the extracted data is correct
-    qDebug() << "Extracted Data:";
-    qDebug() << "Nom: " << nom;
-    qDebug() << "Type: " << type;
-    qDebug() << "Date Debut: " << dateDebut;
-    qDebug() << "Date Fin: " << dateFin;
-    qDebug() << "Lieu: " << lieu;
-    qDebug() << "Capacite: " << capacite;
-    qDebug() << "Prix: " << prix;
-
-    // Now, populate the input fields with the selected event data
-    ui->line_NOMevent->setText(nom);
-    ui->line_TYPEevent->setText(type);
-    ui->dateEditDebut->setDate(QDate::fromString(dateDebut, "yyyy-MM-dd"));
-    ui->dateEditFin->setDate(QDate::fromString(dateFin, "yyyy-MM-dd"));
-    ui->line_LIEU->setText(lieu);
-    ui->line_CAPACITEevent->setText(capacite);
-    ui->line_PRIXevent->setText(prix);
-
-    // Store the selected event's name or any unique identifier (e.g., NOM) for further use (e.g., for updating)
-    selectedEventNom = nom; // Save the selected event's NOM to use it in the modification/update process
-}
-
-void GEvennement::modifier(const QString& nom, const QString& capacite, const QString& type,
-                           const QString& prix, const QDate& dateDebut, const QDate& dateFin, const QString& lieu)
-{
-    // Prepare the SQL query to update the event in the database
-    QSqlQuery query;
-    query.prepare("UPDATE EVENEMENTS SET NOM = :nom, TYPE = :type, DATE_DEBUT = TO_DATE(:date_debut, 'YYYY-MM-DD'), "
-                  "DATE_FIN = TO_DATE(:date_fin, 'YYYY-MM-DD'), LIEU = :lieu, CAPACITE = :capacite, PRIX = :prix "
-                  "WHERE NOM = :selected_nom");
-
-    // Bind the values to the query
-    query.bindValue(":nom", nom);
-    query.bindValue(":type", type);
-    query.bindValue(":date_debut", dateDebut.toString("yyyy-MM-dd"));
-    query.bindValue(":date_fin", dateFin.toString("yyyy-MM-dd"));
-    query.bindValue(":lieu", lieu);
-    query.bindValue(":capacite", capacite.toInt());
-    query.bindValue(":prix", prix.toFloat());
-    query.bindValue(":selected_nom", nom); // Assuming you're modifying by the original name
-
-    // Execute the query to update the event in the database
-    if (query.exec()) {
-        QMessageBox::information(this, "Success", "Event updated successfully.");
-        showEvennements();  // Refresh the event list to reflect the changes
-    } else {
-        QMessageBox::critical(this, "Error", "Failed to update the event: " + query.lastError().text());
+    
+    // Récupérer le nom de l'événement sélectionné
+    int row = ui->tableView->selectionModel()->currentIndex().row();
+    QString nom = model->index(row, 0).data().toString();
+    
+    // Confirmation de suppression
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Confirmation", 
+        QString("Êtes-vous sûr de vouloir supprimer l'événement '%1' ?").arg(nom),
+        QMessageBox::Yes | QMessageBox::No);
+    
+    if (reply == QMessageBox::Yes) {
+        // Supprimer l'événement
+        if (E.supprimer(nom, ui->tableView)) {
+            // La fonction supprimer met déjà à jour l'affichage et affiche un message de succès
+            // Effacer les champs du formulaire
+            ui->line_NOMevent->clear();
+            ui->line_CAPACITEevent->clear();
+            ui->line_TYPEevent->clear();
+            ui->line_PRIXevent->clear();
+            ui->line_LIEU->clear();
+            ui->comboBox_LOC->setCurrentIndex(0);
+            ui->lineEdit_IDENTIFIANT->clear();
+        }
     }
 }
 
 void GEvennement::on_pushButton_Modifier_clicked()
 {
-    // Get the values from the input fields
-    QString nom = ui->line_NOMevent->text().trimmed();
-    QString capacite = ui->line_CAPACITEevent->text().trimmed();
-    QString type = ui->line_TYPEevent->text().trimmed();
-    QString prix = ui->line_PRIXevent->text().trimmed();
+    // Vérifier si une ligne est sélectionnée
+    if (!ui->tableView->selectionModel()->hasSelection()) {
+        QMessageBox::warning(this, "Attention", "Veuillez sélectionner un événement à modifier.");
+        return;
+    }
+    
+    // Récupérer le nom de l'événement sélectionné
+    int row = ui->tableView->selectionModel()->currentIndex().row();
+    QString nomActuel = model->index(row, 0).data().toString();
+    
+    // Récupérer les données du formulaire
+    QString nouveauNom = ui->line_NOMevent->text();
+    QString capacite = ui->line_CAPACITEevent->text();
+    QString type = ui->line_TYPEevent->text();
+    QString prix = ui->line_PRIXevent->text();
     QDate dateDebut = ui->dateEditDebut->date();
     QDate dateFin = ui->dateEditFin->date();
-    QString lieu = ui->line_LIEU->text().trimmed();
-
-    // Check if the required fields are not empty
-    if (nom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || lieu.isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "Please fill in all fields to modify the event.");
+    QString lieu = ui->line_LIEU->text();
+    QString idLocataire = ui->comboBox_LOC->currentData().toString();
+    
+    // Validation des données
+    if (nouveauNom.isEmpty() || capacite.isEmpty() || type.isEmpty() || prix.isEmpty() || 
+        idLocataire.isEmpty() || lieu.isEmpty()) {
+        QMessageBox::warning(this, "Attention", "Veuillez remplir tous les champs obligatoires.");
+        return;
+    }
+    
+    // Valider les dates
+    if (dateDebut > dateFin) {
+        QMessageBox::warning(this, "Erreur de date", "La date de début doit être antérieure à la date de fin.");
         return;
     }
 
-    // Call the modifier() method with the updated values
-    modifier(nom, capacite, type, prix, dateDebut, dateFin, lieu);
+    // Valider le format des données numériques
+    bool ok;
+    capacite.toInt(&ok);
+    if (!ok) {
+        QMessageBox::warning(this, "Erreur de format", "La capacité doit être un nombre entier.");
+        return;
+    }
+
+    prix.toDouble(&ok);
+    if (!ok) {
+        QMessageBox::warning(this, "Erreur de format", "Le prix doit être un nombre valide.");
+        return;
+    }
+    
+    // Confirmation de modification
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Confirmation", 
+        "Êtes-vous sûr de vouloir modifier cet événement ?",
+        QMessageBox::Yes | QMessageBox::No);
+    
+    if (reply == QMessageBox::Yes) {
+        // Modifier l'événement
+        if (E.modifier(nomActuel, nouveauNom, capacite, type, prix, dateDebut, dateFin, lieu, idLocataire)) {
+            QMessageBox::information(this, "Succès", "Événement modifié avec succès!");
+            
+            // Actualiser la liste des événements
+            on_pushButton_Retreive_clicked();
+            
+            // Effacer les champs du formulaire
+            ui->line_NOMevent->clear();
+            ui->line_CAPACITEevent->clear();
+            ui->line_TYPEevent->clear();
+            ui->line_PRIXevent->clear();
+            ui->line_LIEU->clear();
+            ui->comboBox_LOC->setCurrentIndex(0);
+            ui->lineEdit_IDENTIFIANT->clear();
+        }
+    }
 }
 
-
-void GEvennement::onSearchInitiated()
+void GEvennement::on_pushButton_Modifier_2_clicked()
 {
-    // Get the text from the search bar for the event name (NOM)
-    QString nom = ui->searchBar->text();  // Assuming you have a search bar for NOM (QLineEdit)
-
-    // Prepare the SQL query to search by NOM
-    QString queryStr = "SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX "
-                       "FROM EVENEMENTS "
-                       "WHERE NOM LIKE :nom";  // Search by NOM
-
-    QSqlQuery query;
-    query.prepare(queryStr);
-    query.bindValue(":nom", nom.isEmpty() ? "%" : "%" + nom + "%");  // Use LIKE for partial matching
-
-    if (!query.exec()) {
-        qDebug() << "Query failed:" << query.lastError();
-        return;
-    }
-
-    // Create a QStandardItemModel to display the results in the listView
-    QStandardItemModel *model = new QStandardItemModel();
-
-    // Loop through the query results and add each row to the model
-    while (query.next()) {
-        QString eventString = query.value(0).toString() + " | "  // NOM
-                              + query.value(1).toString() + " | "  // TYPE
-                              + query.value(2).toString() + " | "  // DATE_DEBUT
-                              + query.value(3).toString() + " | "  // DATE_FIN
-                              + query.value(4).toString() + " | "  // LIEU
-                              + query.value(5).toString() + " | "  // CAPACITE
-                              + query.value(6).toString();         // PRIX
-
-        // Add the formatted event string to the model as a new item
-        QStandardItem *item = new QStandardItem(eventString);
-        model->appendRow(item);
-    }
-
-    // Set the model to the ListView widget
-    ui->listView->setModel(model);
-    qDebug() << "Setting model to listView...";
+    // Afficher les statistiques
+    showPieChartDialog();
 }
 
-
-void GEvennement::onSortChanged(int index)
+void GEvennement::on_pushButton_Modifier_3_clicked()
 {
-    // Determine the sort order based on the selected item
-    QString sortOrder = (index == 0) ? "ASC" : "DESC";  // "Low to High" is ASC, "High to Low" is DESC
-
-    // Prepare the SQL query to sort by CAPACITE
-    QString queryStr = QString("SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX "
-                               "FROM EVENEMENTS "
-                               "ORDER BY CAPACITE %1").arg(sortOrder);  // Sorting by CAPACITE
-
-    QSqlQuery query;
-    if (!query.exec(queryStr)) {
-        qDebug() << "Query failed:" << query.lastError();
-        return;
-    }
-
-    // Create a QStandardItemModel to display the sorted results
-    QStandardItemModel *model = new QStandardItemModel();
-
-    // Loop through the query results and add each row to the model
-    while (query.next()) {
-        QString eventString = query.value(0).toString() + " | "  // NOM
-                              + query.value(1).toString() + " | "  // TYPE
-                              + query.value(2).toString() + " | "  // DATE_DEBUT
-                              + query.value(3).toString() + " | "  // DATE_FIN
-                              + query.value(4).toString() + " | "  // LIEU
-                              + query.value(5).toString() + " | "  // CAPACITE
-                              + query.value(6).toString();         // PRIX
-
-        // Add the formatted event string to the model as a new item
-        QStandardItem *item = new QStandardItem(eventString);
-        model->appendRow(item);
-    }
-
-    // Set the model to the ListView widget
-    ui->listView->setModel(model);
-    qDebug() << "Setting sorted model to listView...";
+    // Générer le PDF
+    generatePDF();
 }
 
-
-void GEvennement::exportToPDF() {
-    // Open a file dialog to choose the save location and file name
-    QString fileName = QFileDialog::getSaveFileName(this, "Export PDF", "", "PDF Files (*.pdf)");
-    if (fileName.isEmpty()) {
-        QMessageBox::warning(this, "Error", "No file name specified.");
-        return;
-    }
-
-    // Create a QPrinter object to handle PDF generation
-    QPrinter printer(QPrinter::PrinterResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(fileName);
-
-    // Create a QPainter object to draw on the PDF
-    QPainter painter;
-    if (!painter.begin(&printer)) {
-        QMessageBox::warning(this, "Error", "Could not create PDF file.");
-        return;
-    }
-
-    // Set up fonts
-    QFont titleFont = painter.font();
-    titleFont.setPointSize(18);
-    titleFont.setBold(true);
-
-    QFont headerFont = painter.font();
-    headerFont.setPointSize(12);
-    headerFont.setBold(true);
-
-    QFont dataFont = painter.font();
-    dataFont.setPointSize(10);
-
-    // Define margins and spacing
-    int margin = 50;
-    int yPos = margin;
-    int lineHeight = 20;
-    int columnWidth = 100;
-
-    // Draw the title
-    painter.setFont(titleFont);
-    painter.drawText(margin, yPos, "Events Report");
-    yPos += lineHeight * 2;
-
-    // Draw the table headers
-    painter.setFont(headerFont);
-    painter.drawText(margin, yPos, "Name");
-    painter.drawText(margin + columnWidth, yPos, "Type");
-    painter.drawText(margin + 2 * columnWidth, yPos, "Start Date");
-    painter.drawText(margin + 3 * columnWidth, yPos, "End Date");
-    painter.drawText(margin + 4 * columnWidth, yPos, "Location");
-    painter.drawText(margin + 5 * columnWidth, yPos, "Capacity");
-    painter.drawText(margin + 6 * columnWidth, yPos, "Price");
-    yPos += lineHeight;
-
-    // Draw a line under the headers
-    painter.drawLine(margin, yPos, margin + 7 * columnWidth, yPos);
-    yPos += lineHeight;
-
-    // Fetch data from the database
-    QSqlQuery query;
-    query.prepare("SELECT NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX FROM EVENEMENTS");
-    if (!query.exec()) {
-        QMessageBox::critical(this, "Database Error", "Failed to fetch data: " + query.lastError().text());
-        return;
-    }
-
-    // Draw the data rows
-    painter.setFont(dataFont);
-    while (query.next()) {
-        QString nom = query.value(0).toString(); // NOM
-        QString type = query.value(1).toString(); // TYPE
-        QString dateDebut = query.value(2).toDate().toString("yyyy-MM-dd"); // DATE_DEBUT
-        QString dateFin = query.value(3).toDate().toString("yyyy-MM-dd"); // DATE_FIN
-        QString lieu = query.value(4).toString(); // LIEU
-        QString capacite = QString::number(query.value(5).toInt()); // CAPACITE
-        QString prix = QString::number(query.value(6).toDouble(), 'f', 2); // PRIX
-
-        // Draw each column
-        painter.drawText(margin, yPos, nom);
-        painter.drawText(margin + columnWidth, yPos, type);
-        painter.drawText(margin + 2 * columnWidth, yPos, dateDebut);
-        painter.drawText(margin + 3 * columnWidth, yPos, dateFin);
-        painter.drawText(margin + 4 * columnWidth, yPos, lieu);
-        painter.drawText(margin + 5 * columnWidth, yPos, capacite);
-        painter.drawText(margin + 6 * columnWidth, yPos, prix);
-
-        // Move to the next line
-        yPos += lineHeight;
-
-        // Draw a line between rows
-        painter.drawLine(margin, yPos, margin + 7 * columnWidth, yPos);
-        yPos += lineHeight;
-    }
-
-    // End the painting process
-    painter.end();
-
-    // Notify the user that the PDF has been created
-    QMessageBox::information(this, "Success", "PDF exported successfully to " + fileName);
-}
-
-
-
-void GEvennement::on_pushButton_Statistique_clicked()
+void GEvennement::on_pushButton_Rechercher_clicked()
 {
-    showEventsChart();
-
+    // Récupérer le texte de recherche
+    QString searchText = ui->lineEdit_Recherche->text();
+    
+    if (searchText.isEmpty()) {
+        // Si le champ de recherche est vide, afficher tous les événements
+        on_pushButton_Retreive_clicked();
+        return;
+    }
+    
+    // Recherche par identifiant, nom ou type
+    QSqlQuery query;
+    query.prepare("SELECT * FROM EYK.EVENEMENTS "
+                 "WHERE IDENTIFIANT LIKE :search OR NOM LIKE :search OR TYPE LIKE :search "
+                 "ORDER BY NOM");
+    query.bindValue(":search", "%" + searchText + "%");
+    
+    if (query.exec()) {
+        // Créer un nouveau modèle
+        QStandardItemModel *newModel = new QStandardItemModel(ui->tableView);
+        
+        // Configuration des en-têtes
+        QStringList headers;
+        headers << "Nom" << "Type" << "Date Début" << "Date Fin" << "Lieu" << "Capacité" << "Prix" << "Locataire" << "Identifiant";
+        newModel->setHorizontalHeaderLabels(headers);
+        
+        // Variables pour stocker l'ID du locataire
+        QMap<QString, QString> locataireNames;
+        
+        // Récupérer les noms des locataires
+        QSqlQuery locQuery("SELECT ID_LOCATAIRE, NOM FROM EYK.LOCATAIRES");
+        while (locQuery.next()) {
+            locataireNames[locQuery.value("ID_LOCATAIRE").toString()] = locQuery.value("NOM").toString();
+        }
+        
+        // Remplir le modèle avec les résultats de la recherche
+        int row = 0;
+        while (query.next()) {
+            QList<QStandardItem*> rowItems;
+            
+            // Création des items dans l'ordre demandé
+            rowItems << new QStandardItem(query.value("NOM").toString())
+                    << new QStandardItem(query.value("TYPE").toString())
+                    << new QStandardItem(query.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("DATE_FIN").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("LIEU").toString())
+                    << new QStandardItem(query.value("CAPACITE").toString())
+                    << new QStandardItem(query.value("PRIX").toString());
+            
+            // Ajouter le nom du locataire
+            QString idLocataire = query.value("ID_LOCATAIRE").toString();
+            QString nomLocataire = locataireNames.value(idLocataire, "Inconnu");
+            rowItems << new QStandardItem(nomLocataire);
+            
+            // Ajouter l'identifiant
+            rowItems << new QStandardItem(query.value("IDENTIFIANT").toString());
+            
+            // Configuration des items
+            for(int col = 0; col < rowItems.size(); ++col) {
+                rowItems[col]->setTextAlignment(Qt::AlignCenter);
+                rowItems[col]->setEditable(false);
+                newModel->setItem(row, col, rowItems[col]);
+            }
+            row++;
+        }
+        
+        // Supprimer l'ancien modèle et définir le nouveau
+        if (model) {
+            delete model;
+        }
+        model = newModel;
+        ui->tableView->setModel(model);
+        
+        // Définir une largeur spécifique pour chaque colonne
+        QList<int> columnWidths = {150, 100, 100, 100, 150, 80, 80, 150, 100};
+        for(int col = 0; col < columnWidths.size() && col < model->columnCount(); ++col) {
+            ui->tableView->setColumnWidth(col, columnWidths[col]);
+        }
+        
+        // Configuration supplémentaire du tableau
+        ui->tableView->setSortingEnabled(true);
+        ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->tableView->setAlternatingRowColors(true);
+        
+        qDebug() << "Recherche terminée avec" << row << "résultats pour" << searchText;
+    } else {
+        QMessageBox::critical(this, "Erreur", "Échec de la recherche: " + query.lastError().text());
+    }
 }
 
+void GEvennement::on_pushButton_TriType_clicked()
+{
+    // Trier par type d'événement
+    QSqlQuery query;
+    query.prepare("SELECT * FROM EYK.EVENEMENTS ORDER BY TYPE");
+    
+    if (query.exec()) {
+        // Créer un nouveau modèle
+        QStandardItemModel *newModel = new QStandardItemModel(ui->tableView);
+        
+        // Configuration des en-têtes
+        QStringList headers;
+        headers << "Nom" << "Type" << "Date Début" << "Date Fin" << "Lieu" << "Capacité" << "Prix" << "Locataire" << "Identifiant";
+        newModel->setHorizontalHeaderLabels(headers);
+        
+        // Variables pour stocker l'ID du locataire
+        QMap<QString, QString> locataireNames;
+        
+        // Récupérer les noms des locataires
+        QSqlQuery locQuery("SELECT ID_LOCATAIRE, NOM FROM EYK.LOCATAIRES");
+        while (locQuery.next()) {
+            locataireNames[locQuery.value("ID_LOCATAIRE").toString()] = locQuery.value("NOM").toString();
+        }
+        
+        // Remplir le modèle avec les résultats triés
+        int row = 0;
+        while (query.next()) {
+            QList<QStandardItem*> rowItems;
+            
+            // Création des items dans l'ordre demandé
+            rowItems << new QStandardItem(query.value("NOM").toString())
+                    << new QStandardItem(query.value("TYPE").toString())
+                    << new QStandardItem(query.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("DATE_FIN").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("LIEU").toString())
+                    << new QStandardItem(query.value("CAPACITE").toString())
+                    << new QStandardItem(query.value("PRIX").toString());
+            
+            // Ajouter le nom du locataire
+            QString idLocataire = query.value("ID_LOCATAIRE").toString();
+            QString nomLocataire = locataireNames.value(idLocataire, "Inconnu");
+            rowItems << new QStandardItem(nomLocataire);
+            
+            // Ajouter l'identifiant
+            rowItems << new QStandardItem(query.value("IDENTIFIANT").toString());
+            
+            // Configuration des items
+            for(int col = 0; col < rowItems.size(); ++col) {
+                rowItems[col]->setTextAlignment(Qt::AlignCenter);
+                rowItems[col]->setEditable(false);
+                newModel->setItem(row, col, rowItems[col]);
+            }
+            row++;
+        }
+        
+        // Supprimer l'ancien modèle et définir le nouveau
+        if (model) {
+            delete model;
+        }
+        model = newModel;
+        ui->tableView->setModel(model);
+        
+        // Définir une largeur spécifique pour chaque colonne
+        QList<int> columnWidths = {150, 100, 100, 100, 150, 80, 80, 150, 100};
+        for(int col = 0; col < columnWidths.size() && col < model->columnCount(); ++col) {
+            ui->tableView->setColumnWidth(col, columnWidths[col]);
+        }
+        
+        // Configuration supplémentaire du tableau
+        ui->tableView->setSortingEnabled(true);
+        ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->tableView->setAlternatingRowColors(true);
+        
+        qDebug() << "Tri par TYPE terminé avec" << row << "événements.";
+    } else {
+        QMessageBox::critical(this, "Erreur", "Échec du tri: " + query.lastError().text());
+    }
+}
+
+void GEvennement::on_pushButton_TriDate_clicked()
+{
+    // Trier par date d'événement
+    QSqlQuery query;
+    query.prepare("SELECT * FROM EYK.EVENEMENTS ORDER BY DATE_DEBUT");
+    
+    if (query.exec()) {
+        // Créer un nouveau modèle
+        QStandardItemModel *newModel = new QStandardItemModel(ui->tableView);
+        
+        // Configuration des en-têtes
+        QStringList headers;
+        headers << "Nom" << "Type" << "Date Début" << "Date Fin" << "Lieu" << "Capacité" << "Prix" << "Locataire" << "Identifiant";
+        newModel->setHorizontalHeaderLabels(headers);
+        
+        // Variables pour stocker l'ID du locataire
+        QMap<QString, QString> locataireNames;
+        
+        // Récupérer les noms des locataires
+        QSqlQuery locQuery("SELECT ID_LOCATAIRE, NOM FROM EYK.LOCATAIRES");
+        while (locQuery.next()) {
+            locataireNames[locQuery.value("ID_LOCATAIRE").toString()] = locQuery.value("NOM").toString();
+        }
+        
+        // Remplir le modèle avec les résultats triés
+        int row = 0;
+        while (query.next()) {
+            QList<QStandardItem*> rowItems;
+            
+            // Création des items dans l'ordre demandé
+            rowItems << new QStandardItem(query.value("NOM").toString())
+                    << new QStandardItem(query.value("TYPE").toString())
+                    << new QStandardItem(query.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("DATE_FIN").toDate().toString("dd/MM/yyyy"))
+                    << new QStandardItem(query.value("LIEU").toString())
+                    << new QStandardItem(query.value("CAPACITE").toString())
+                    << new QStandardItem(query.value("PRIX").toString());
+            
+            // Ajouter le nom du locataire
+            QString idLocataire = query.value("ID_LOCATAIRE").toString();
+            QString nomLocataire = locataireNames.value(idLocataire, "Inconnu");
+            rowItems << new QStandardItem(nomLocataire);
+            
+            // Ajouter l'identifiant
+            rowItems << new QStandardItem(query.value("IDENTIFIANT").toString());
+            
+            // Configuration des items
+            for(int col = 0; col < rowItems.size(); ++col) {
+                rowItems[col]->setTextAlignment(Qt::AlignCenter);
+                rowItems[col]->setEditable(false);
+                newModel->setItem(row, col, rowItems[col]);
+            }
+            row++;
+        }
+        
+        // Supprimer l'ancien modèle et définir le nouveau
+        if (model) {
+            delete model;
+        }
+        model = newModel;
+        ui->tableView->setModel(model);
+        
+        // Définir une largeur spécifique pour chaque colonne
+        QList<int> columnWidths = {150, 100, 100, 100, 150, 80, 80, 150, 100};
+        for(int col = 0; col < columnWidths.size() && col < model->columnCount(); ++col) {
+            ui->tableView->setColumnWidth(col, columnWidths[col]);
+        }
+        
+        // Configuration supplémentaire du tableau
+        ui->tableView->setSortingEnabled(true);
+        ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->tableView->setAlternatingRowColors(true);
+        
+        qDebug() << "Tri par DATE_DEBUT terminé avec" << row << "événements.";
+    } else {
+        QMessageBox::critical(this, "Erreur", "Échec du tri: " + query.lastError().text());
+    }
+}
+
+void GEvennement::on_pushButton_Retreive_clicked()
+{
+    // Utiliser la fonction showEvennements de la classe Evennement pour afficher tous les événements
+    E.showEvennements(ui->tableView);
+    
+    // Nous n'utilisons plus QSqlQueryModel mais QStandardItemModel
+    // Le cast est donc différent
+    model = qobject_cast<QStandardItemModel*>(ui->tableView->model());
+}
+
+void GEvennement::on_tableView_clicked(const QModelIndex &index)
+{
+    // Récupérer les données de la ligne sélectionnée
+    if (index.isValid()) {
+        int row = index.row();
+        
+        // Obtenir le modèle et vérifier son type
+        QAbstractItemModel *currentModel = ui->tableView->model();
+        if (!currentModel) {
+            qDebug() << "Erreur: Aucun modèle associé au tableView";
+            return;
+        }
+        
+        // L'ordre des colonnes est: Nom, Type, Date Début, Date Fin, Lieu, Capacité, Prix, Locataire, Identifiant
+        
+        try {
+            // Récupérer le nom pour la modification/suppression (première colonne)
+            QString nom = currentModel->index(row, 0).data().toString();
+            selectedEventNom = nom;
+            
+            // Remplir les champs du formulaire avec les données
+            ui->line_NOMevent->setText(currentModel->index(row, 0).data().toString()); // Nom
+            ui->line_TYPEevent->setText(currentModel->index(row, 1).data().toString()); // Type
+            
+            // Convertir les dates
+            QVariant dateDebutValue = currentModel->index(row, 2).data();
+            QVariant dateFinValue = currentModel->index(row, 3).data();
+            
+            QDate dateDebut = dateDebutValue.toDate();
+            QDate dateFin = dateFinValue.toDate();
+            
+            if (dateDebut.isValid()) {
+                ui->dateEditDebut->setDate(dateDebut);
+            } else {
+                // Essayer de parser manuellement
+                QString dateStr = dateDebutValue.toString();
+                QDate parsedDate = QDate::fromString(dateStr, "dd/MM/yyyy");
+                if (parsedDate.isValid()) {
+                    ui->dateEditDebut->setDate(parsedDate);
+                }
+            }
+            
+            if (dateFin.isValid()) {
+                ui->dateEditFin->setDate(dateFin);
+            } else {
+                // Essayer de parser manuellement
+                QString dateStr = dateFinValue.toString();
+                QDate parsedDate = QDate::fromString(dateStr, "dd/MM/yyyy");
+                if (parsedDate.isValid()) {
+                    ui->dateEditFin->setDate(parsedDate);
+                }
+            }
+            
+            ui->line_LIEU->setText(currentModel->index(row, 4).data().toString()); // Lieu
+            ui->line_CAPACITEevent->setText(currentModel->index(row, 5).data().toString()); // Capacité
+            ui->line_PRIXevent->setText(currentModel->index(row, 6).data().toString()); // Prix
+            
+            // Identifiant est dans la dernière colonne (8)
+            QString identifiant = currentModel->index(row, 8).data().toString();
+            ui->lineEdit_IDENTIFIANT->setText(identifiant);
+            
+            // Locataire est dans la colonne 7
+            QString locataireName = currentModel->index(row, 7).data().toString();
+            
+            // Rechercher dans le combobox par nom
+            int comboIndex = ui->comboBox_LOC->findText(locataireName);
+            if (comboIndex != -1) {
+                ui->comboBox_LOC->setCurrentIndex(comboIndex);
+            }
+            
+            qDebug() << "Ligne sélectionnée:" << row 
+                    << "Nom:" << nom 
+                    << "Type:" << ui->line_TYPEevent->text() 
+                    << "Identifiant:" << identifiant;
+        }
+        catch (const std::exception& e) {
+            qDebug() << "Exception lors de l'accès aux données:" << e.what();
+        }
+    }
+}
+
+void GEvennement::on_lineEdit_Recherche_textChanged(const QString &text)
+{
+    // Recherche dynamique quand le texte change
+    if (text.isEmpty()) {
+        // Si le champ est vide, afficher tous les événements
+        on_pushButton_Retreive_clicked();
+    } else {
+        // Sinon, effectuer la recherche
+        on_pushButton_Rechercher_clicked();
+    }
+}
+
+void GEvennement::on_pushButton_Dashboard_clicked()
+{
+    showPieChartDialog();
+}
+
+void GEvennement::on_pushButton_Locataires_clicked()
+{
+    // Navigation vers la section Locataires
+    QMessageBox::information(this, "Navigation", "Navigation vers la section Locataires");
+}
+
+void GEvennement::on_pushButton_Services_clicked()
+{
+    // Navigation vers la section Services
+    QMessageBox::information(this, "Navigation", "Navigation vers la section Services");
+}
+
+void GEvennement::on_pushButton_Evennements_clicked()
+{
+    // Actualiser la page des événements
+    on_pushButton_Retreive_clicked();
+}
+
+void GEvennement::on_pushButton_deconnecter_clicked()
+{
+    // Déconnexion
+    QMessageBox::information(this, "Déconnexion", "À bientôt!");
+    close();
+}
+
+void GEvennement::populateLocatairesComboBox()
+{
+    // Remplir le combobox des locataires
+    ui->comboBox_LOC->clear();
+    
+    QSqlQuery query;
+    query.prepare("SELECT ID_LOCATAIRE, NOM FROM EYK.LOCATAIRES ORDER BY NOM");
+    
+    if (query.exec()) {
+        while (query.next()) {
+            QString id = query.value("ID_LOCATAIRE").toString();
+            QString nom = query.value("NOM").toString();
+            ui->comboBox_LOC->addItem(nom, id);
+        }
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible de charger la liste des locataires: " + query.lastError().text());
+    }
+}
+
+QChart *GEvennement::createPieChart()
+{
+    QSqlQuery query;
+    query.prepare("SELECT TYPE, COUNT(*) as COUNT FROM EYK.EVENEMENTS GROUP BY TYPE");
+    
+    QPieSeries *series = new QPieSeries();
+    
+    if (query.exec()) {
+        while (query.next()) {
+            QString type = query.value("TYPE").toString();
+            int count = query.value("COUNT").toInt();
+            
+            QPieSlice *slice = series->append(type + " (" + QString::number(count) + ")", count);
+            slice->setLabelVisible(true);
+            slice->setLabelPosition(QPieSlice::LabelOutside);
+            
+            // Couleurs vives et distinctes pour chaque type
+            if (type.contains("Conférence", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#E74C3C"));  // Rouge vif
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Concert", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#3498DB"));  // Bleu électrique
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Exposition", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#2ECC71"));  // Vert émeraude
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Séminaire", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#F1C40F"));  // Jaune soleil
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Formation", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#9B59B6"));  // Violet royal
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Spectacle", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#E67E22"));  // Orange vif
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Festival", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#16A085"));  // Turquoise foncé
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else if (type.contains("Atelier", Qt::CaseInsensitive)) {
+                slice->setColor(QColor("#8E44AD"));  // Violet profond
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            } else {
+                slice->setColor(QColor("#34495E"));  // Gris bleuté
+                slice->setBorderColor(Qt::white);
+                slice->setBorderWidth(2);
+            }
+            
+            // Effet d'explosion au clic
+            connect(slice, &QPieSlice::clicked, [=]() {
+                if (slice->isExploded()) {
+                    slice->setExploded(false);
+                } else {
+                    slice->setExploded(true);
+                }
+            });
+            
+            // Effet de survol
+            connect(slice, &QPieSlice::hovered, [=](bool show) {
+                if (show) {
+                    slice->setLabelVisible(true);
+                    slice->setExploded(true);
+                } else {
+                    slice->setExploded(false);
+                }
+            });
+        }
+    }
+    
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Répartition des événements par type");
+    chart->legend()->setAlignment(Qt::AlignRight);
+    chart->setAnimationOptions(QChart::AllAnimations);
+    chart->setBackgroundBrush(QColor("#FFFFFF"));  // Fond blanc
+    
+    return chart;
+}
+
+void GEvennement::showPieChartDialog()
+{
+    // Afficher le graphique dans une boîte de dialogue
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Statistiques des Événements");
+    dialog->setMinimumSize(600, 400);
+    
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    
+    QChartView *chartView = new QChartView(createPieChart(), dialog);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    
+    layout->addWidget(chartView);
+    
+    QPushButton *closeButton = new QPushButton("Fermer", dialog);
+    connect(closeButton, &QPushButton::clicked, dialog, &QDialog::accept);
+    
+    layout->addWidget(closeButton);
+    
+    dialog->setLayout(layout);
+    dialog->exec();
+}
+
+void GEvennement::exportToPDF(const QModelIndex &index)
+{
+    // Fonction pour exporter les détails d'un événement individuel en PDF
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un événement.");
+        return;
+    }
+    
+    int row = index.row();
+    QString identifiant = model->index(row, 0).data().toString();
+    
+    // Récupérer les détails de l'événement
+    QSqlQuery query;
+    query.prepare("SELECT * FROM EYK.EVENEMENTS WHERE IDENTIFIANT = :id");
+    query.bindValue(":id", identifiant);
+    
+    if (query.exec() && query.next()) {
+        QString fileName = QFileDialog::getSaveFileName(this, 
+            "Enregistrer le PDF", QString(), "Fichiers PDF (*.pdf)");
+        
+        if (fileName.isEmpty())
+            return;
+            
+        QPrinter printer(QPrinter::PrinterResolution);
+        printer.setOutputFormat(QPrinter::PdfFormat);
+        printer.setOutputFileName(fileName);
+        printer.setPageSize(QPageSize(QPageSize::A4));
+        
+        QTextDocument doc;
+        QString html = "<h1 align='center'>Détails de l'Événement</h1>";
+        html += "<p><strong>ID:</strong> " + query.value("IDENTIFIANT").toString() + "</p>";
+        html += "<p><strong>Nom:</strong> " + query.value("NOM").toString() + "</p>";
+        html += "<p><strong>Type:</strong> " + query.value("TYPE").toString() + "</p>";
+        html += "<p><strong>Capacité:</strong> " + query.value("CAPACITE").toString() + "</p>";
+        html += "<p><strong>Prix:</strong> " + query.value("PRIX").toString() + "</p>";
+        html += "<p><strong>Date Début:</strong> " + formatDate(query.value("DATE_DEBUT").toDateTime()) + "</p>";
+        html += "<p><strong>Date Fin:</strong> " + formatDate(query.value("DATE_FIN").toDateTime()) + "</p>";
+        html += "<p><strong>Lieu:</strong> " + query.value("LIEU").toString() + "</p>";
+        
+        doc.setHtml(html);
+        doc.print(&printer);
+        
+        QMessageBox::information(this, "Succès", "Le PDF a été généré avec succès !");
+    } else {
+        QMessageBox::critical(this, "Erreur", "Impossible de récupérer les détails de l'événement.");
+    }
+}
+
+void GEvennement::on_pushButton_Map_clicked()
+{
+    qDebug() << "Bouton Map cliqué";
+    
+    // Créer une boîte de dialogue pour la carte
+    QDialog *mapDialog = new QDialog(this);
+    mapDialog->setWindowTitle("Carte des événements");
+    mapDialog->setMinimumSize(800, 600);
+    
+    // Créer un layout vertical pour la boîte de dialogue
+    QVBoxLayout *layout = new QVBoxLayout(mapDialog);
+    
+    // Initialiser la carte dans la boîte de dialogue
+    QQuickWidget *dialogMapWidget = new QQuickWidget(mapDialog);
+    dialogMapWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+    
+    // Activer le débogage QML
+    QQmlEngine *engine = dialogMapWidget->engine();
+    engine->rootContext()->setContextProperty("debug", true);
+    
+    // Charger les événements depuis la base de données
+    QSqlQuery query;
+    query.prepare("SELECT IDENTIFIANT, NOM, TYPE, LIEU FROM EYK.EVENEMENTS");
+    
+    QVariantList events;
+    if (query.exec()) {
+        while (query.next()) {
+            QString lieu = query.value("LIEU").toString();
+            qDebug() << "Lieu trouvé:" << lieu;
+            // Extraire les coordonnées du format "Latitude: X, Longitude: Y"
+            QRegularExpression regex("Latitude: (-?\\d+\\.?\\d*), Longitude: (-?\\d+\\.?\\d*)");
+            QRegularExpressionMatch match = regex.match(lieu);
+            if (match.hasMatch()) {
+                double latitude = match.captured(1).toDouble();
+                double longitude = match.captured(2).toDouble();
+                
+                QVariantMap event;
+                event["id"] = query.value("IDENTIFIANT").toString();
+                event["nom"] = query.value("NOM").toString();
+                event["type"] = query.value("TYPE").toString();
+                event["latitude"] = latitude;
+                event["longitude"] = longitude;
+                events.append(event);
+                qDebug() << "Événement ajouté:" << event;
+            }
+        }
+    } else {
+        qDebug() << "Erreur de requête:" << query.lastError().text();
+    }
+    
+    qDebug() << "Nombre d'événements trouvés:" << events.size();
+    
+    // Définir la source QML
+    QUrl sourceUrl = QUrl("qrc:/map.qml");
+    qDebug() << "URL de la source QML:" << sourceUrl;
+    
+    // Passer les événements au contexte QML avant de charger le fichier
+    engine->rootContext()->setContextProperty("initialEvents", events);
+    
+    // Charger le fichier QML
+    dialogMapWidget->setSource(sourceUrl);
+    
+    // Vérifier les erreurs de chargement
+    if (dialogMapWidget->status() == QQuickWidget::Error) {
+        QString errors;
+        for (const QQmlError &error : dialogMapWidget->errors()) {
+            errors += error.toString() + "\n";
+            qDebug() << "Erreur QML:" << error.toString();
+        }
+        QMessageBox::critical(this, "Erreur", "Erreur lors du chargement de la carte:\n" + errors);
+        delete mapDialog;
+        return;
+    }
+    
+    // Passer les événements au QML
+    QQuickItem *rootObject = dialogMapWidget->rootObject();
+    if (rootObject) {
+        rootObject->setProperty("events", events);
+        connect(rootObject, SIGNAL(locationSelected(double,double)),
+                this, SLOT(onLocationSelected(double,double)));
+        qDebug() << "Signaux de la carte connectés avec succès";
+    } else {
+        qDebug() << "Erreur: Impossible de récupérer l'objet racine QML";
+        QMessageBox::warning(this, "Avertissement", "Impossible de connecter les signaux de la carte");
+    }
+    
+    // Ajouter la carte au layout
+    layout->addWidget(dialogMapWidget);
+    
+    // Ajouter des boutons
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QPushButton *okButton = new QPushButton("OK", mapDialog);
+    QPushButton *cancelButton = new QPushButton("Annuler", mapDialog);
+    
+    buttonLayout->addWidget(okButton);
+    buttonLayout->addWidget(cancelButton);
+    layout->addLayout(buttonLayout);
+    
+    // Connecter les boutons
+    connect(okButton, &QPushButton::clicked, mapDialog, &QDialog::accept);
+    connect(cancelButton, &QPushButton::clicked, mapDialog, &QDialog::reject);
+    
+    // Afficher la boîte de dialogue
+    mapDialog->exec();
+    
+    // Nettoyer
+    delete mapDialog; // Cela détruira aussi dialogMapWidget car il est enfant de mapDialog
+}
+
+void GEvennement::onLocationSelected(double latitude, double longitude)
+{
+    qDebug() << "Location sélectionnée:" << latitude << longitude;
+    QString location = QString("Latitude: %1, Longitude: %2").arg(latitude).arg(longitude);
+    ui->line_LIEU->setText(location);
+}
