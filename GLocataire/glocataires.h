@@ -4,6 +4,28 @@
 #include <QMainWindow>
 #include <QSqlQueryModel>
 #include <QLabel>
+#include <QPrinter>
+#include <QPainter>
+#include <QFileDialog>
+#include <QTableView>
+#include <QtCharts>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrlQuery>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QInputDialog>
+#include <QtNetwork/QSslSocket>
+#include <QtNetwork/QSslConfiguration>
+#include <QtNetwork/QSslCipher>
+#include <QtNetwork/QSslKey>
+#include <QtNetwork/QSslCertificate>
+#include <QtNetwork/QSslError>
+
+#include "locataires.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,21 +44,45 @@ public:
     // Method to display locataire data
     void showLocataires();
 
+    //CRUD
+    void Ajout();
+    void Supprimer();
+
+    bool Modifier(const QString& identifiant, const QString& nom, const QString& tel, const QString& mail,
+                  const QString& contrat, const QString& statutPaiement, const QString& type, double montantLoyer);
+
 private slots:
     void on_pushButton_Ajouter_clicked();
-
     void on_pushButton_Supprimer_clicked();
-
-    void on_listView_clicked(const QModelIndex &index);
-
     void on_pushButton_Modifier_clicked();
+    void on_pushButton_Retreive_clicked();
+    void on_tableView_clicked(const QModelIndex &index);
+    void on_stat_clicked();
+    void on_PDF_clicked();
+    void on_searchLineEdit_textChanged(const QString &text);
+    void on_sortComboBox_currentIndexChanged(int index);
+    void on_pushButton_ChatBot_clicked();
 
 private:
     Ui::GLocataire *ui;
-    QSqlQueryModel *model;            // Model to fetch and hold data
-    QLabel *lbl_Image_Display;        // Label for the main image
-    QLabel *lbl_Logo_Display;         // Label for the logo
-    QString selectedTel;  // This will store the tel for the selected item
+    Locataires L;
+    QSqlQueryModel *model;
+    QLabel *lbl_Image_Display;
+    QLabel *lbl_Logo_Display;
+    QString selectedTel;
+    int identifiant;
+    QNetworkAccessManager *networkManager;
+    void refreshTable();
+    void populateFieldsFromSelection(const QModelIndex &index);
+    void createPieChart();
+    void exportToPDF();
+    void filterLocataires(const QString &searchText);
+    void sortLocataires(int sortOrder);
+    QChart *statsChart;
+    QChartView *chartView;
+    QSortFilterProxyModel *proxyModel;
+    bool locataireExists(int identifiant);
+    void sendConfirmationEmail(const QString &recipientEmail, const QString &name);
 };
 
 #endif // GLOCATAIRES_H

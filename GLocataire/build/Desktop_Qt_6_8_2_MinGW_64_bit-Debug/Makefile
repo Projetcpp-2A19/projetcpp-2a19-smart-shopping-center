@@ -303,9 +303,19 @@ Makefile: ../../GEvennement.pro E:/Qt/6.8.2/mingw_64/mkspecs/win32-g++/qmake.con
 		E:/Qt/6.8.2/mingw_64/mkspecs/features/yacc.prf \
 		E:/Qt/6.8.2/mingw_64/mkspecs/features/lex.prf \
 		../../GEvennement.pro \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6PrintSupport.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6Charts.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6OpenGLWidgets.prl \
 		E:/Qt/6.8.2/mingw_64/lib/Qt6Widgets.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6Quick.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6OpenGL.prl \
 		E:/Qt/6.8.2/mingw_64/lib/Qt6Gui.prl \
 		E:/Qt/6.8.2/mingw_64/lib/Qt6Sql.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6QmlMeta.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6QmlModels.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6QmlWorkerScript.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6Qml.prl \
+		E:/Qt/6.8.2/mingw_64/lib/Qt6Network.prl \
 		E:/Qt/6.8.2/mingw_64/lib/Qt6Core.prl \
 		E:/Qt/6.8.2/mingw_64/lib/Qt6EntryPoint.prl \
 		E:/Qt/6.8.2/mingw_64/mkspecs/features/build_pass.prf
@@ -543,9 +553,19 @@ E:/Qt/6.8.2/mingw_64/mkspecs/features/exceptions.prf:
 E:/Qt/6.8.2/mingw_64/mkspecs/features/yacc.prf:
 E:/Qt/6.8.2/mingw_64/mkspecs/features/lex.prf:
 ../../GEvennement.pro:
+E:/Qt/6.8.2/mingw_64/lib/Qt6PrintSupport.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6Charts.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6OpenGLWidgets.prl:
 E:/Qt/6.8.2/mingw_64/lib/Qt6Widgets.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6Quick.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6OpenGL.prl:
 E:/Qt/6.8.2/mingw_64/lib/Qt6Gui.prl:
 E:/Qt/6.8.2/mingw_64/lib/Qt6Sql.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6QmlMeta.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6QmlModels.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6QmlWorkerScript.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6Qml.prl:
+E:/Qt/6.8.2/mingw_64/lib/Qt6Network.prl:
 E:/Qt/6.8.2/mingw_64/lib/Qt6Core.prl:
 E:/Qt/6.8.2/mingw_64/lib/Qt6EntryPoint.prl:
 E:/Qt/6.8.2/mingw_64/mkspecs/features/build_pass.prf:

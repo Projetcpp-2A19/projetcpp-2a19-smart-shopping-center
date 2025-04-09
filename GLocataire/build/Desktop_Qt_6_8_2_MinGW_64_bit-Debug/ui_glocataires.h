@@ -11,15 +11,12 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QCommandLinkButton>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
@@ -32,22 +29,19 @@ public:
     QWidget *centralwidget;
     QFrame *frame;
     QLineEdit *line_NOMLoc;
-    QLineEdit *line_CAPACITELoc;
+    QLineEdit *line_PhoneLoc;
     QLineEdit *line_CONTRATLoc;
     QLineEdit *line_MAILLoc;
     QLineEdit *line_IDLoc;
     QLineEdit *line_Statut_PAIEMENTLoc;
     QLineEdit *line_MONTANT_LOYERLOC;
     QLineEdit *line_TYPELoc;
+    QLineEdit *line_IDENTIFIANT;
     QPushButton *pushButton_Ajouter;
     QPushButton *pushButton_Supprimer;
     QPushButton *pushButton_Modifier;
     QLabel *label_TITLE;
     QListView *listView;
-    QProgressBar *progressBar;
-    QLineEdit *lineEdit;
-    QComboBox *comboBox_tri;
-    QCommandLinkButton *commandLinkButton;
     QLabel *lbl_Image_Display;
     QFrame *frame_gestions;
     QPushButton *pushButton_Dashboard;
@@ -59,8 +53,9 @@ public:
     QPushButton *pushButton_deconnecter;
     QLabel *lbl_Logo_Display;
     QFrame *frame_2;
-    QLineEdit *lineEdit_exporter;
     QFrame *frame_3;
+    QLineEdit *Line_DeleteID;
+    QPushButton *pushButton_Retreive;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -68,7 +63,7 @@ public:
     {
         if (GLocataire->objectName().isEmpty())
             GLocataire->setObjectName("GLocataire");
-        GLocataire->resize(905, 599);
+        GLocataire->resize(1261, 638);
         GLocataire->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
 "    background: #f0c1cd;  \n"
 "}\n"
@@ -80,7 +75,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         frame = new QFrame(centralwidget);
         frame->setObjectName("frame");
-        frame->setGeometry(QRect(210, 110, 271, 441));
+        frame->setGeometry(QRect(210, 110, 271, 471));
         frame->setStyleSheet(QString::fromUtf8("QFrame{\n"
 "    border: 3px solid grey;\n"
 "    border-radius: 4px;\n"
@@ -101,10 +96,10 @@ public:
 "    background: white;\n"
 "    selection-background-color: darkgray;\n"
 "}"));
-        line_CAPACITELoc = new QLineEdit(frame);
-        line_CAPACITELoc->setObjectName("line_CAPACITELoc");
-        line_CAPACITELoc->setGeometry(QRect(40, 140, 191, 26));
-        line_CAPACITELoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+        line_PhoneLoc = new QLineEdit(frame);
+        line_PhoneLoc->setObjectName("line_PhoneLoc");
+        line_PhoneLoc->setGeometry(QRect(40, 140, 191, 26));
+        line_PhoneLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
 "    border-radius: 10px;\n"
@@ -172,6 +167,17 @@ public:
         line_TYPELoc->setObjectName("line_TYPELoc");
         line_TYPELoc->setGeometry(QRect(40, 390, 191, 26));
         line_TYPELoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        line_IDENTIFIANT = new QLineEdit(frame);
+        line_IDENTIFIANT->setObjectName("line_IDENTIFIANT");
+        line_IDENTIFIANT->setGeometry(QRect(40, 430, 191, 26));
+        line_IDENTIFIANT->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
 "    border-radius: 10px;\n"
@@ -265,38 +271,9 @@ public:
 ""));
         listView = new QListView(centralwidget);
         listView->setObjectName("listView");
-        listView->setGeometry(QRect(500, 230, 391, 192));
+        listView->setGeometry(QRect(500, 160, 711, 281));
         listView->setStyleSheet(QString::fromUtf8("QListView {\n"
 "    alternate-background-color:  yellow;\n"
-"}"));
-        progressBar = new QProgressBar(centralwidget);
-        progressBar->setObjectName("progressBar");
-        progressBar->setGeometry(QRect(680, 460, 118, 23));
-        progressBar->setValue(24);
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setEnabled(false);
-        lineEdit->setGeometry(QRect(500, 190, 191, 26));
-        lineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
-        comboBox_tri = new QComboBox(centralwidget);
-        comboBox_tri->setObjectName("comboBox_tri");
-        comboBox_tri->setGeometry(QRect(690, 190, 91, 26));
-        commandLinkButton = new QCommandLinkButton(centralwidget);
-        commandLinkButton->setObjectName("commandLinkButton");
-        commandLinkButton->setGeometry(QRect(500, 140, 151, 41));
-        commandLinkButton->setStyleSheet(QString::fromUtf8("QCommandLinkButton {\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 10px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
 "}"));
         lbl_Image_Display = new QLabel(centralwidget);
         lbl_Image_Display->setObjectName("lbl_Image_Display");
@@ -528,18 +505,6 @@ public:
         frame_2->setGeometry(QRect(120, 540, 120, 80));
         frame_2->setFrameShape(QFrame::Shape::StyledPanel);
         frame_2->setFrameShadow(QFrame::Shadow::Raised);
-        lineEdit_exporter = new QLineEdit(centralwidget);
-        lineEdit_exporter->setObjectName("lineEdit_exporter");
-        lineEdit_exporter->setEnabled(false);
-        lineEdit_exporter->setGeometry(QRect(680, 150, 101, 26));
-        lineEdit_exporter->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
         frame_3 = new QFrame(centralwidget);
         frame_3->setObjectName("frame_3");
         frame_3->setGeometry(QRect(180, -10, 621, 31));
@@ -552,10 +517,38 @@ public:
 ""));
         frame_3->setFrameShape(QFrame::Shape::StyledPanel);
         frame_3->setFrameShadow(QFrame::Shadow::Raised);
+        Line_DeleteID = new QLineEdit(centralwidget);
+        Line_DeleteID->setObjectName("Line_DeleteID");
+        Line_DeleteID->setGeometry(QRect(670, 460, 113, 26));
+        pushButton_Retreive = new QPushButton(centralwidget);
+        pushButton_Retreive->setObjectName("pushButton_Retreive");
+        pushButton_Retreive->setGeometry(QRect(820, 460, 121, 31));
+        pushButton_Retreive->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
         GLocataire->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GLocataire);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 905, 22));
+        menubar->setGeometry(QRect(0, 0, 1261, 22));
         GLocataire->setMenuBar(menubar);
         statusbar = new QStatusBar(GLocataire);
         statusbar->setObjectName("statusbar");
@@ -570,7 +563,7 @@ public:
     {
         GLocataire->setWindowTitle(QCoreApplication::translate("GLocataire", "GEvennement", nullptr));
         line_NOMLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "            NOM", nullptr));
-        line_CAPACITELoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             TEL", nullptr));
+        line_PhoneLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             TEL", nullptr));
         line_CONTRATLoc->setText(QString());
         line_CONTRATLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "          CONTRAT", nullptr));
         line_MAILLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             MAIL", nullptr));
@@ -578,12 +571,11 @@ public:
         line_Statut_PAIEMENTLoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "   STATUT PAIEMENT", nullptr));
         line_MONTANT_LOYERLOC->setPlaceholderText(QCoreApplication::translate("GLocataire", "    MONTAN_LOYER", nullptr));
         line_TYPELoc->setPlaceholderText(QCoreApplication::translate("GLocataire", "             TYPE", nullptr));
+        line_IDENTIFIANT->setPlaceholderText(QCoreApplication::translate("GLocataire", "          IDENTIFIANT", nullptr));
         pushButton_Ajouter->setText(QCoreApplication::translate("GLocataire", "Ajouter", nullptr));
         pushButton_Supprimer->setText(QCoreApplication::translate("GLocataire", "Supprimer", nullptr));
         pushButton_Modifier->setText(QCoreApplication::translate("GLocataire", "Modifier", nullptr));
         label_TITLE->setText(QCoreApplication::translate("GLocataire", "Gestion des locataires", nullptr));
-        lineEdit->setPlaceholderText(QCoreApplication::translate("GLocataire", "Trier les locataires", nullptr));
-        commandLinkButton->setText(QString());
         lbl_Image_Display->setText(QString());
         pushButton_Dashboard->setText(QCoreApplication::translate("GLocataire", "Dashboard", nullptr));
         pushButton_Employes->setText(QCoreApplication::translate("GLocataire", "Employ\303\251s", nullptr));
@@ -593,7 +585,7 @@ public:
         pushButton_Evennements->setText(QCoreApplication::translate("GLocataire", "Evennements", nullptr));
         pushButton_deconnecter->setText(QCoreApplication::translate("GLocataire", "se d\303\251connecter", nullptr));
         lbl_Logo_Display->setText(QString());
-        lineEdit_exporter->setPlaceholderText(QCoreApplication::translate("GLocataire", "    Exporter", nullptr));
+        pushButton_Retreive->setText(QCoreApplication::translate("GLocataire", "Retreive", nullptr));
     } // retranslateUi
 
 };
