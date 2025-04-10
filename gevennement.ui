@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>623</height>
+    <width>1238</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,32 +33,6 @@
       <width>82</width>
       <height>28</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>200</y>
-      <width>191</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLineEdit {
-	font: 9pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 20px;
-    padding: 0 8px;
-    background: black;
-    selection-background-color: darkgray;
-}</string>
-    </property>
-    <property name="placeholderText">
-     <string>Trier les boutiques</string>
     </property>
    </widget>
    <widget class="QFrame" name="frame_10">
@@ -175,9 +149,12 @@ QPushButton:default {
       <height>192</height>
      </rect>
     </property>
+    <attribute name="horizontalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
     <column>
      <property name="text">
-      <string>id</string>
+      <string>ID</string>
      </property>
     </column>
     <column>
@@ -213,6 +190,16 @@ QPushButton:default {
     <column>
      <property name="text">
       <string>horaire</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>ID_employé</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>ID_locataire</string>
      </property>
     </column>
    </widget>
@@ -599,28 +586,6 @@ QPushButton:default {
      <string>Ajouter</string>
     </property>
    </widget>
-   <widget class="QCommandLinkButton" name="commandLinkButton">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>150</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QCommandLinkButton {
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: black;
-    selection-background-color: darkgray;
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_Supprimer">
     <property name="geometry">
      <rect>
@@ -686,7 +651,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>30</y>
+       <y>20</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -709,7 +674,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>80</y>
+       <y>60</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -732,7 +697,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>180</y>
+       <y>140</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -755,7 +720,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>330</y>
+       <y>340</y>
        <width>141</width>
        <height>31</height>
       </rect>
@@ -768,7 +733,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>130</y>
+       <y>100</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -791,7 +756,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>230</y>
+       <y>180</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -834,7 +799,7 @@ QPushButton:default {
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>280</y>
+       <y>300</y>
        <width>191</width>
        <height>28</height>
       </rect>
@@ -847,6 +812,9 @@ QPushButton:default {
     background: black;
     selection-background-color: darkgray;</string>
      </property>
+     <property name="currentText">
+      <string>actif</string>
+     </property>
      <item>
       <property name="text">
        <string>actif</string>
@@ -858,32 +826,52 @@ QPushButton:default {
       </property>
      </item>
     </widget>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_exporter">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>160</y>
-      <width>101</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLineEdit {
-	font: 9pt &quot;Segoe UI&quot;;
+    <widget class="QLineEdit" name="line_IDLOCATAIREboutique">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>220</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
     border: 2px solid gray;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 0 8px;
     background: black;
     selection-background-color: darkgray;
 }</string>
-    </property>
-    <property name="placeholderText">
-     <string>    Exporter</string>
-    </property>
+     </property>
+     <property name="placeholderText">
+      <string>      ID LOCATAIRE</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_IDEMPboutique">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>260</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: black;
+    selection-background-color: darkgray;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>       ID EMPLOYE</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
@@ -898,13 +886,88 @@ QPushButton:default {
      <number>24</number>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEdit_recherche_id">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>160</y>
+      <width>171</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: black;
+    selection-background-color: darkgray;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>            NOM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_recherche_boutique">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>160</y>
+      <width>83</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_trier_boutiques">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>200</y>
+      <width>83</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_exporter_boutiques">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>120</y>
+      <width>83</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_afficher_statistiques">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>120</y>
+      <width>83</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>820</width>
+     <width>1238</width>
      <height>25</height>
     </rect>
    </property>
