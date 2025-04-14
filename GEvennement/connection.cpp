@@ -14,9 +14,9 @@ bool Connection::createconnect()
     // Initialize the database connection with QODBC
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
     // Set the database name (this should match the ODBC data source name)
-    db.setDatabaseName("Source_Projet2A");  // Ensure the ODBC DSN is configured properly in your system
-    db.setUserName("EYK");
-    db.setPassword("EYK123");
+    db.setDatabaseName("Source_Projet2A");  // Ensure the ODBC DSN is configured properly in your system // Source_Projet2A
+    db.setUserName("EYK"); //
+    db.setPassword("EYK123"); //
 
     // Attempt to open the database
     if (db.open())

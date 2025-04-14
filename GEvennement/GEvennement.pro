@@ -18,12 +18,14 @@ SOURCES += \
     main.cpp \
     gevennement.cpp \
     evennement.cpp \
-    connection.cpp
+    connection.cpp \
+    calendardialog.cpp
 
 HEADERS += \
     gevennement.h \
     evennement.h \
-    connection.h
+    connection.h \
+    calendardialog.h
 
 FORMS += \
     gevennement.ui

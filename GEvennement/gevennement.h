@@ -23,10 +23,12 @@
 #include <QQmlEngine>
 #include "evennement.h"
 #include <QStandardItemModel>
+#include "calendardialog.h" // Inclure le nouveau fichier d'en-tête
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class GEvennement;
+namespace Ui
+{
+    class GEvennement;
 }
 QT_END_NAMESPACE
 
@@ -60,11 +62,12 @@ private slots:
     void on_pushButton_PDF_clicked();
     void on_pushButton_Map_clicked();
     void onLocationSelected(double latitude, double longitude);
+    void on_pushButton_Calendar_clicked(); // Nouveau slot pour le bouton du calendrier
 
 private:
-    Ui::GEvennement *ui;  // UI pointer
+    Ui::GEvennement *ui; // UI pointer
     Evennement E;
-    QStandardItemModel *model;  // Changé de QSqlQueryModel à QStandardItemModel
+    QStandardItemModel *model; // Changé de QSqlQueryModel à QStandardItemModel
     QQuickWidget *mapWidget;
     QString selectedEventNom;
 

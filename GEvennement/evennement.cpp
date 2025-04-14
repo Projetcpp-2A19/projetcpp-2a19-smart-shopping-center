@@ -61,8 +61,8 @@ void Evennement::showEvennements(QTableView *tableView)
         "E.PRIX, "
         "L.NOM as LOCATAIRE_NOM, "
         "E.IDENTIFIANT "
-        "FROM EYK.EVENEMENTS E "
-        "LEFT JOIN EYK.LOCATAIRES L ON E.ID_LOCATAIRE = L.ID_LOCATAIRE "
+        "FROM eyk.EVENEMENTS E "
+        "LEFT JOIN eyk.LOCATAIRES L ON E.ID_LOCATAIRE = L.ID_LOCATAIRE "
         "ORDER BY E.NOM"
     );
 
@@ -180,7 +180,7 @@ bool Evennement::ajout(QString nom, QString capacite, QString type, QString prix
     QSqlQuery query;
     // L'ordre des champs correspond exactement à l'ordre de la base de données
     // ID_EVENT est géré par un déclencheur (trigger) Oracle
-    QString queryStr = "INSERT INTO EYK.EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX, ID_LOCATAIRE, IDENTIFIANT) "
+    QString queryStr = "INSERT INTO eyk.EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX, ID_LOCATAIRE, IDENTIFIANT) "
                       "VALUES (:nom, :type, :dateDebut, :dateFin, :lieu, :capacite, :prix, :idLocataire, :identifiant)";
     
     qDebug() << "Requête SQL à exécuter:" << queryStr;
@@ -198,7 +198,7 @@ bool Evennement::ajout(QString nom, QString capacite, QString type, QString prix
     query.bindValue(":lieu", lieu);
     query.bindValue(":capacite", capaciteInt); // Utiliser la valeur convertie
     query.bindValue(":prix", prixDouble); // Utiliser la valeur convertie
-    
+    /*
     // Convertir ID_LOCATAIRE en nombre entier
     int idLocataireInt = idLocataire.toInt(&conversionOk);
     if (!conversionOk) {
@@ -206,6 +206,9 @@ bool Evennement::ajout(QString nom, QString capacite, QString type, QString prix
         QMessageBox::warning(nullptr, "Erreur de validation", "L'ID du locataire doit être un nombre entier.");
         return false;
     }
+*/
+    int idLocataireInt = 1;
+
     query.bindValue(":idLocataire", idLocataireInt);
     query.bindValue(":identifiant", IDENTIFIANT);
 
@@ -253,7 +256,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
 
     // Essayer d'abord de rechercher par IDENTIFIANT
     QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT COUNT(*) FROM EYK.EVENEMENTS WHERE IDENTIFIANT = :id");
+    checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE IDENTIFIANT = :id");
     checkQuery.bindValue(":id", nomOuId);
     
     if (!checkQuery.exec() || !checkQuery.next()) {
@@ -267,7 +270,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
     QString whereClause;
     QString paramName;
     if (!eventExists) {
-        checkQuery.prepare("SELECT COUNT(*) FROM EYK.EVENEMENTS WHERE NOM = :nom");
+        checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE NOM = :nom");
         checkQuery.bindValue(":nom", nomOuId);
         
         if (!checkQuery.exec() || !checkQuery.next()) {
@@ -295,7 +298,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
 
     // Récupérer le nom de l'événement pour le message de confirmation
     QSqlQuery nameQuery;
-    nameQuery.prepare("SELECT NOM FROM EYK.EVENEMENTS WHERE " + whereClause);
+    nameQuery.prepare("SELECT NOM FROM eyk.EVENEMENTS WHERE " + whereClause);
     nameQuery.bindValue(":valeur", nomOuId);
     
     QString eventName = nomOuId;
@@ -314,7 +317,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
 
     // Préparer et exécuter la requête de suppression
     QSqlQuery query;
-    query.prepare("DELETE FROM EYK.EVENEMENTS WHERE " + whereClause);
+    query.prepare("DELETE FROM eyk.EVENEMENTS WHERE " + whereClause);
     query.bindValue(":valeur", nomOuId);
 
     if (query.exec()) {
@@ -360,7 +363,7 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
 
     // Vérifier si l'événement existe
     QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT COUNT(*) FROM EYK.EVENEMENTS WHERE NOM = :nom");
+    checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE NOM = :nom");
     checkQuery.bindValue(":nom", nom);
     
     if (!checkQuery.exec() || !checkQuery.next()) {
@@ -376,7 +379,7 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
     // Préparer la requête de modification selon l'ordre exact des champs dans la base
     QSqlQuery query;
     query.prepare(
-        "UPDATE EYK.EVENEMENTS SET "
+        "UPDATE eyk.EVENEMENTS SET "
         "NOM = :nouveauNom, "
         "TYPE = :type, "
         "DATE_DEBUT = :dateDebut, "
