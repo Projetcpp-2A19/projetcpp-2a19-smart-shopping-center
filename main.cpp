@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     if (conn.createconnect()) {
         qDebug() << "Connexion réussie à la base de données!";
         QMessageBox::information(nullptr, "Connexion", "Connexion réussie !");
+
     } else {
         qDebug() << "Échec de la connexion :" << QSqlDatabase::database().lastError().text();
 
@@ -40,3 +41,4 @@ int main(int argc, char *argv[])
     QSqlDatabase::database().close();
     return result;
 }
+

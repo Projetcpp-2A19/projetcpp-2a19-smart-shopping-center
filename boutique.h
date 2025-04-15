@@ -53,11 +53,12 @@ public:
     void setIdEmploye(const QString &id) { ID_EMPLOYE = id; }
     void setIdLocataire(const QString &id) { ID_LOCATAIRE = id; }
 
-    // Méthodes CRUD
-    bool save();
-    bool remove();
-    static QList<Boutique> getAll();
+    static bool ajouter(const Boutique &b);
+    static bool modifier(const Boutique &b);
+    static bool supprimer(const QString &id);
+    static QList<Boutique> afficher();
     static Boutique getById(QString id);
+
 };
 
 #endif // BOUTIQUE_H

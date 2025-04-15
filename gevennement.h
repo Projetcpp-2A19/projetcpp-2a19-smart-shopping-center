@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include "boutique.h"
+#include <string>
+#include <QSystemTrayIcon>
+#include <QtCharts/QChartView>
+#include <QtCharts/QPieSeries>
+
 
 namespace Ui {
 class GEvennement;
@@ -16,14 +21,17 @@ public:
     explicit GEvennement(QWidget *parent = nullptr);
     ~GEvennement();
 
+
 private slots:
     void on_pushButton_Ajouter_clicked();
     void on_pushButton_Modifier_clicked();
     void on_pushButton_Supprimer_clicked();
-    void on_tableWidget_Boutique_clicked(const QModelIndex &index);
+    void on_pushButton_Afficher_clicked();
     void on_pushButton_recherche_boutique_clicked();
     void on_pushButton_trier_boutiques_clicked();
     void on_pushButton_exporter_boutiques_clicked();
+    void on_tableWidget_Boutique_clicked(const QModelIndex &index);
+
 
 private:
     Ui::GEvennement *ui;
@@ -31,7 +39,14 @@ private:
     void afficherBoutique(const Boutique &b);
     void viderFormulaire();
     Boutique lireFormulaire() const;
+    QSystemTrayIcon *trayIcon;
+    QList<double> montants;
+    void afficherStatistiquesEtatBoutiques();
+    QChart *chart;
+    QChartView *chartView;
+    QPieSeries *series;
+    void afficherHistogrammeMontants();
+
 
 };
-
 #endif // GEVENNEMENT_H

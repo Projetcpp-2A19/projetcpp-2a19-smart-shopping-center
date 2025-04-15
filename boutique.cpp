@@ -3,6 +3,7 @@
 #include <QSqlError>
 #include <QDebug>
 
+
 Boutique::Boutique() : SURFACE(0), MONTANT(0) {}
 
 Boutique::Boutique(QString nom, QString type, QString localisation,
@@ -10,78 +11,75 @@ Boutique::Boutique(QString nom, QString type, QString localisation,
     NOM(nom), TYPE(type), LOCALISATION(localisation),
     SURFACE(surface), MONTANT(montant), ETAT(etat), HORAIRE(horaire) {}
 
-bool Boutique::save()
+bool Boutique::ajouter(const Boutique &b)
 {
     QSqlQuery query;
-
-    if (ID_BOUTIQUE.isEmpty()) {
-        // Insertion
-        query.prepare("INSERT INTO boutiques (NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT, HORAIRE_OUVERTURE, ID_EMP, ID_LOCATAIRE) "
-                      "VALUES (:nom, :type, :localisation, :surface, :montant, :etat, :horaire, :id_employe, :id_locataire)");
-    } else {
-        // Mise à jour
-        query.prepare("UPDATE boutiques SET NOM = :nom, TYPE = :type, LOCALISATION = :localisation, "
-                      "SURFACE = :surface, MONTANT = :montant, ETAT = :etat, HORAIRE_OUVERTURE = :horaire, "
-                      "ID_EMP = :id_employe, ID_LOCATAIRE = :id_locataire WHERE id_boutique = :id_boutique");
-        query.bindValue(":id_boutique", ID_BOUTIQUE);
-    }
-
-    query.bindValue(":nom", NOM);
-    query.bindValue(":type", TYPE);
-    query.bindValue(":localisation", LOCALISATION);
-    query.bindValue(":surface", SURFACE);
-    query.bindValue(":montant", MONTANT);
-    query.bindValue(":etat", ETAT);
-    query.bindValue(":horaire", HORAIRE);
-    query.bindValue(":id_employe", ID_EMPLOYE); // Nouveau champ
-    query.bindValue(":id_locataire", ID_LOCATAIRE); // Nouveau champ
-
-    if (!query.exec()) {
-        qDebug() << "Erreur lors de la sauvegarde:" << query.lastError().text();
-        return false;
-    }
-
-    if (ID_BOUTIQUE.isEmpty()) {
-        ID_BOUTIQUE = query.lastInsertId().toString();
-    }
-
-    return true;
-}
-bool Boutique::remove()
-{
-    if (ID_BOUTIQUE.isEmpty()) return false;
-
-    QSqlQuery query;
-    query.prepare("DELETE FROM boutiques WHERE ID_BOUTIQUE = :id");
-    query.bindValue(":id", ID_BOUTIQUE);
+    query.prepare("INSERT INTO boutiques (NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT, HORAIRE_OUVERTURE, ID_EMP, ID_LOCATAIRE) "
+                  "VALUES (:nom, :type, :localisation, :surface, :montant, :etat, :horaire, :id_employe, :id_locataire)");
+    query.bindValue(":nom", b.getNom());
+    query.bindValue(":type", b.getType());
+    query.bindValue(":localisation", b.getLocalisation());
+    query.bindValue(":surface", b.getSurface());
+    query.bindValue(":montant", b.getMontant());
+    query.bindValue(":etat", b.getEtat());
+    query.bindValue(":horaire", b.getHoraire());
+    query.bindValue(":id_employe", b.getIdEmploye());
+    query.bindValue(":id_locataire", b.getIdLocataire());
 
     return query.exec();
 }
 
-QList<Boutique> Boutique::getAll()
+bool Boutique::modifier(const Boutique &b)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE boutiques SET NOM = :nom, TYPE = :type, LOCALISATION = :localisation, "
+                  "SURFACE = :surface, MONTANT = :montant, ETAT = :etat, HORAIRE_OUVERTURE = :horaire, "
+                  "ID_EMP = :id_employe, ID_LOCATAIRE = :id_locataire WHERE ID_BOUTIQUE = :id_boutique");
+    query.bindValue(":id_boutique", b.getId());
+    query.bindValue(":nom", b.getNom());
+    query.bindValue(":type", b.getType());
+    query.bindValue(":localisation", b.getLocalisation());
+    query.bindValue(":surface", b.getSurface());
+    query.bindValue(":montant", b.getMontant());
+    query.bindValue(":etat", b.getEtat());
+    query.bindValue(":horaire", b.getHoraire());
+    query.bindValue(":id_employe", b.getIdEmploye());
+    query.bindValue(":id_locataire", b.getIdLocataire());
+
+    return query.exec();
+}
+
+bool Boutique::supprimer(const QString &id)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM boutiques WHERE ID_BOUTIQUE = :id");
+    query.bindValue(":id", id);
+    return query.exec();
+}
+
+QList<Boutique> Boutique::afficher()
 {
     QList<Boutique> boutiques;
     QSqlQuery query("SELECT * FROM boutiques ORDER BY NOM");
 
     while (query.next()) {
         Boutique b;
-        b.ID_BOUTIQUE = query.value("ID_BOUTIQUE").toString();
-        b.NOM = query.value("NOM").toString();
-        b.TYPE = query.value("TYPE").toString();
-        b.LOCALISATION = query.value("LOCALISATION").toString();
-        b.SURFACE = query.value("SURFACE").toDouble();
-        b.MONTANT = query.value("MONTANT").toDouble();
-        b.ETAT = query.value("ETAT").toString();
-        b.HORAIRE = query.value("HORAIRE_OUVERTURE").toString();
-        b.ID_EMPLOYE = query.value("ID_EMP").toString(); // Récupérer ID Employé
-        b.ID_LOCATAIRE = query.value("ID_LOCATAIRE").toString(); // Récupérer ID Locataire
+        b.setId(query.value("ID_BOUTIQUE").toString());
+        b.setNom(query.value("NOM").toString());
+        b.setType(query.value("TYPE").toString());
+        b.setLocalisation(query.value("LOCALISATION").toString());
+        b.setSurface(query.value("SURFACE").toDouble());
+        b.setMontant(query.value("MONTANT").toDouble());
+        b.setEtat(query.value("ETAT").toString());
+        b.setHoraire(query.value("HORAIRE_OUVERTURE").toString());
+        b.setIdEmploye(query.value("ID_EMP").toString());
+        b.setIdLocataire(query.value("ID_LOCATAIRE").toString());
 
         boutiques.append(b);
     }
 
     return boutiques;
 }
-
 Boutique Boutique::getById(QString id)
 {
     Boutique b;
@@ -90,17 +88,16 @@ Boutique Boutique::getById(QString id)
     query.bindValue(":id", id);
 
     if (query.exec() && query.next()) {
-        b.ID_BOUTIQUE = query.value("ID_BOUTIQUE").toString();
-        b.NOM = query.value("NOM").toString();
-        b.TYPE = query.value("TYPE").toString();
-        b.LOCALISATION = query.value("LOCALISATION").toString();
-        b.SURFACE = query.value("SURFACE").toDouble();
-        b.MONTANT = query.value("MONTANT").toDouble();
-        b.ETAT = query.value("ETAT").toString();
-        b.HORAIRE = query.value("HORAIRE_OUVERTURE").toString();
-        b.ID_EMPLOYE = query.value("ID_EMP").toString(); // Récupérer ID Employé
-        b.ID_LOCATAIRE = query.value("ID_LOCATAIRE").toString(); // Récupérer ID Locataire
-
+        b.setId(query.value("ID_BOUTIQUE").toString());
+        b.setNom(query.value("NOM").toString());
+        b.setType(query.value("TYPE").toString());
+        b.setLocalisation(query.value("LOCALISATION").toString());
+        b.setSurface(query.value("SURFACE").toDouble());
+        b.setMontant(query.value("MONTANT").toDouble());
+        b.setEtat(query.value("ETAT").toString());
+        b.setHoraire(query.value("HORAIRE_OUVERTURE").toString());
+        b.setIdEmploye(query.value("ID_EMP").toString());
+        b.setIdLocataire(query.value("ID_LOCATAIRE").toString());
     }
 
     return b;

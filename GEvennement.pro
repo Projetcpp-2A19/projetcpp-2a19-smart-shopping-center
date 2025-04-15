@@ -2,7 +2,9 @@ QT       += core gui sql
 QT += sql
 QT += printsupport
 QT += core gui sql widgets printsupport
+QT += core gui charts
 QT += charts
+QMAKE_CXXFLAGS += -fpermissive
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,7 +28,9 @@ HEADERS += \
 FORMS += \
     gevennement.ui \
 
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
