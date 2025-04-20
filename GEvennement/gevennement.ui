@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1077</width>
-    <height>628</height>
+    <height>721</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,10 +28,10 @@
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>110</y>
-      <width>271</width>
-      <height>421</height>
+      <x>200</x>
+      <y>100</y>
+      <width>263</width>
+      <height>452</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -46,17 +46,11 @@
     <property name="frameShape">
      <enum>QFrame::Shape::NoFrame</enum>
     </property>
-    <widget class="QLineEdit" name="line_NOMevent">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>50</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="line_TYPEevent">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
 	font: 11pt &quot;Segoe UI&quot;;
     border: 2px solid gray;
     border-radius: 10px;
@@ -64,22 +58,19 @@
     background: white;
     selection-background-color: darkgray;
 }</string>
-     </property>
-     <property name="placeholderText">
-      <string>            NOM</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_CAPACITEevent">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>300</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
+       </property>
+       <property name="placeholderText">
+        <string>             TYPE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="line_IDevent">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
 	font: 11pt &quot;Segoe UI&quot;;
     border: 2px solid gray;
     border-radius: 10px;
@@ -87,140 +78,16 @@
     background: white;
     selection-background-color: darkgray;
 }</string>
-     </property>
-     <property name="placeholderText">
-      <string>         CAPACITE</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_PRIXevent">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>330</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-	font: 11pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: white;
-    selection-background-color: darkgray;
-}</string>
-     </property>
-     <property name="placeholderText">
-      <string>             PRIX</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>140</y>
-       <width>91</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Date début</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>200</y>
-       <width>91</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Date fin</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_TYPEevent">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>100</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-	font: 11pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: white;
-    selection-background-color: darkgray;
-}</string>
-     </property>
-     <property name="placeholderText">
-      <string>             TYPE</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_IDevent">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>10</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-	font: 11pt &quot;Segoe UI&quot;;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    background: white;
-    selection-background-color: darkgray;
-}</string>
-     </property>
-     <property name="placeholderText">
-      <string>               ID</string>
-     </property>
-    </widget>
-    <widget class="QDateEdit" name="dateEditDebut">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>170</y>
-       <width>251</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QDateEdit" name="dateEditFin">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>230</y>
-       <width>251</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_LIEU">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>260</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
+       </property>
+       <property name="placeholderText">
+        <string>               ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLineEdit" name="line_LOCATIONevent">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
     font: 11pt &quot;Segoe UI&quot;;
     border: 2px solid gray;
     border-radius: 10px;
@@ -228,74 +95,59 @@
     background: white;
     selection-background-color: darkgray;
 }</string>
-     </property>
-     <property name="placeholderText">
-      <string>         LIEU</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox_LOC">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>360</y>
-       <width>181</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>       Choisir Un Locataire</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_IDENTIFIANT">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>390</y>
-       <width>181</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>         IDENTIFIANT</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="line_LOCATIONevent">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>240</y>
-       <width>191</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-    font: 11pt &quot;Segoe UI&quot;;
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>         LOCATION</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QLineEdit" name="line_CAPACITEevent">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
     background: white;
     selection-background-color: darkgray;
 }</string>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>         LOCATION</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_Map">
-     <property name="geometry">
-      <rect>
-       <x>240</x>
-       <y>250</y>
-       <width>25</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QPushButton {
+       </property>
+       <property name="placeholderText">
+        <string>         CAPACITE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="line_NOMevent">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: darkgray;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>            NOM</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" rowspan="2" colspan="3">
+      <widget class="QDateEdit" name="dateEditFin"/>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <widget class="QDateEdit" name="dateEditDebut"/>
+     </item>
+     <item row="8" column="2" rowspan="2">
+      <widget class="QPushButton" name="pushButton_Map">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -308,11 +160,75 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: #3d8b40;
 }</string>
-     </property>
-     <property name="text">
-      <string>📍</string>
-     </property>
-    </widget>
+       </property>
+       <property name="text">
+        <string>📍</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" rowspan="2" colspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Date fin</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QLineEdit" name="line_PRIXevent">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: darkgray;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>             PRIX</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QComboBox" name="comboBox_LOC">
+       <property name="placeholderText">
+        <string>       Choisir Un Locataire</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLineEdit" name="line_LIEU">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+    font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: darkgray;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>         LIEU</string>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="1">
+      <widget class="QLineEdit" name="lineEdit_IDENTIFIANT">
+       <property name="placeholderText">
+        <string>         IDENTIFIANT</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Date début</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QFrame" name="frame_recherche">
     <property name="geometry">
@@ -581,7 +497,7 @@ QPushButton:default {
      <string>Modifier</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_TITLE">
+   <widget class="QLabel" name="label_titre">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -598,7 +514,7 @@ QPushButton:default {
 }</string>
     </property>
     <property name="text">
-     <string>Gestion des événements</string>
+     <string/>
     </property>
    </widget>
    <widget class="QTableView" name="tableView">

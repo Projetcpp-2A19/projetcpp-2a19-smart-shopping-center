@@ -8,6 +8,9 @@
 #include <QSqlQueryModel>
 #include <QTableView>
 #include <QDebug>
+#include <QLabel>
+
+
 
 class Evennement {
 private:
@@ -70,6 +73,9 @@ public:
     bool modifier(QString nom, QString nouveauNom, QString capacite, QString type,
                  QString prix, QDate dateDebut, QDate dateFin,
                  QString lieu, QString idLocataire);
+
+    bool modifierTempEtHumd(const QString& temp, const QString& humd,  QLabel *LABEL_temp);
+    //void showTempHumd(const QString& temp, const QString& humd);
 
 
 

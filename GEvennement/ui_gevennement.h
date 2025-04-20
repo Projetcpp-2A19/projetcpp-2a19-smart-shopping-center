@@ -55,7 +55,7 @@ public:
     QPushButton *pushButton_Ajouter;
     QPushButton *pushButton_Supprimer;
     QPushButton *pushButton_Modifier;
-    QLabel *label_TITLE;
+    QLabel *label_titre;
     QTableView *tableView;
     QLabel *lbl_Image_Display;
     QFrame *frame_gestions;
@@ -387,10 +387,10 @@ public:
 "QPushButton:default {\n"
 "    border-color: navy; /* make the default button prominent */\n"
 "}"));
-        label_TITLE = new QLabel(centralwidget);
-        label_TITLE->setObjectName(QStringLiteral("label_TITLE"));
-        label_TITLE->setGeometry(QRect(190, 20, 581, 81));
-        label_TITLE->setStyleSheet(QLatin1String("QLabel {\n"
+        label_titre = new QLabel(centralwidget);
+        label_titre->setObjectName(QStringLiteral("label_TITLE"));
+        label_titre->setGeometry(QRect(190, 20, 581, 81));
+        label_titre->setStyleSheet(QLatin1String("QLabel {\n"
 "    color: white;\n"
 "    font-weight: bold;\n"
 "    background-color: transparent;\n"
@@ -812,7 +812,7 @@ public:
         pushButton_Ajouter->setText(QApplication::translate("GEvennement", "Ajouter", Q_NULLPTR));
         pushButton_Supprimer->setText(QApplication::translate("GEvennement", "Supprimer", Q_NULLPTR));
         pushButton_Modifier->setText(QApplication::translate("GEvennement", "Modifier", Q_NULLPTR));
-        label_TITLE->setText(QApplication::translate("GEvennement", "Gestion des \303\251v\303\251nements", Q_NULLPTR));
+        label_titre->setText(QApplication::translate("GEvennement", "Gestion des \303\251v\303\251nements", Q_NULLPTR));
         lbl_Image_Display->setText(QString());
         pushButton_Dashboard->setText(QApplication::translate("GEvennement", "Dashboard", Q_NULLPTR));
         pushButton_Employes->setText(QApplication::translate("GEvennement", "Employ\303\251s", Q_NULLPTR));

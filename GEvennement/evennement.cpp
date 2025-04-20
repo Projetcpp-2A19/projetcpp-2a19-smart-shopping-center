@@ -44,7 +44,11 @@ void Evennement::setIDLocataire(const QString& idLocataire) { this->ID_LOCATAIRE
 void Evennement::setIdentifiant(const QString& identifiant) { this->IDENTIFIANT = identifiant; }  // New setter
 
 
+
+
+
 // CRUD Methods
+
 void Evennement::showEvennements(QTableView *tableView)
 {
     qDebug() << "Récupération des événements...";
@@ -292,7 +296,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
     }
     
     if (!eventExists) {
-        QMessageBox::warning(nullptr, "Attention", "Aucun événement trouvé avec cet identifiant ou ce nom.");
+        QMessageBox::warning(nullptr, "", "Aucun événement trouvé avec cet identifiant ou ce nom.");
         return false;
     }
 
@@ -341,11 +345,9 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
     }
 }
 
-
-
-bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QString type, 
-                         QString prix, QDate dateDebut, QDate dateFin, 
-                         QString lieu, QString idLocataire)
+bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QString type,
+                          QString prix, QDate dateDebut, QDate dateFin,
+                          QString lieu, QString idLocataire)
 {
     qDebug() << "Tentative de modification de l'événement avec le nom:" << nom;
 
@@ -365,7 +367,7 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE NOM = :nom");
     checkQuery.bindValue(":nom", nom);
-    
+
     if (!checkQuery.exec() || !checkQuery.next()) {
         QMessageBox::warning(nullptr, "Attention", "Impossible de vérifier l'existence de l'événement.");
         return false;
@@ -389,7 +391,7 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
         "PRIX = :prix, "
         "ID_LOCATAIRE = :idLocataire "
         "WHERE NOM = :nom"
-    );
+        );
 
     // Lier les valeurs dans l'ordre des champs
     query.bindValue(":nom", nom);
@@ -409,6 +411,60 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
     } else {
         qDebug() << "Erreur lors de la modification:" << query.lastError().text();
         QMessageBox::critical(nullptr, "Erreur", "Impossible de modifier l'événement : " + query.lastError().text());
+        return false;
+    }
+}
+bool Evennement::modifierTempEtHumd(const QString& temp, const QString& humd, QLabel *LABEL_temp)
+{
+    QDate dateDuJour = QDate::currentDate();
+
+    if (!verifierConnexion()) {
+        QMessageBox::critical(nullptr, "Erreur", "Connexion à la base de données indisponible.");
+        return false;
+    }
+
+
+
+    QSqlQuery updateQuery;
+    updateQuery.prepare(R"(
+        UPDATE eyk.EVENEMENTS
+        SET TEMP = :temp, HUMD = :humd
+        WHERE DATE_DEBUT = :dateDebut
+    )");
+    updateQuery.bindValue(":temp", temp);
+    updateQuery.bindValue(":humd", humd);
+    updateQuery.bindValue(":dateDebut", dateDuJour);
+    QSqlQuery checkQuery;
+    checkQuery.prepare(R"(
+        SELECT NOM
+        FROM eyk.EVENEMENTS
+        WHERE DATE_DEBUT = :dateDebut
+    )");
+    checkQuery.bindValue(":dateDebut", dateDuJour);
+
+    if (!checkQuery.exec() || !checkQuery.next())
+    {
+       // QMessageBox::warning(nullptr, "Attention", "Échec de la vérification de l'événement.");
+       // LABEL_temp->setText("Échec de vérification");
+        LABEL_temp->setText("Pas d'événement");
+
+        return false;
+    }
+
+    QString nomEvenement = checkQuery.value(0).toString();
+
+    if (updateQuery.exec()) {
+        if (updateQuery.numRowsAffected() > 0) {
+            QString texte = "Événement : " + nomEvenement + "\nTempérature : " + temp + "\nHumidité : " + humd;
+            LABEL_temp->setText(texte);
+            return true;
+        } else {
+            LABEL_temp->setText("Pas d'événement");
+            return false;
+        }
+    } else {
+        qDebug() << "Erreur de mise à jour :" << updateQuery.lastError().text();
+        LABEL_temp->setText("Erreur de mise à jour");
         return false;
     }
 }

@@ -1,6 +1,7 @@
 #ifndef GEVENNEMENT_H
 #define GEVENNEMENT_H
 
+#include "arduino.h"
 #include <QMainWindow>
 #include <QLabel>
 #include <QSqlQueryModel>
@@ -41,6 +42,8 @@ public:
     ~GEvennement();
 
 private slots:
+    void update_label();
+
     void on_pushButton_Ajouter_clicked();
     void on_pushButton_Supprimer_clicked();
     void on_pushButton_Modifier_clicked();
@@ -80,6 +83,15 @@ private:
     QChart *createPieChart();
     void showPieChartDialog();
     void exportToPDF(const QModelIndex &index);
+    QString tempValueVerif = "";
+    QString humdValueVerif = "";
+    QLabel* LABEL_temp = nullptr;
+    QLabel* LABEL_hum = nullptr;
+
+
+    QByteArray data; // variable contenant les données reçues
+
+    Arduino A; // objet temporaire
 };
 
 #endif // GEVENNEMENT_H

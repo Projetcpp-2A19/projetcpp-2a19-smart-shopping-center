@@ -63,7 +63,79 @@ GEvennement::GEvennement(QWidget *parent)
     // Afficher les événements au démarrage
     populateLocatairesComboBox();
     on_pushButton_Retreive_clicked();
+
+
+
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    switch(ret){
+    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+        break;
+    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+        break;
+    case(-1):qDebug() << "arduino is not available";
+    }
+    QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label())); // permet de lancer
+    //le slot update_label suite à la reception du signal readyRead (reception des données).
 }
+
+
+
+
+void GEvennement::update_label()
+{
+    // Créer les QLabel UNE seule fois
+    if(!LABEL_temp){
+        LABEL_temp = new QLabel(this);
+        LABEL_temp->setObjectName("LABEL_temp");
+        LABEL_temp->setGeometry(20, 20, 150, 100);
+        LABEL_temp->setAlignment(Qt::AlignCenter);
+        LABEL_temp->setStyleSheet(R"(
+            QLabel {
+                font: bold 10pt "Segoe UI";
+                color: black;
+                background-color: white;
+                border: 2px solid gray;
+                border-radius: 8px;
+            }
+        )");
+        LABEL_temp->setParent(ui->centralwidget);
+        LABEL_temp->show();
+    }
+
+
+    data = A.read_from_arduino();
+    //qDebug() << "Donnée reçue : " << data;
+
+    QString tempValue = "";
+    QString humdValue = "";
+    QString tempValueVerif = "";
+    QString humdValueVerif = "";
+
+    if (data.contains("0")) tempValue = "normale";
+    else if (data.contains("1")) tempValue = "critique";
+
+    if (data.contains("4")) humdValue = "normale";
+    else if (data.contains("3")) humdValue = "élevée";
+    else if (data.contains("5")) humdValue = "basse";
+
+    // Vérifie que les deux valeurs sont valides
+    bool tempValide = (tempValue == "normale" || tempValue == "critique");
+    bool humValide = (humdValue == "normale" || humdValue == "élevée" || humdValue == "basse");
+
+    if (tempValide && humValide)
+    {
+        if (tempValueVerif != tempValue || humdValueVerif != humdValue) {
+            tempValueVerif = tempValue;
+            humdValueVerif = humdValue;
+              E.modifierTempEtHumd(tempValue, humdValue,LABEL_temp);
+        }
+    } else
+    {
+       // qDebug() << "Données non valides ignorées : " << data;
+    }
+
+}
+
 
 GEvennement::~GEvennement()
 {
@@ -1056,7 +1128,7 @@ void GEvennement::on_pushButton_Map_clicked()
     QUrl sourceUrl = QUrl("qrc:/map.qml");
     qDebug() << "URL de la source QML:" << sourceUrl;
 
-    // Passer les événements au contexte QML avant de charger le fichier
+    // Passer les événements au contexte QML avant de charger le fichier //sur map
     engine->rootContext()->setContextProperty("initialEvents", events);
 
     // Charger le fichier QML
