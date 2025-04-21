@@ -63,6 +63,7 @@ public:
     QLineEdit *searchLineEdit;
     QComboBox *sortComboBox;
     QLabel *label_tri;
+    QPushButton *pushButton_Ouvrir;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -343,7 +344,7 @@ public:
         lbl_Image_Display->setObjectName("lbl_Image_Display");
         lbl_Image_Display->setEnabled(true);
         lbl_Image_Display->setGeometry(QRect(660, 20, 151, 121));
-        lbl_Image_Display->setPixmap(QPixmap(QString::fromUtf8("../../../photo.jpg")));
+        lbl_Image_Display->setPixmap(QPixmap(QString::fromUtf8("../photo.jpg")));
         lbl_Image_Display->setScaledContents(true);
         frame_gestions = new QFrame(centralwidget);
         frame_gestions->setObjectName("frame_gestions");
@@ -746,10 +747,35 @@ public:
         label_tri->setGeometry(QRect(860, 60, 131, 21));
         label_tri->setStyleSheet(QString::fromUtf8("font: 10pt \"Segoe UI\";"));
         label_tri->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        pushButton_Ouvrir = new QPushButton(centralwidget);
+        pushButton_Ouvrir->setObjectName("pushButton_Ouvrir");
+        pushButton_Ouvrir->setGeometry(QRect(1040, 460, 151, 31));
+        pushButton_Ouvrir->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
         GLocataire->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GLocataire);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1261, 25));
+        menubar->setGeometry(QRect(0, 0, 1261, 26));
         GLocataire->setMenuBar(menubar);
         statusbar = new QStatusBar(GLocataire);
         statusbar->setObjectName("statusbar");
@@ -794,6 +820,7 @@ public:
         pushButton_ChatBot->setText(QCoreApplication::translate("GLocataire", "ChatBot", nullptr));
         searchLineEdit->setPlaceholderText(QCoreApplication::translate("GLocataire", "Rechercher par nom...", nullptr));
         label_tri->setText(QCoreApplication::translate("GLocataire", "Trier par montant", nullptr));
+        pushButton_Ouvrir->setText(QCoreApplication::translate("GLocataire", "ouvrir", nullptr));
     } // retranslateUi
 
 };

@@ -1,19 +1,21 @@
-QT       += core gui sql printsupport charts network \
-    quick
+QT       += core gui sql printsupport charts network serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+TARGET = GEvennement
+TEMPLATE = app
+
 CONFIG += c++17
 
-# Add QXlsx source path (sources) using relative paths
 SOURCES += \
+    arduino.cpp \
     connection.cpp \
     glocataires.cpp \
     locataires.cpp \
     main.cpp
 
-# Add the header files using relative paths
 HEADERS += \
+    arduino.h \
     connection.h \
     glocataires.h \
     locataires.h
@@ -21,7 +23,5 @@ HEADERS += \
 FORMS += \
     glocataires.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+# Vérification de QtSerialPort (retirer la ligne LIBS si la version Qt5 gère cela automatiquement)
+#LIBS += -lQt5SerialPort

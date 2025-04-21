@@ -27,6 +27,9 @@
 
 #include "locataires.h"
 
+#include "arduino.h"
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class GLocataire;
@@ -62,8 +65,11 @@ private slots:
     void on_searchLineEdit_textChanged(const QString &text);
     void on_sortComboBox_currentIndexChanged(int index);
     void on_pushButton_ChatBot_clicked();
+    void on_pushButton_Ouvrir_clicked();  // bouton pour déclencher l'ouverture du moteur si RFID=1
+
 
 private:
+
     Ui::GLocataire *ui;
     Locataires L;
     QSqlQueryModel *model;
@@ -72,6 +78,9 @@ private:
     QString selectedTel;
     int identifiant;
     QNetworkAccessManager *networkManager;
+    Arduino A; // Instance Arduino pour la communication série
+    QByteArray data; // Pour stocker les données reçues de l'Arduino (utile pour update_label si besoin)
+
     void refreshTable();
     void populateFieldsFromSelection(const QModelIndex &index);
     void createPieChart();

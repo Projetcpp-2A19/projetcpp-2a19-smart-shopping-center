@@ -1,7 +1,8 @@
+#include "locataires.h"
 #include "glocataires.h"
 #include "ui_glocataires.h"
 #include "connection.h"
-#include "locataires.h"
+
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlError>
@@ -27,6 +28,8 @@
 #include <QTextDocument>
 #include <QUrlQuery>
 
+#include "arduino.h"
+
 GLocataire::GLocataire(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GLocataire)
@@ -38,32 +41,29 @@ GLocataire::GLocataire(QWidget *parent)
 {
     ui->setupUi(this);
 
-    Locataires L;
     Connection conn;
-
     if (!conn.createconnect()) {
         qDebug() << "Database connection failed!";
         QMessageBox::critical(this, "Database Error",
-                            "Failed to connect to the database: " +
-                            QSqlDatabase::database().lastError().text());
+                              "Failed to connect to the database: " +
+                                  QSqlDatabase::database().lastError().text());
         return;
     }
 
     qDebug() << "Database connected successfully!";
-    
-    // Initialize the table view
-    L.showLocataires(ui->tableView);
-    // Set up proxy model for sorting and filtering
-    proxyModel->setSourceModel(ui->tableView->model());
-    ui->tableView->setModel(proxyModel);
 
-    // Configure the proxy model for sorting
-    proxyModel->setDynamicSortFilter(true); // Enable dynamic sorting
-    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive); // Case-insensitive sorting
-    proxyModel->setSortLocaleAware(true); // Locale-aware sorting
+    // Setup the model and populate the table
+    model->setQuery("SELECT * FROM locataires");
+    ui->tableView->setModel(model);
+
+    // Configure the proxy for sorting and filtering
+    proxyModel->setSourceModel(model);
     ui->tableView->setModel(proxyModel);
-    
-    // Initialize sort combo box
+    proxyModel->setDynamicSortFilter(true);
+    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    proxyModel->setSortLocaleAware(true);
+
+    // Sorting options
     ui->sortComboBox->addItem("Par défaut");
     ui->sortComboBox->addItem("Montant croissant");
     ui->sortComboBox->addItem("Montant décroissant");
@@ -76,10 +76,30 @@ GLocataire::GLocataire(QWidget *parent)
     connect(ui->stat, &QPushButton::clicked, this, &GLocataire::on_stat_clicked);
     connect(ui->PDF, &QPushButton::clicked, this, &GLocataire::on_PDF_clicked);
     connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &GLocataire::on_searchLineEdit_textChanged);
-    connect(ui->sortComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), 
+    connect(ui->sortComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GLocataire::on_sortComboBox_currentIndexChanged);
     connect(ui->pushButton_ChatBot, &QPushButton::clicked, this, &GLocataire::on_pushButton_ChatBot_clicked);
+
+    // Arduino connection
+    int ret = A.connect_arduino();
+    switch (ret) {
+    case 0:
+        qDebug() << "Arduino connecté sur :" << A.getarduino_port_name();
+        break;
+    case 1:
+        qDebug() << "Arduino disponible mais non connecté";
+        break;
+    case -1:
+        qDebug() << "Arduino non disponible";
+        break;
+    }
+
+    QObject::connect(A.getserial(), SIGNAL(readyRead()), this, SLOT(update_label()));
+
+    // Connect button for opening the motor based on RFID
+    connect(ui->pushButton_Ouvrir, &QPushButton::clicked, this, &GLocataire::on_pushButton_Ouvrir_clicked);
 }
+
 
 GLocataire::~GLocataire()
 {
@@ -123,6 +143,22 @@ void GLocataire::on_tableView_clicked(const QModelIndex &index)
 {
     populateFieldsFromSelection(index);
 }
+void GLocataire::on_pushButton_Ouvrir_clicked()
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM locataires WHERE rfid = :rfid");
+    query.bindValue(":rfid", 1); // ou adapter selon tes besoins
+
+    if (query.exec() && query.next()) {
+        A.write_to_arduino("1"); // Commande à l'Arduino
+        QMessageBox::information(this, "Succès", "Locataire reconnu. Moteur en cours d'ouverture.");
+    } else {
+        QMessageBox::warning(this, "Erreur", "Aucun locataire avec RFID = 1 trouvé.");
+    }
+}
+
+
+
 
 void GLocataire::on_pushButton_Supprimer_clicked()
 {

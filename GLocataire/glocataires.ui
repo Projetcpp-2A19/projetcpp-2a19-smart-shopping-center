@@ -488,7 +488,7 @@ QHeaderView::section {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../photo.jpg</pixmap>
+     <pixmap>../photo.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -1112,6 +1112,43 @@ QComboBox::down-arrow:on {
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_Ouvrir">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>460</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>ouvrir</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1119,7 +1156,7 @@ QComboBox::down-arrow:on {
      <x>0</x>
      <y>0</y>
      <width>1261</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
