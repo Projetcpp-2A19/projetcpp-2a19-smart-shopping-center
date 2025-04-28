@@ -62,6 +62,8 @@ GLocataire::GLocataire(QWidget *parent)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortLocaleAware(true);
+    // Masquer la colonne RFID (index 9, si RFID est la 10e colonne)
+    ui->tableView->setColumnHidden(9, true);
 
     // Sorting options
     ui->sortComboBox->addItem("Par défaut");
@@ -121,39 +123,73 @@ void GLocataire::populateFieldsFromSelection(const QModelIndex &index)
     QAbstractItemModel *model = ui->tableView->model();
     int row = index.row();
 
-    // Populate the input fields with the selected row's data
-    ui->line_IDENTIFIANT->setText(model->data(model->index(row, 8)).toString());
-    ui->line_NOMLoc->setText(model->data(model->index(row, 1)).toString());
-    ui->line_PhoneLoc->setText(model->data(model->index(row, 2)).toString());
-    ui->line_MAILLoc->setText(model->data(model->index(row, 3)).toString());
-    ui->line_CONTRATLoc->setText(model->data(model->index(row, 7)).toString());
-    
-    // Set the combobox value based on payment status
-    QString statutPaiement = model->data(model->index(row, 6)).toString();
+    ui->line_NOMLoc->setText(model->data(model->index(row, 0)).toString());
+    ui->line_PhoneLoc->setText(model->data(model->index(row, 1)).toString());
+    ui->line_MAILLoc->setText(model->data(model->index(row, 2)).toString());
+    ui->line_TYPELoc->setText(model->data(model->index(row, 3)).toString());
+    ui->line_MONTANT_LOYERLOC->setText(model->data(model->index(row, 4)).toString());
+    QString statutPaiement = model->data(model->index(row, 5)).toString();
     int comboIndex = ui->comboBox_StatutPaiement->findText(statutPaiement);
     if (comboIndex != -1) {
         ui->comboBox_StatutPaiement->setCurrentIndex(comboIndex);
     }
-    
-    ui->line_TYPELoc->setText(model->data(model->index(row, 4)).toString());
-    ui->line_MONTANT_LOYERLOC->setText(model->data(model->index(row, 5)).toString());
+
+    ui->line_CONTRATLoc->setText(model->data(model->index(row, 6)).toString());
+    ui->line_IDENTIFIANT->setText(model->data(model->index(row, 8)).toString());
+
+    // Set the combobox value based on payment status
+
+    //ui->tableView->setColumnHidden(9, true);  // Cache la colonne RFID (index 9)
+
 }
 
 void GLocataire::on_tableView_clicked(const QModelIndex &index)
 {
     populateFieldsFromSelection(index);
 }
+
+
 void GLocataire::on_pushButton_Ouvrir_clicked()
 {
-    QSqlQuery query;
-    query.prepare("SELECT * FROM locataires WHERE rfid = :rfid");
-    query.bindValue(":rfid", 1); // ou adapter selon tes besoins
+    QSqlQuery rfidQuery;
+    if (!rfidQuery.exec("SELECT rfid FROM LOCATAIRES")) {
+        QMessageBox::critical(this, "Erreur", "Erreur lors de la lecture des RFID : " + rfidQuery.lastError().text());
+        return;
+    }
 
-    if (query.exec() && query.next()) {
-        A.write_to_arduino("1"); // Commande à l'Arduino
-        QMessageBox::information(this, "Succès", "Locataire reconnu. Moteur en cours d'ouverture.");
+    QSqlQuery idQuery;
+    if (!idQuery.exec("SELECT ID_LOCATAIRE FROM LOCATAIRES")) {
+        QMessageBox::critical(this, "Erreur", "Erreur lors de la lecture des ID_LOCATAIRE : " + idQuery.lastError().text());
+        return;
+    }
+
+    QSet<QString> idsSet;
+    qDebug() << "---- ID_LOCATAIRE lus ----";
+    while (idQuery.next()) {
+        QString id = idQuery.value(0).toString().trimmed();
+        idsSet.insert(id);
+        qDebug() << id;
+    }
+
+    bool matchFound = false;
+
+    qDebug() << "---- RFID lus ----";
+    while (rfidQuery.next()) {
+        QString rfidValue = rfidQuery.value(0).toString().trimmed();
+        qDebug() << rfidValue;
+
+        if (idsSet.contains(rfidValue)) {
+            matchFound = true;
+            qDebug() << "✅ Correspondance trouvée : " << rfidValue;
+            break;
+        }
+    }
+
+    if (matchFound) {
+        A.write_to_arduino("1");
+        QMessageBox::information(this, "Succès", "Correspondance RFID / ID_LOCATAIRE trouvée. Ouverture en cours...");
     } else {
-        QMessageBox::warning(this, "Erreur", "Aucun locataire avec RFID = 1 trouvé.");
+        QMessageBox::warning(this, "Erreur", "❌ Aucune correspondance RFID -> ID_LOCATAIRE trouvée.");
     }
 }
 
@@ -692,10 +728,10 @@ void GLocataire::sortLocataires(int sortOrder)
 
     switch (sortOrder) {
     case 1: // Montant croissant
-        proxyModel->sort(5, Qt::AscendingOrder);  // 5 est l'index de la colonne "Loyer"
+        proxyModel->sort(0, Qt::AscendingOrder);  // 5 est l'index de la colonne "Loyer"
         break;
     case 2: // Montant décroissant
-        proxyModel->sort(5, Qt::DescendingOrder);
+        proxyModel->sort(0, Qt::DescendingOrder);
         break;
     default: // Par défaut
         proxyModel->sort(-1); // Désactive le tri

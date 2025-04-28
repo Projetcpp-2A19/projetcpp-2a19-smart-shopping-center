@@ -83,7 +83,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         frame = new QFrame(centralwidget);
         frame->setObjectName("frame");
-        frame->setGeometry(QRect(210, 110, 271, 471));
+        frame->setGeometry(QRect(210, 100, 271, 471));
         frame->setStyleSheet(QString::fromUtf8("QFrame{\n"
 "    border: 3px solid grey;\n"
 "    border-radius: 4px;\n"
@@ -95,7 +95,7 @@ public:
         frame->setFrameShadow(QFrame::Shadow::Raised);
         line_NOMLoc = new QLineEdit(frame);
         line_NOMLoc->setObjectName("line_NOMLoc");
-        line_NOMLoc->setGeometry(QRect(40, 90, 191, 26));
+        line_NOMLoc->setGeometry(QRect(40, 60, 191, 26));
         line_NOMLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -108,7 +108,7 @@ public:
 "}"));
         line_PhoneLoc = new QLineEdit(frame);
         line_PhoneLoc->setObjectName("line_PhoneLoc");
-        line_PhoneLoc->setGeometry(QRect(40, 140, 191, 26));
+        line_PhoneLoc->setGeometry(QRect(40, 110, 191, 26));
         line_PhoneLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -121,7 +121,7 @@ public:
 "}"));
         line_CONTRATLoc = new QLineEdit(frame);
         line_CONTRATLoc->setObjectName("line_CONTRATLoc");
-        line_CONTRATLoc->setGeometry(QRect(40, 240, 191, 26));
+        line_CONTRATLoc->setGeometry(QRect(40, 220, 191, 26));
         line_CONTRATLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -134,7 +134,7 @@ public:
 "}"));
         line_MAILLoc = new QLineEdit(frame);
         line_MAILLoc->setObjectName("line_MAILLoc");
-        line_MAILLoc->setGeometry(QRect(40, 190, 191, 26));
+        line_MAILLoc->setGeometry(QRect(40, 160, 191, 26));
         line_MAILLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -148,7 +148,7 @@ public:
         line_IDLoc = new QLineEdit(frame);
         line_IDLoc->setObjectName("line_IDLoc");
         line_IDLoc->setEnabled(false);
-        line_IDLoc->setGeometry(QRect(40, 40, 191, 26));
+        line_IDLoc->setGeometry(QRect(40, 20, 191, 26));
         line_IDLoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -163,7 +163,7 @@ public:
         comboBox_StatutPaiement->addItem(QString());
         comboBox_StatutPaiement->addItem(QString());
         comboBox_StatutPaiement->setObjectName("comboBox_StatutPaiement");
-        comboBox_StatutPaiement->setGeometry(QRect(40, 340, 191, 26));
+        comboBox_StatutPaiement->setGeometry(QRect(40, 310, 191, 26));
         comboBox_StatutPaiement->setStyleSheet(QString::fromUtf8("QComboBox {\n"
 "    font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -191,7 +191,7 @@ public:
 "}"));
         line_MONTANT_LOYERLOC = new QLineEdit(frame);
         line_MONTANT_LOYERLOC->setObjectName("line_MONTANT_LOYERLOC");
-        line_MONTANT_LOYERLOC->setGeometry(QRect(40, 290, 191, 26));
+        line_MONTANT_LOYERLOC->setGeometry(QRect(40, 270, 191, 26));
         line_MONTANT_LOYERLOC->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -204,7 +204,7 @@ public:
 "}"));
         line_TYPELoc = new QLineEdit(frame);
         line_TYPELoc->setObjectName("line_TYPELoc");
-        line_TYPELoc->setGeometry(QRect(40, 390, 191, 26));
+        line_TYPELoc->setGeometry(QRect(30, 360, 191, 26));
         line_TYPELoc->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -217,7 +217,7 @@ public:
 "}"));
         line_IDENTIFIANT = new QLineEdit(frame);
         line_IDENTIFIANT->setObjectName("line_IDENTIFIANT");
-        line_IDENTIFIANT->setGeometry(QRect(40, 430, 191, 26));
+        line_IDENTIFIANT->setGeometry(QRect(20, 400, 191, 26));
         line_IDENTIFIANT->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
