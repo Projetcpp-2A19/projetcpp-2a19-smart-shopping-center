@@ -32,7 +32,10 @@ HEADERS += \
 FORMS += \
     gevennement.ui
 
-RESOURCES += resources.qrc
+RESOURCES += resources.qrc \
+    map.qrc \
+    map.qrc \
+    ressources.qrc
 
 # Additional paths
 INCLUDEPATH += $$PWD

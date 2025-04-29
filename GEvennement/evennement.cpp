@@ -68,7 +68,7 @@ void Evennement::showEvennements(QTableView *tableView)
         "FROM eyk.EVENEMENTS E "
         "LEFT JOIN eyk.LOCATAIRES L ON E.ID_LOCATAIRE = L.ID_LOCATAIRE "
         "ORDER BY E.NOM"
-    );
+        );
 
     if (!query.exec()) {
         qDebug() << "Erreur lors de l'exécution de la requête:" << query.lastError().text();
@@ -86,17 +86,17 @@ void Evennement::showEvennements(QTableView *tableView)
     int row = 0;
     while (query.next()) {
         QList<QStandardItem*> rowItems;
-        
+
         // Création des items dans l'ordre demandé
         rowItems << new QStandardItem(query.value("NOM").toString())
-                << new QStandardItem(query.value("TYPE").toString())
-                << new QStandardItem(query.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy"))
-                << new QStandardItem(query.value("DATE_FIN").toDate().toString("dd/MM/yyyy"))
-                << new QStandardItem(query.value("LIEU").toString())
-                << new QStandardItem(query.value("CAPACITE").toString())
-                << new QStandardItem(query.value("PRIX").toString())
-                << new QStandardItem(query.value("LOCATAIRE_NOM").toString())
-                << new QStandardItem(query.value("IDENTIFIANT").toString());
+                 << new QStandardItem(query.value("TYPE").toString())
+                 << new QStandardItem(query.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy"))
+                 << new QStandardItem(query.value("DATE_FIN").toDate().toString("dd/MM/yyyy"))
+                 << new QStandardItem(query.value("LIEU").toString())
+                 << new QStandardItem(query.value("CAPACITE").toString())
+                 << new QStandardItem(query.value("PRIX").toString())
+                 << new QStandardItem(query.value("LOCATAIRE_NOM").toString())
+                 << new QStandardItem(query.value("IDENTIFIANT").toString());
 
         // Configuration des items
         for(int col = 0; col < rowItems.size(); ++col) {
@@ -109,7 +109,7 @@ void Evennement::showEvennements(QTableView *tableView)
 
     // Configuration du tableau
     tableView->setModel(model);
-    
+
     // Définir une largeur spécifique pour chaque colonne
     QList<int> columnWidths = {150, 100, 100, 100, 150, 80, 80, 150, 100};
     for(int col = 0; col < columnWidths.size(); ++col) {
@@ -185,10 +185,10 @@ bool Evennement::ajout(QString nom, QString capacite, QString type, QString prix
     // L'ordre des champs correspond exactement à l'ordre de la base de données
     // ID_EVENT est géré par un déclencheur (trigger) Oracle
     QString queryStr = "INSERT INTO eyk.EVENEMENTS (NOM, TYPE, DATE_DEBUT, DATE_FIN, LIEU, CAPACITE, PRIX, ID_LOCATAIRE, IDENTIFIANT) "
-                      "VALUES (:nom, :type, :dateDebut, :dateFin, :lieu, :capacite, :prix, :idLocataire, :identifiant)";
-    
+                       "VALUES (:nom, :type, :dateDebut, :dateFin, :lieu, :capacite, :prix, :idLocataire, :identifiant)";
+
     qDebug() << "Requête SQL à exécuter:" << queryStr;
-    
+
     if (!query.prepare(queryStr)) {
         qDebug() << "Erreur lors de la préparation de la requête:" << query.lastError().text();
         return false;
@@ -260,28 +260,28 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
 
     // Essayer d'abord de rechercher par IDENTIFIANT
     QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE IDENTIFIANT = :id");
+    /*checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE IDENTIFIANT = :id");
     checkQuery.bindValue(":id", nomOuId);
-    
+
     if (!checkQuery.exec() || !checkQuery.next()) {
         QMessageBox::warning(nullptr, "Attention", "Impossible de vérifier l'existence de l'événement.");
         return false;
     }
-
+*/
     bool eventExists = checkQuery.value(0).toInt() > 0;
-    
+
     // Si non trouvé par IDENTIFIANT, essayer par NOM
     QString whereClause;
     QString paramName;
     if (!eventExists) {
         checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE NOM = :nom");
         checkQuery.bindValue(":nom", nomOuId);
-        
+
         if (!checkQuery.exec() || !checkQuery.next()) {
             QMessageBox::warning(nullptr, "Attention", "Impossible de vérifier l'existence de l'événement.");
             return false;
         }
-        
+
         eventExists = checkQuery.value(0).toInt() > 0;
         if (eventExists) {
             whereClause = "NOM = :valeur";
@@ -294,7 +294,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
         whereClause = "IDENTIFIANT = :valeur";
         paramName = "identifiant";
     }
-    
+
     if (!eventExists) {
         QMessageBox::warning(nullptr, "", "Aucun événement trouvé avec cet identifiant ou ce nom.");
         return false;
@@ -304,17 +304,17 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
     QSqlQuery nameQuery;
     nameQuery.prepare("SELECT NOM FROM eyk.EVENEMENTS WHERE " + whereClause);
     nameQuery.bindValue(":valeur", nomOuId);
-    
+
     QString eventName = nomOuId;
     if (nameQuery.exec() && nameQuery.next()) {
         eventName = nameQuery.value("NOM").toString();
     }
 
     // Demander confirmation à l'utilisateur
-    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Confirmation", 
-        QString("Voulez-vous vraiment supprimer l'événement '%1' ?").arg(eventName),
-        QMessageBox::Yes | QMessageBox::No);
-    
+    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Confirmation",
+                                                              QString("Voulez-vous vraiment supprimer l'événement '%1' ?").arg(eventName),
+                                                              QMessageBox::Yes | QMessageBox::No);
+
     if (reply == QMessageBox::No) {
         return false;
     }
@@ -329,7 +329,7 @@ bool Evennement::supprimer(QString nomOuId, QTableView *tableView)
         if (affectedRows > 0) {
             qDebug() << "Événement supprimé avec succès, lignes affectées:" << affectedRows;
             QMessageBox::information(nullptr, "Succès", "L'événement a été supprimé avec succès.");
-            
+
             // Rafraîchir l'affichage
             showEvennements(tableView);
             return true;
@@ -367,7 +367,6 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT COUNT(*) FROM eyk.EVENEMENTS WHERE NOM = :nom");
     checkQuery.bindValue(":nom", nom);
-
     if (!checkQuery.exec() || !checkQuery.next()) {
         QMessageBox::warning(nullptr, "Attention", "Impossible de vérifier l'existence de l'événement.");
         return false;
@@ -414,6 +413,7 @@ bool Evennement::modifier(QString nom, QString nouveauNom, QString capacite, QSt
         return false;
     }
 }
+
 bool Evennement::modifierTempEtHumd(const QString& temp, const QString& humd, QLabel *LABEL_temp)
 {
     QDate dateDuJour = QDate::currentDate();
@@ -423,35 +423,32 @@ bool Evennement::modifierTempEtHumd(const QString& temp, const QString& humd, QL
         return false;
     }
 
-
-
-    QSqlQuery updateQuery;
-    updateQuery.prepare(R"(
-        UPDATE eyk.EVENEMENTS
-        SET TEMP = :temp, HUMD = :humd
-        WHERE DATE_DEBUT = :dateDebut
-    )");
-    updateQuery.bindValue(":temp", temp);
-    updateQuery.bindValue(":humd", humd);
-    updateQuery.bindValue(":dateDebut", dateDuJour);
+    // Requête pour vérifier si un événement est en cours aujourd'hui
     QSqlQuery checkQuery;
     checkQuery.prepare(R"(
         SELECT NOM
         FROM eyk.EVENEMENTS
-        WHERE DATE_DEBUT = :dateDebut
+        WHERE :dateDuJour BETWEEN DATE_DEBUT AND DATE_FIN
     )");
-    checkQuery.bindValue(":dateDebut", dateDuJour);
+    checkQuery.bindValue(":dateDuJour", dateDuJour);
 
-    if (!checkQuery.exec() || !checkQuery.next())
-    {
-       // QMessageBox::warning(nullptr, "Attention", "Échec de la vérification de l'événement.");
-       // LABEL_temp->setText("Échec de vérification");
+    if (!checkQuery.exec() || !checkQuery.next()) {
         LABEL_temp->setText("Pas d'événement");
-
         return false;
     }
 
     QString nomEvenement = checkQuery.value(0).toString();
+
+    // Mise à jour des valeurs de température et humidité
+    QSqlQuery updateQuery;
+    updateQuery.prepare(R"(
+        UPDATE eyk.EVENEMENTS
+        SET TEMP = :temp, HUMD = :humd
+        WHERE :dateDuJour BETWEEN DATE_DEBUT AND DATE_FIN
+    )");
+    updateQuery.bindValue(":temp", temp);
+    updateQuery.bindValue(":humd", humd);
+    updateQuery.bindValue(":dateDuJour", dateDuJour);
 
     if (updateQuery.exec()) {
         if (updateQuery.numRowsAffected() > 0) {

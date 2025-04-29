@@ -26,12 +26,16 @@ GEvennement::GEvennement(QWidget *parent)
 {
     ui->setupUi(this);
     setupUi();
+    ui->centralwidget->setStyleSheet("QWidget#centralwidget { background-color:#f0c1cd; }");
+
+
 
     // Enregistrer les types QML nécessaires
     qRegisterMetaType<QGeoCoordinate>();
 
     // Initialiser le modèle avec QStandardItemModel au lieu de QSqlQueryModel
     model = new QStandardItemModel(this);
+
 
     // Ajouter un bouton pour le calendrier dans la barre d'outils
     QPushButton *calendarButton = new QPushButton("Calendrier", this);
@@ -53,13 +57,12 @@ GEvennement::GEvennement(QWidget *parent)
     )");
 
     // Positionner le bouton du calendrier à côté des autres boutons
-    calendarButton->setGeometry(820, 560, 171, 31);
+    calendarButton->setGeometry(717, 550, 115, 31);
     calendarButton->setParent(ui->centralwidget);
     calendarButton->show();
 
     // Connecter le signal clicked du bouton calendrier
     connect(calendarButton, &QPushButton::clicked, this, &GEvennement::on_pushButton_Calendar_clicked);
-
     // Afficher les événements au démarrage
     populateLocatairesComboBox();
     on_pushButton_Retreive_clicked();
@@ -76,6 +79,7 @@ GEvennement::GEvennement(QWidget *parent)
     }
     QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label())); // permet de lancer
     //le slot update_label suite à la reception du signal readyRead (reception des données).
+
 }
 
 
@@ -127,11 +131,11 @@ void GEvennement::update_label()
         if (tempValueVerif != tempValue || humdValueVerif != humdValue) {
             tempValueVerif = tempValue;
             humdValueVerif = humdValue;
-              E.modifierTempEtHumd(tempValue, humdValue,LABEL_temp);
+            E.modifierTempEtHumd(tempValue, humdValue,LABEL_temp);
         }
     } else
     {
-       // qDebug() << "Données non valides ignorées : " << data;
+        // qDebug() << "Données non valides ignorées : " << data;
     }
 
 }
@@ -614,7 +618,7 @@ void GEvennement::on_pushButton_TriType_clicked()
         }
 
         // Configuration supplémentaire du tableau
-     /*   ui->tableView->setSortingEnabled(true);
+        /*   ui->tableView->setSortingEnabled(true);
         ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
         ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
         ui->tableView->setAlternatingRowColors(true);*/
@@ -702,7 +706,7 @@ void GEvennement::on_pushButton_TriDate_clicked()
         }
 
         // Configuration supplémentaire du tableau
-       /* ui->tableView->setSortingEnabled(true);
+        /* ui->tableView->setSortingEnabled(true);
         ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
         ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
         ui->tableView->setAlternatingRowColors(true);*/
@@ -964,21 +968,21 @@ QChart *GEvennement::createPieChart()
             // Effet d'explosion au clic
             connect(slice, &QPieSlice::clicked, [=]()
                     {
-                if (slice->isExploded()) {
-                    slice->setExploded(false);
-                } else {
-                    slice->setExploded(true);
-                } });
+                        if (slice->isExploded()) {
+                            slice->setExploded(false);
+                        } else {
+                            slice->setExploded(true);
+                        } });
 
             // Effet de survol
             connect(slice, &QPieSlice::hovered, [=](bool show)
                     {
-                if (show) {
-                    slice->setLabelVisible(true);
-                    slice->setExploded(true);
-                } else {
-                    slice->setExploded(false);
-                } });
+                        if (show) {
+                            slice->setLabelVisible(true);
+                            slice->setExploded(true);
+                        } else {
+                            slice->setExploded(false);
+                        } });
         }
     }
 

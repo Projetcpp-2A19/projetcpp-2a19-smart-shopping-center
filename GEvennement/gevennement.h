@@ -29,7 +29,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
-    class GEvennement;
+class GEvennement;
 }
 QT_END_NAMESPACE
 

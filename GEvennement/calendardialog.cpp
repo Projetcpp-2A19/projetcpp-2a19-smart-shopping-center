@@ -109,7 +109,7 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             selection-background-color: #3498db;
             selection-color: white;
         }
-        
+
         QCalendarWidget QToolButton {
             height: 36px;
             color: #2c3e50;
@@ -118,15 +118,15 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             font-weight: bold;
             border-radius: 4px;
         }
-        
+
         QCalendarWidget QToolButton:hover {
             background-color: #ecf0f1;
         }
-        
+
         QCalendarWidget QToolButton:pressed {
             background-color: #bdc3c7;
         }
-        
+
         QCalendarWidget QWidget#qt_calendar_navigationbar {
             background-color: #f8f9fa;
             border-top-left-radius: 8px;
@@ -134,25 +134,25 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             padding: 4px;
             border-bottom: 1px solid #e0e0e0;
         }
-        
+
         QCalendarWidget QAbstractItemView {
             selection-background-color: #3498db;
             selection-color: white;
         }
-        
+
         QCalendarWidget QAbstractItemView:enabled {
             color: #2c3e50;
             background-color: white;
             font-size: 12px;
         }
-        
+
         QCalendarWidget QMenu {
             background-color: white;
             border: 1px solid #d0d0d0;
             border-radius: 4px;
             padding: 2px;
         }
-        
+
         QCalendarWidget QSpinBox {
             height: 30px;
             background-color: white;
@@ -162,7 +162,7 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             selection-background-color: #3498db;
             selection-color: white;
         }
-        
+
         /* Style amélioré du tableau */
         QTableView {
             border: 1px solid #e0e0e0;
@@ -173,17 +173,17 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             alternate-background-color: #f9f9f9;
             padding: 5px;
         }
-        
+
         QTableView::item {
             padding: 6px;
             border-bottom: 1px solid #ecf0f1;
         }
-        
+
         QTableView::item:selected {
             background-color: #3498db;
             color: white;
         }
-        
+
         QHeaderView::section {
             background-color: #3498db;
             color: white;
@@ -192,11 +192,11 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             border: none;
             border-right: 1px solid #2980b9;
         }
-        
+
         QHeaderView::section:first {
             border-top-left-radius: 6px;
         }
-        
+
         QHeaderView::section:last {
             border-top-right-radius: 6px;
             border-right: none;
@@ -211,27 +211,27 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             min-width: 100px;
             color: white;
         }
-        
+
         QPushButton:hover {
             opacity: 0.9;
         }
-        
+
         QPushButton:pressed {
             opacity: 0.7;
         }
-        
+
         QPushButton#addEventButton {
             background-color: #2ecc71;
         }
-        
+
         QPushButton#modifyEventButton {
             background-color: #3498db;
         }
-        
+
         QPushButton#deleteEventButton {
             background-color: #e74c3c;
         }
-        
+
         QPushButton#closeButton {
             background-color: #95a5a6;
         }
@@ -241,7 +241,7 @@ CalendarDialog::CalendarDialog(QWidget *parent):QDialog(parent)
             background-color: #e0e0e0;
             width: 2px;
         }
-        
+
         QSplitter::handle:hover {
             background-color: #3498db;
         }
@@ -756,22 +756,22 @@ void CalendarDialog::setupEventDialog(QDialog *dialog, CalendarEvent *event)
     // Ajouter des validations supplémentaires
     connect(dateDebutEdit, &QDateTimeEdit::dateTimeChanged, [=]()
             {
-        if (dateDebutEdit->dateTime() > dateFinEdit->dateTime()) {
-            dateFinEdit->setDateTime(dateDebutEdit->dateTime().addSecs(3600)); // Ajoute 1 heure
-        } });
+                if (dateDebutEdit->dateTime() > dateFinEdit->dateTime()) {
+                    dateFinEdit->setDateTime(dateDebutEdit->dateTime().addSecs(3600)); // Ajoute 1 heure
+                } });
 
     // Connecter le signal accepted pour valider et sauver les données
     connect(dialog, &QDialog::accepted, [=]()
             {
-        event->identifiant = idLineEdit->text();
-        event->nom = nomLineEdit->text();
-        event->type = typeComboBox->currentText();
-        event->dateDebut = dateDebutEdit->dateTime();
-        event->dateFin = dateFinEdit->dateTime();
-        event->lieu = lieuLineEdit->text();
-        event->capacite = capaciteLineEdit->text();
-        event->prix = prixLineEdit->text();
-        event->idLocataire = locataireComboBox->currentData().toString(); });
+                event->identifiant = idLineEdit->text();
+                event->nom = nomLineEdit->text();
+                event->type = typeComboBox->currentText();
+                event->dateDebut = dateDebutEdit->dateTime();
+                event->dateFin = dateFinEdit->dateTime();
+                event->lieu = lieuLineEdit->text();
+                event->capacite = capaciteLineEdit->text();
+                event->prix = prixLineEdit->text();
+                event->idLocataire = locataireComboBox->currentData().toString(); });
 }
 
 // Méthode auxiliaire pour remplir le combobox des locataires

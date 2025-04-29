@@ -23,7 +23,7 @@ private:
     QString lieu;
     QString ID_LOCATAIRE;
     QString IDENTIFIANT;
-    
+
     bool verifierConnexion() const {
         if (!QSqlDatabase::database().isValid()) {
             qDebug() << "La connexion à la base de données n'est pas valide!";
@@ -71,8 +71,8 @@ public:
     bool supprimer(QString nom, QTableView *tableView);
 
     bool modifier(QString nom, QString nouveauNom, QString capacite, QString type,
-                 QString prix, QDate dateDebut, QDate dateFin,
-                 QString lieu, QString idLocataire);
+                  QString prix, QDate dateDebut, QDate dateFin,
+                  QString lieu, QString idLocataire);
 
     bool modifierTempEtHumd(const QString& temp, const QString& humd,  QLabel *LABEL_temp);
     //void showTempHumd(const QString& temp, const QString& humd);
