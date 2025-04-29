@@ -68,6 +68,7 @@ public:
     QPushButton *pushButton_Afficher;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *layoutPrincipal;
+    QLineEdit *line_IDLOCATAIREboutique_2;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -99,7 +100,7 @@ public:
         frame_10->setFrameShadow(QFrame::Shadow::Raised);
         label = new QLabel(frame_10);
         label->setObjectName("label");
-        label->setGeometry(QRect(1150, -10, 61, 51));
+        label->setGeometry(QRect(1500, -10, 61, 51));
         label->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/debug/notif.png")));
         label->setScaledContents(true);
         pushButton_Modifier = new QPushButton(centralwidget);
@@ -610,6 +611,17 @@ public:
         layoutPrincipal = new QVBoxLayout(verticalLayoutWidget);
         layoutPrincipal->setObjectName("layoutPrincipal");
         layoutPrincipal->setContentsMargins(0, 0, 0, 0);
+        line_IDLOCATAIREboutique_2 = new QLineEdit(centralwidget);
+        line_IDLOCATAIREboutique_2->setObjectName("line_IDLOCATAIREboutique_2");
+        line_IDLOCATAIREboutique_2->setGeometry(QRect(590, 720, 191, 26));
+        line_IDLOCATAIREboutique_2->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: black;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
         GEvennement->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GEvennement);
         menubar->setObjectName("menubar");
@@ -679,6 +691,7 @@ public:
         pushButton_exporter_boutiques->setText(QCoreApplication::translate("GEvennement", "Exporter", nullptr));
         pushButton_vider_formulaire->setText(QCoreApplication::translate("GEvennement", "vider", nullptr));
         pushButton_Afficher->setText(QCoreApplication::translate("GEvennement", "Afficher", nullptr));
+        line_IDLOCATAIREboutique_2->setPlaceholderText(QCoreApplication::translate("GEvennement", "      ID LOCATAIRE", nullptr));
     } // retranslateUi
 
 };

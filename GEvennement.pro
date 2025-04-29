@@ -4,6 +4,11 @@ QT += printsupport
 QT += core gui sql widgets printsupport
 QT += core gui charts
 QT += charts
+QT += serialport
+CONFIG   += c++11
+
+TARGET = SpeechRecognitionApp
+TEMPLATE = app
 QMAKE_CXXFLAGS += -fpermissive
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -15,12 +20,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    arduino.cpp \
     boutique.cpp \
     connection.cpp \
     main.cpp \
     gevennement.cpp \
 
 HEADERS += \
+    arduino.h \
     boutique.h \
     connection.h \
     gevennement.h \

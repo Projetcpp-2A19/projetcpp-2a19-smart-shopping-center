@@ -7,6 +7,8 @@
 #include <QSystemTrayIcon>
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
+#include "arduino.h"
+#include <QRegularExpression>
 
 
 namespace Ui {
@@ -31,7 +33,7 @@ private slots:
     void on_pushButton_trier_boutiques_clicked();
     void on_pushButton_exporter_boutiques_clicked();
     void on_tableWidget_Boutique_clicked(const QModelIndex &index);
-
+    void readFromArduino(); // Si vous utilisez l'héritage de QObject
 
 private:
     Ui::GEvennement *ui;
@@ -46,6 +48,10 @@ private:
     QChartView *chartView;
     QPieSeries *series;
     void afficherHistogrammeMontants();
+    Arduino *arduino; // Déclaration de l'objet Arduino
+    void sendCommandToArduino(const QString &command);
+    void checkLocataireExistence(const QString &idLocataire);
+    void keyPressEvent(QKeyEvent *event);
 
 
 };

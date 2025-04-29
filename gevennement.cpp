@@ -1,5 +1,6 @@
 #include "gevennement.h"
 #include "ui_gevennement.h"
+#include "arduino.h"
 #include <QFileDialog>
 #include <QPrinter>
 #include <QPainter>
@@ -19,8 +20,7 @@
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QValueAxis>
-
-
+#include <QRegularExpression>
 
 
 GEvennement::GEvennement(QWidget *parent) :
@@ -28,9 +28,18 @@ GEvennement::GEvennement(QWidget *parent) :
     ui(new Ui::GEvennement),
     chart(nullptr),
     chartView(nullptr),
-    series(nullptr)
+    series(nullptr),
+    arduino(new Arduino())
 {
     ui->setupUi(this);
+
+    if (arduino->connect_arduino() == 0) {
+        qDebug() << "Arduino connecté avec succès.";
+        connect(arduino->getserial(), &QSerialPort::readyRead, this, &GEvennement::readFromArduino);
+    } else {
+        qDebug() << "Erreur de connexion à l'Arduino.";
+    }
+
 
     chartView = nullptr; // Initialisation
     chart = nullptr;
@@ -40,10 +49,10 @@ GEvennement::GEvennement(QWidget *parent) :
 
     connect(ui->pushButton_exporter_boutiques, &QPushButton::clicked, this, &GEvennement::on_pushButton_exporter_boutiques_clicked);
     connect(ui->pushButton_vider_formulaire, &QPushButton::clicked, this, &GEvennement::viderFormulaire);
-
-    // Activer l'adaptation des images à la taille des labels
+    connect(arduino->getserial(), &QSerialPort::readyRead, this, &GEvennement::readFromArduino);    // Activer l'adaptation des images à la taille des labels
     ui->lbl_Image_Display->setScaledContents(true);
     ui->lbl_Logo_Display->setScaledContents(true);
+
 
     // Charger l'image principale
     QString imagePath = QCoreApplication::applicationDirPath() + "/photo.jpg";
@@ -80,6 +89,7 @@ GEvennement::GEvennement(QWidget *parent) :
     ui->tableWidget_Boutique->setColumnCount(10);
     QStringList headers = {"ID", "Nom", "Type", "Localisation", "Surface", "Montant", "État", "Horaire", "ID_EMPLOYE", "ID_LOCATAIRE" };
     ui->tableWidget_Boutique->setHorizontalHeaderLabels(headers);
+
 
 
 
@@ -268,56 +278,7 @@ void GEvennement::on_pushButton_Ajouter_clicked() {
         QMessageBox::critical(this, "Erreur", "Échec de l'ajout de la boutique");
     }
 }
-/*void GEvennement::on_pushButton_Ajouter_clicked()
-{
-    Boutique b = lireFormulaire();
-    QString errorMessage;
 
-    if (b.getNom().isEmpty() || b.getType().isEmpty() || b.getLocalisation().isEmpty() ||
-        b.getIdEmploye().isEmpty() || b.getIdLocataire().isEmpty()) {
-        errorMessage += "Veuillez remplir tous les champs obligatoires.\n";
-    }
-
-    if (b.getSurface() <= 0) {
-        errorMessage += "La surface doit être un chiffre positif.\n";
-    }
-
-    if (b.getMontant() <= 0) {
-        errorMessage += "Le montant doit être un chiffre positif.\n";
-    }
-
-    if (!QRegularExpression("^[0-9]+$").match(b.getIdEmploye()).hasMatch()) {
-        errorMessage += "L'ID employé doit contenir uniquement des chiffres.\n";
-    }
-
-    if (!QRegularExpression("^[0-9]+$").match(b.getIdLocataire()).hasMatch()) {
-        errorMessage += "L'ID locataire doit contenir uniquement des chiffres.\n";
-    }
-
-    if (!errorMessage.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", errorMessage);
-        return;
-    }
-
-    if (!QRegularExpression("^[a-zA-Z0-9]{3,}$").match(b.getNom()).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Le nom de la boutique doit contenir au minimum 3 lettres ou chiffres.");
-        return;
-    }
-
-    if (!QRegularExpression("^[a-zA-Z]{3,}$").match(b.getType()).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Le type de la boutique doit contenir au minimum 3 lettres.");
-        return;
-    }
-
-    if (Boutique::ajouter(b)) {
-        QMessageBox::information(this, "Succès", "Boutique ajoutée avec succès");
-        viderFormulaire();
-        chargerBoutiques();
-    } else {
-        QMessageBox::critical(this, "Erreur", "Échec de l'ajout de la boutique");
-    }
-}
-*/
 void GEvennement::on_pushButton_Modifier_clicked(){
     QModelIndex index = ui->tableWidget_Boutique->currentIndex();
     if (!index.isValid()) {
@@ -606,4 +567,107 @@ void GEvennement::afficherHistogrammeMontants()
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
     ui->layoutPrincipal->addWidget(chartView);
+}
+
+
+void GEvennement::readFromArduino() {
+    static QString buffer;
+    static QRegularExpression idRegex(R"((\d+))"); // Regex pour extraire uniquement les chiffres
+
+    while (arduino->getserial()->bytesAvailable()) {
+        QByteArray rawData = arduino->read_from_arduino();
+        buffer += QString::fromUtf8(rawData);
+
+        // Détection de fin de trame (n'importe quel caractère non numérique)
+        QRegularExpressionMatch match = idRegex.match(buffer);
+        if (match.hasMatch()) {
+            QString receivedId = match.captured(1);
+            qDebug() << "ID validé :" << receivedId;
+
+            // Mise à jour UI et vérification
+            QMetaObject::invokeMethod(this, [this, receivedId]() {
+                ui->line_IDLOCATAIREboutique_2->setText(receivedId);
+                checkLocataireExistence(receivedId);
+            }, Qt::QueuedConnection);
+
+            buffer.clear(); // Réinitialiser après traitement réussi
+        }
+        else if (buffer.length() > 10) { // Anti-buffer overflow
+            buffer.clear();
+        }
+    }
+}
+void GEvennement::checkLocataireExistence(const QString &idLocataire) {
+    QSqlQuery query;
+    bool conversionOk;
+    int id = idLocataire.toInt(&conversionOk);
+
+    // Vérification de la conversion numérique
+    if (!conversionOk) {
+        QMessageBox::critical(this, "Erreur", "Format ID invalide - Veuillez entrer un nombre");
+        sendCommandToArduino("ERR_INVALID_FORMAT");
+        return;
+    }
+
+    // Vérification existence du locataire
+    query.prepare("SELECT ID_LOCATAIRE FROM locataires WHERE ID_LOCATAIRE = ?");
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        qCritical() << "Erreur SQL :" << query.lastError().text();
+        QMessageBox::critical(this, "Erreur DB",
+                              "Erreur de vérification ID:\n" + query.lastError().text());
+        return;
+    }
+
+    if (query.next()) {
+        // Mise à jour du RFID
+        QSqlQuery updateQuery;
+        updateQuery.prepare("UPDATE locataires SET RFID = ? WHERE ID_LOCATAIRE = ?");
+        updateQuery.addBindValue(id); // RFID (même valeur que l'ID)
+        updateQuery.addBindValue(id); // ID_LOCATAIRE
+
+        if (updateQuery.exec()) {
+            if (updateQuery.numRowsAffected() > 0) {
+                QMessageBox::information(
+                    this,
+                    "Mise à jour réussie",
+                    QString("ID %1 - RFID mis à jour avec succès").arg(id)
+                    );
+                sendCommandToArduino("RFID_OK");
+            } else {
+                QMessageBox::warning(
+                    this,
+                    "Aucun changement",
+                    "Le RFID était déjà configuré pour cet ID"
+                    );
+            }
+        } else {
+            QMessageBox::critical(
+                this,
+                "Erreur mise à jour",
+                "Échec de la mise à jour RFID:\n" + updateQuery.lastError().text()
+                );
+        }
+    } else {
+        QMessageBox::warning(
+            this,
+            "ID introuvable",
+            QString("Aucun locataire avec l'ID: %1").arg(id)
+            );
+        sendCommandToArduino("NF");
+    }
+}
+void GEvennement::keyPressEvent(QKeyEvent *event) {
+    qDebug() << "Touche pressée:" << event->key();
+    QMainWindow::keyPressEvent(event); // Appeler la méthode de base
+}
+// Modifier sendCommandToArduino() pour ajouter des logs :
+void GEvennement::sendCommandToArduino(const QString &command) {
+    if (arduino->getserial()->isOpen()) {
+        QByteArray data = command.toUtf8() + '\n';
+        arduino->getserial()->write(data);
+        arduino->getserial()->flush();
+        qDebug() << "Commande envoyée :" << data.trimmed();
+    }
 }

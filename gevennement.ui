@@ -1005,6 +1005,29 @@ QPushButton:default {
     </property>
     <layout class="QVBoxLayout" name="layoutPrincipal"/>
    </widget>
+   <widget class="QLineEdit" name="line_IDLOCATAIREboutique_2">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>720</y>
+      <width>191</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: black;
+    selection-background-color: darkgray;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>      ID LOCATAIRE</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
