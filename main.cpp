@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include "gevennement.h"
+#include "gboutique.h"
 
 int main(int argc, char *argv[])
 {

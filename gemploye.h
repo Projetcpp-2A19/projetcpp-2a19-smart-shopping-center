@@ -51,6 +51,7 @@ private slots:
 
     void on_pushButton_Evennements_clicked();
 
+    void on_pushButton_Boutiques_clicked();
 private:
     Ui::gemploye *ui;
     Employee Etmp; // Objet employé

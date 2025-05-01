@@ -69,7 +69,7 @@ public:
     {
         if (gemploye->objectName().isEmpty())
             gemploye->setObjectName("gemploye");
-        gemploye->resize(1095, 750);
+        gemploye->resize(1099, 751);
         gemploye->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
 "    background: #f0c1cd;  \n"
 "}\n"
@@ -557,7 +557,7 @@ public:
         lbl_Logo_Display->setScaledContents(true);
         frame_3 = new QFrame(centralwidget);
         frame_3->setObjectName("frame_3");
-        frame_3->setGeometry(QRect(180, -10, 811, 31));
+        frame_3->setGeometry(QRect(180, -10, 961, 31));
         frame_3->setStyleSheet(QString::fromUtf8("QFrame {\n"
 "    background: rgb(0, 162, 198);\n"
 "    border: 2px solid #00a2c6;\n"
@@ -587,7 +587,7 @@ public:
         QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(7, __qtablewidgetitem7);
         tableWidget->setObjectName("tableWidget");
-        tableWidget->setGeometry(QRect(470, 170, 521, 321));
+        tableWidget->setGeometry(QRect(530, 220, 521, 321));
         tableWidget->setStyleSheet(QString::fromUtf8("QTableWidget {\n"
 "    background-color: #f5f5f5;  /* Fond gris clair pour le tableau */\n"
 "    border-radius: 10px;         /* Coins arrondis pour un effet moderne */\n"
@@ -665,7 +665,7 @@ public:
 ""));
         pushButton_rechercher = new QPushButton(centralwidget);
         pushButton_rechercher->setObjectName("pushButton_rechercher");
-        pushButton_rechercher->setGeometry(QRect(660, 130, 121, 31));
+        pushButton_rechercher->setGeometry(QRect(720, 180, 121, 31));
         pushButton_rechercher->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -690,7 +690,7 @@ public:
 "}"));
         lineEdit_nom_recherche = new QLineEdit(centralwidget);
         lineEdit_nom_recherche->setObjectName("lineEdit_nom_recherche");
-        lineEdit_nom_recherche->setGeometry(QRect(460, 130, 171, 26));
+        lineEdit_nom_recherche->setGeometry(QRect(520, 180, 171, 26));
         lineEdit_nom_recherche->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -701,7 +701,7 @@ public:
 "}"));
         pushButton_trier = new QPushButton(centralwidget);
         pushButton_trier->setObjectName("pushButton_trier");
-        pushButton_trier->setGeometry(QRect(860, 130, 121, 31));
+        pushButton_trier->setGeometry(QRect(920, 180, 121, 31));
         pushButton_trier->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -726,7 +726,7 @@ public:
 "}"));
         pushButton_stats = new QPushButton(centralwidget);
         pushButton_stats->setObjectName("pushButton_stats");
-        pushButton_stats->setGeometry(QRect(520, 500, 171, 31));
+        pushButton_stats->setGeometry(QRect(580, 550, 171, 31));
         pushButton_stats->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -751,7 +751,7 @@ public:
 "}"));
         pushButton_ajouter_id_empreinte = new QPushButton(centralwidget);
         pushButton_ajouter_id_empreinte->setObjectName("pushButton_ajouter_id_empreinte");
-        pushButton_ajouter_id_empreinte->setGeometry(QRect(780, 510, 171, 31));
+        pushButton_ajouter_id_empreinte->setGeometry(QRect(840, 560, 171, 31));
         pushButton_ajouter_id_empreinte->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -777,7 +777,7 @@ public:
         gemploye->setCentralWidget(centralwidget);
         menubar = new QMenuBar(gemploye);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1095, 26));
+        menubar->setGeometry(QRect(0, 0, 1099, 26));
         gemploye->setMenuBar(menubar);
         statusbar = new QStatusBar(gemploye);
         statusbar->setObjectName("statusbar");

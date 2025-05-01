@@ -28,6 +28,8 @@
 #include"glocataires.h"
 #include"gevennement.h"
 
+#include "gboutique.h"
+
 gemploye::gemploye(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::gemploye)
@@ -698,6 +700,12 @@ void gemploye::on_pushButton_Evennements_clicked()
 {
     GEvennement *eventWindow = new GEvennement(this); // `this` pour que la fenêtre soit liée à la fenêtre principale
     eventWindow->show(); // Ouvre comme une boîte de dialogue modale
+    // locataireWindow->show(); // Alternative : fenêtre non-modale
+}
+void gemploye::on_pushButton_Boutiques_clicked()
+{
+    gboutique *boutiqueWindow = new gboutique(this); // `this` pour que la fenêtre soit liée à la fenêtre principale
+    boutiqueWindow->show(); // Ouvre comme une boîte de dialogue modale
     // locataireWindow->show(); // Alternative : fenêtre non-modale
 }
 

@@ -21,10 +21,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     arduino.cpp \
     authentification.cpp \
+    boutique.cpp \
     calendardialog.cpp \
     connection.cpp \
     employee.cpp \
     evennement.cpp \
+    gboutique.cpp \
     gemploye.cpp \
     gevennement.cpp \
     glocataires.cpp \
@@ -35,10 +37,12 @@ SOURCES += \
 HEADERS += \
     arduino.h \
     authentification.h \
+    boutique.h \
     calendardialog.h \
     connection.h \
     employee.h \
     evennement.h \
+    gboutique.h \
     gemploye.h \
     gevennement.h \
     glocataires.h \
@@ -46,6 +50,7 @@ HEADERS += \
 
 # UI Files
 FORMS += \
+    gboutique.ui \
     gemploye.ui \
     gevennement.ui \
     glocataires.ui

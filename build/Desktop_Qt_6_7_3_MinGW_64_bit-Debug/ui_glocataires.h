@@ -44,7 +44,6 @@ public:
     QPushButton *pushButton_Modifier;
     QLabel *label_TITLE;
     QTableView *tableView;
-    QLabel *lbl_Image_Display;
     QFrame *frame_gestions;
     QPushButton *pushButton_Dashboard;
     QPushButton *pushButton_Employes;
@@ -53,7 +52,6 @@ public:
     QPushButton *pushButton_Services;
     QPushButton *pushButton_Evennements;
     QPushButton *pushButton_deconnecter;
-    QLabel *lbl_Logo_Display;
     QFrame *frame_2;
     QFrame *frame_3;
     QPushButton *pushButton_Retreive;
@@ -71,7 +69,7 @@ public:
     {
         if (GLocataire->objectName().isEmpty())
             GLocataire->setObjectName("GLocataire");
-        GLocataire->resize(1261, 638);
+        GLocataire->resize(1098, 770);
         GLocataire->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
 "    background: #f0c1cd;  \n"
 "}\n"
@@ -280,7 +278,7 @@ public:
 "}"));
         pushButton_Modifier = new QPushButton(centralwidget);
         pushButton_Modifier->setObjectName("pushButton_Modifier");
-        pushButton_Modifier->setGeometry(QRect(670, 510, 121, 31));
+        pushButton_Modifier->setGeometry(QRect(520, 560, 121, 31));
         pushButton_Modifier->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -314,7 +312,7 @@ public:
 ""));
         tableView = new QTableView(centralwidget);
         tableView->setObjectName("tableView");
-        tableView->setGeometry(QRect(500, 130, 741, 321));
+        tableView->setGeometry(QRect(500, 130, 571, 321));
         tableView->setStyleSheet(QString::fromUtf8("QTableView {\n"
 "    background-color: white;\n"
 "    border: 2px solid gray;\n"
@@ -340,15 +338,9 @@ public:
 "    border: 1px solid #666;\n"
 "    font-weight: bold;\n"
 "}"));
-        lbl_Image_Display = new QLabel(centralwidget);
-        lbl_Image_Display->setObjectName("lbl_Image_Display");
-        lbl_Image_Display->setEnabled(true);
-        lbl_Image_Display->setGeometry(QRect(660, 20, 151, 121));
-        lbl_Image_Display->setPixmap(QPixmap(QString::fromUtf8("../photo.jpg")));
-        lbl_Image_Display->setScaledContents(true);
         frame_gestions = new QFrame(centralwidget);
         frame_gestions->setObjectName("frame_gestions");
-        frame_gestions->setGeometry(QRect(0, 0, 181, 571));
+        frame_gestions->setGeometry(QRect(0, 0, 181, 731));
         frame_gestions->setStyleSheet(QString::fromUtf8("QFrame {\n"
 "    background: rgb(0, 162, 198);\n"
 "    border: 2px solid #00a2c6;\n"
@@ -534,7 +526,7 @@ public:
 ""));
         pushButton_deconnecter = new QPushButton(frame_gestions);
         pushButton_deconnecter->setObjectName("pushButton_deconnecter");
-        pushButton_deconnecter->setGeometry(QRect(0, 500, 181, 51));
+        pushButton_deconnecter->setGeometry(QRect(0, 620, 181, 51));
         pushButton_deconnecter->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "  \n"
 "    font: 9pt \"Segoe UI\";\n"
@@ -560,11 +552,6 @@ public:
 "    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
 "}\n"
 ""));
-        lbl_Logo_Display = new QLabel(frame_gestions);
-        lbl_Logo_Display->setObjectName("lbl_Logo_Display");
-        lbl_Logo_Display->setGeometry(QRect(0, 0, 181, 91));
-        lbl_Logo_Display->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/debug/logo.gif")));
-        lbl_Logo_Display->setScaledContents(true);
         frame_2 = new QFrame(frame_gestions);
         frame_2->setObjectName("frame_2");
         frame_2->setGeometry(QRect(120, 540, 120, 80));
@@ -572,7 +559,7 @@ public:
         frame_2->setFrameShadow(QFrame::Shadow::Raised);
         frame_3 = new QFrame(centralwidget);
         frame_3->setObjectName("frame_3");
-        frame_3->setGeometry(QRect(180, -10, 621, 31));
+        frame_3->setGeometry(QRect(180, -10, 931, 31));
         frame_3->setStyleSheet(QString::fromUtf8("QFrame {\n"
 "    background: rgb(0, 162, 198);\n"
 "    border: 2px solid #00a2c6;\n"
@@ -584,7 +571,7 @@ public:
         frame_3->setFrameShadow(QFrame::Shadow::Raised);
         pushButton_Retreive = new QPushButton(centralwidget);
         pushButton_Retreive->setObjectName("pushButton_Retreive");
-        pushButton_Retreive->setGeometry(QRect(820, 460, 121, 31));
+        pushButton_Retreive->setGeometry(QRect(520, 610, 121, 31));
         pushButton_Retreive->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -609,7 +596,7 @@ public:
 "}"));
         stat = new QPushButton(centralwidget);
         stat->setObjectName("stat");
-        stat->setGeometry(QRect(840, 510, 151, 31));
+        stat->setGeometry(QRect(690, 480, 151, 31));
         stat->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -634,7 +621,7 @@ public:
 "}"));
         PDF = new QPushButton(centralwidget);
         PDF->setObjectName("PDF");
-        PDF->setGeometry(QRect(1040, 510, 151, 31));
+        PDF->setGeometry(QRect(700, 540, 151, 31));
         PDF->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -659,7 +646,7 @@ public:
 "}"));
         pushButton_ChatBot = new QPushButton(centralwidget);
         pushButton_ChatBot->setObjectName("pushButton_ChatBot");
-        pushButton_ChatBot->setGeometry(QRect(1030, 80, 141, 41));
+        pushButton_ChatBot->setGeometry(QRect(940, 80, 141, 41));
         pushButton_ChatBot->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #4CAF50;\n"
 "    border: none;\n"
@@ -680,7 +667,7 @@ public:
 "}"));
         searchLineEdit = new QLineEdit(centralwidget);
         searchLineEdit->setObjectName("searchLineEdit");
-        searchLineEdit->setGeometry(QRect(640, 90, 200, 31));
+        searchLineEdit->setGeometry(QRect(520, 90, 200, 31));
         searchLineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
 "	font: 11pt \"Segoe UI\";\n"
 "    border: 2px solid gray;\n"
@@ -693,7 +680,7 @@ public:
 "}"));
         sortComboBox = new QComboBox(centralwidget);
         sortComboBox->setObjectName("sortComboBox");
-        sortComboBox->setGeometry(QRect(850, 90, 169, 31));
+        sortComboBox->setGeometry(QRect(740, 90, 169, 31));
         sortComboBox->setStyleSheet(QString::fromUtf8("QComboBox {\n"
 "    border: 2px solid gray;\n"
 "    border-radius: 10px;\n"
@@ -744,12 +731,12 @@ public:
 "}"));
         label_tri = new QLabel(centralwidget);
         label_tri->setObjectName("label_tri");
-        label_tri->setGeometry(QRect(860, 60, 131, 21));
+        label_tri->setGeometry(QRect(760, 60, 131, 21));
         label_tri->setStyleSheet(QString::fromUtf8("font: 10pt \"Segoe UI\";"));
         label_tri->setAlignment(Qt::AlignmentFlag::AlignCenter);
         pushButton_Ouvrir = new QPushButton(centralwidget);
         pushButton_Ouvrir->setObjectName("pushButton_Ouvrir");
-        pushButton_Ouvrir->setGeometry(QRect(1040, 460, 151, 31));
+        pushButton_Ouvrir->setGeometry(QRect(880, 480, 151, 31));
         pushButton_Ouvrir->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	font: 14pt \"Segoe UI\";\n"
 "	color: rgb(255, 255, 255);\n"
@@ -775,7 +762,7 @@ public:
         GLocataire->setCentralWidget(centralwidget);
         menubar = new QMenuBar(GLocataire);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1261, 26));
+        menubar->setGeometry(QRect(0, 0, 1098, 26));
         GLocataire->setMenuBar(menubar);
         statusbar = new QStatusBar(GLocataire);
         statusbar->setObjectName("statusbar");
@@ -805,7 +792,6 @@ public:
         pushButton_Supprimer->setText(QCoreApplication::translate("GLocataire", "Supprimer", nullptr));
         pushButton_Modifier->setText(QCoreApplication::translate("GLocataire", "Modifier", nullptr));
         label_TITLE->setText(QCoreApplication::translate("GLocataire", "Gestion des locataires", nullptr));
-        lbl_Image_Display->setText(QString());
         pushButton_Dashboard->setText(QCoreApplication::translate("GLocataire", "Dashboard", nullptr));
         pushButton_Employes->setText(QCoreApplication::translate("GLocataire", "Employ\303\251s", nullptr));
         pushButton_Boutiques->setText(QCoreApplication::translate("GLocataire", "Boutiques", nullptr));
@@ -813,7 +799,6 @@ public:
         pushButton_Services->setText(QCoreApplication::translate("GLocataire", "Services", nullptr));
         pushButton_Evennements->setText(QCoreApplication::translate("GLocataire", "Evennements", nullptr));
         pushButton_deconnecter->setText(QCoreApplication::translate("GLocataire", "se d\303\251connecter", nullptr));
-        lbl_Logo_Display->setText(QString());
         pushButton_Retreive->setText(QCoreApplication::translate("GLocataire", "Retreive", nullptr));
         stat->setText(QCoreApplication::translate("GLocataire", "STATISTIQUES", nullptr));
         PDF->setText(QCoreApplication::translate("GLocataire", "PDF", nullptr));
