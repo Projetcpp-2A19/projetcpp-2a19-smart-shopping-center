@@ -1,0 +1,10 @@
+debug/arduino.o
+debug/authentification.o
+debug/connection.o
+debug/employee.o
+debug/gemploye.o
+debug/glocataires.o
+debug/locataires.o
+debug/main.o
+debug/moc_gemploye.o
+debug/moc_glocataires.o

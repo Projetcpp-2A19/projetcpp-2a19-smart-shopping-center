@@ -1,0 +1,10 @@
+release/arduino.o
+release/authentification.o
+release/connection.o
+release/employee.o
+release/gemploye.o
+release/glocataires.o
+release/locataires.o
+release/main.o
+release/moc_gemploye.o
+release/moc_glocataires.o

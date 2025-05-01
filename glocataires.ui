@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GLocataire</class>
+ <widget class="QMainWindow" name="GLocataire">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1098</width>
+    <height>770</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GEvennement</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background: #f0c1cd;  
+}
+
+
+</string>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>100</y>
+      <width>271</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame{
+    border: 3px solid grey;
+    border-radius: 4px;
+    padding: 2px;
+     border-radius: 10px;
+    background-color:  rgb(0, 162, 198);
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QLineEdit" name="line_NOMLoc">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>            NOM</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_PhoneLoc">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>110</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>             TEL</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_CONTRATLoc">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>220</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>          CONTRAT</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_MAILLoc">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>160</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>             MAIL</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_IDLoc">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>20</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>               ID</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_StatutPaiement">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>310</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    color: black;
+}
+
+QComboBox::drop-down {
+    border: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(down_arrow.png);
+    width: 12px;
+    height: 12px;
+}
+
+QComboBox QAbstractItemView {
+    color: black;
+    background-color: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+}</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Payé</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Non payé</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLineEdit" name="line_MONTANT_LOYERLOC">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>270</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>    MONTANT LOYER</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_TYPELoc">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>360</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>             TYPE</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_IDENTIFIANT">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>400</y>
+       <width>191</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+     </property>
+     <property name="placeholderText">
+      <string>          IDENTIFIANT</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Ajouter">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>460</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>Ajouter</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Supprimer">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>510</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>Supprimer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Modifier">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>560</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>Modifier</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_TITLE">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>20</y>
+      <width>581</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+	font: 36pt &quot;Imprint MT Shadow&quot;;
+    color: rgb(0, 162, 198);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Gestion des locataires</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>130</y>
+      <width>571</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTableView {
+    background-color: white;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 2px;
+    font: 11pt &quot;Segoe UI&quot;;
+    color: black;
+}
+
+QTableView::item {
+    color: black;
+}
+
+QTableView::item:selected {
+    background-color: rgb(0, 162, 198);
+    color: white;
+}
+
+QHeaderView::section {
+    background-color: rgb(0, 162, 198);
+    color: white;
+    padding: 4px;
+    border: 1px solid #666;
+    font-weight: bold;
+}</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_gestions">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>181</width>
+      <height>731</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+    background: rgb(0, 162, 198);
+    border: 2px solid #00a2c6;
+    border-radius: 4px;
+    padding: 2px;
+}
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="pushButton_Dashboard">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>100</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Dashboard</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Employes">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>150</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Employés</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Boutiques">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>200</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Boutiques</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Locataires">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>250</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Locataires</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Services">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>300</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Services</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Evennements">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>350</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Evennements</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_deconnecter">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>620</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+  
+    font: 9pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 12pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>se déconnecter</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>540</y>
+       <width>120</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_3">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>-10</y>
+      <width>931</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+    background: rgb(0, 162, 198);
+    border: 2px solid #00a2c6;
+    border-radius: 4px;
+    padding: 2px;
+}
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Retreive">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>610</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>Retreive</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stat">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>480</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>STATISTIQUES</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PDF">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>540</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>PDF</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ChatBot">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>80</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+QPushButton:hover {
+    background-color: #45a049;
+}
+
+QPushButton:pressed {
+    background-color: #3d8b40;
+}</string>
+    </property>
+    <property name="text">
+     <string>ChatBot</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="searchLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>90</y>
+      <width>200</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+	font: 11pt &quot;Segoe UI&quot;;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: white;
+    selection-background-color: rgb(0, 162, 198);
+    selection-color: white;
+    color: black;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>Rechercher par nom...</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="sortComboBox">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>90</y>
+      <width>169</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+	font: 11pt &quot;Segoe UI&quot;;
+    background: white;
+    color: black;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+}
+
+QComboBox:on {
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+QComboBox::down-arrow {
+    image: url(:/icons/arrow-down.png);
+}
+
+QComboBox::down-arrow:on {
+    top: 1px;
+    left: 1px;
+}</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_tri">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>60</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;Segoe UI&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Trier par montant</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Ouvrir">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>480</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	font: 14pt &quot;Segoe UI&quot;;
+	color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #00a2c6, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+    </property>
+    <property name="text">
+     <string>ouvrir</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1098</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
