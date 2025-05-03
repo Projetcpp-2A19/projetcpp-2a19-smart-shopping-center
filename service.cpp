@@ -165,3 +165,41 @@ QSqlQueryModel* Service::afficher() {
     model->setQuery("SELECT * FROM SERVICES");
     return model;
 }
+QSqlQueryModel* Service::rechercherParId(QString id) {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery query;
+    query.prepare("SELECT * FROM SERVICES WHERE ID_SERVICE = :id");
+    query.bindValue(":id", id);
+    query.exec();
+    model->setQuery(std::move(query));
+    return model;
+}
+QSqlQueryModel* Service::trierParPriorite() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT * FROM SERVICES ORDER BY PRIORITE DESC");
+    return model;
+}
+QSqlQueryModel* Service::statistiquesDemandes() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT * FROM STATS_DEMANDES ORDER BY NBR_DEMANDES DESC");
+    return model;
+}
+void Service::enregistrerHistorique(QString id, QString action, QString ancienStatut, QString nouveauStatut)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO HISTORIQUE_SERVICES (ID_SERVICE, TYPE_ACTION, ANCIEN_STATUT, NOUVEAU_STATUT) "
+                  "VALUES (:id, :action, :ancien, :nouveau)");
+    query.bindValue(":id", id);
+    query.bindValue(":action", action);
+    query.bindValue(":ancien", ancienStatut);
+    query.bindValue(":nouveau", nouveauStatut);
+    query.exec();
+}
+QSqlQueryModel* Service::afficherHistorique()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT * FROM HISTORIQUE_SERVICES ORDER BY DATE_ACTION DESC");
+    return model;
+}
+
+

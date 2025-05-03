@@ -33,6 +33,18 @@ public:
     static bool supprimer(QString id);
     static bool existeDeja(QString id);
     static QSqlQueryModel* afficher();
+    static QSqlQueryModel* rechercherParId(QString id);
+    static QSqlQueryModel* trierParPriorite();
+    static QSqlQueryModel* statistiquesDemandes();
+    static void enregistrerHistorique(QString id, QString action, QString ancienStatut, QString nouveauStatut);
+    static QSqlQueryModel* afficherHistorique();
+
+
+
+
+
+
+
 
 private:
     QString id;

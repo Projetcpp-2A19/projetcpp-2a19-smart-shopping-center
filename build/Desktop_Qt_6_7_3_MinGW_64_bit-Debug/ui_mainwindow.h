@@ -13,7 +13,6 @@
 #include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QCommandLinkButton>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -33,8 +32,6 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QCommandLinkButton *commandLinkButton;
-    QLineEdit *lineEdit;
     QComboBox *comboBox_tri;
     QFrame *frame_gestions;
     QPushButton *pushButton_Dashboard;
@@ -44,7 +41,6 @@ public:
     QPushButton *pushButton_Services;
     QPushButton *pushButton_Evennements;
     QPushButton *pushButton_deconnecter;
-    QProgressBar *progressBar;
     QLabel *label_TITLE;
     QLabel *lbl_Image_Display;
     QFrame *frame;
@@ -53,14 +49,17 @@ public:
     QLineEdit *lineEdit_priorite;
     QLineEdit *lineEdit_type;
     QLineEdit *lineEdit_ID;
-    QComboBox *comboBox;
     QComboBox *comboBox_2;
-    QLineEdit *lineEdit_exporter;
     QPushButton *pushButton_Modifier;
     QProgressBar *progressBar_2;
     QPushButton *pushButton_Supprimer;
     QPushButton *pushButton_Ajouter;
     QTableView *tableView;
+    QLineEdit *lineEdit_recherche;
+    QPushButton *pushButton_Rechercher;
+    QPushButton *pushButton_ExporterPDF;
+    QPushButton *pushButton_Historique;
+    QPushButton *pushButton_TestWebhook;
     QMenuBar *menubar;
     QMenu *menuGservice;
     QStatusBar *statusbar;
@@ -69,34 +68,17 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(800, 600);
+        MainWindow->resize(977, 703);
+        MainWindow->setStyleSheet(QString::fromUtf8("QMainWindow{\n"
+"	background:#f0c1cd;\n"
+"}"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        commandLinkButton = new QCommandLinkButton(centralwidget);
-        commandLinkButton->setObjectName("commandLinkButton");
-        commandLinkButton->setGeometry(QRect(530, 150, 101, 41));
-        commandLinkButton->setStyleSheet(QString::fromUtf8("QCommandLinkButton {\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 10px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setEnabled(false);
-        lineEdit->setGeometry(QRect(500, 200, 191, 26));
-        lineEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
-"}"));
         comboBox_tri = new QComboBox(centralwidget);
+        comboBox_tri->addItem(QString());
+        comboBox_tri->addItem(QString());
         comboBox_tri->setObjectName("comboBox_tri");
-        comboBox_tri->setGeometry(QRect(950, 350, 91, 26));
+        comboBox_tri->setGeometry(QRect(690, 160, 121, 26));
         frame_gestions = new QFrame(centralwidget);
         frame_gestions->setObjectName("frame_gestions");
         frame_gestions->setGeometry(QRect(0, 40, 181, 891));
@@ -311,10 +293,6 @@ public:
 "    border-color: navy; /* rendre le bouton par d\303\251faut plus visible */\n"
 "}\n"
 ""));
-        progressBar = new QProgressBar(centralwidget);
-        progressBar->setObjectName("progressBar");
-        progressBar->setGeometry(QRect(940, 620, 118, 23));
-        progressBar->setValue(24);
         label_TITLE = new QLabel(centralwidget);
         label_TITLE->setObjectName("label_TITLE");
         label_TITLE->setGeometry(QRect(210, 10, 581, 81));
@@ -324,7 +302,7 @@ public:
         lbl_Image_Display = new QLabel(centralwidget);
         lbl_Image_Display->setObjectName("lbl_Image_Display");
         lbl_Image_Display->setEnabled(true);
-        lbl_Image_Display->setGeometry(QRect(890, 170, 151, 121));
+        lbl_Image_Display->setGeometry(QRect(900, 140, 151, 121));
         lbl_Image_Display->setPixmap(QPixmap(QString::fromUtf8("../../../photo.jpg")));
         lbl_Image_Display->setScaledContents(true);
         frame = new QFrame(centralwidget);
@@ -393,28 +371,32 @@ public:
 "    background: white;\n"
 "    selection-background-color: darkgray;\n"
 "}"));
-        comboBox = new QComboBox(frame);
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->setObjectName("comboBox");
-        comboBox->setGeometry(QRect(80, 240, 101, 22));
         comboBox_2 = new QComboBox(frame);
         comboBox_2->addItem(QString());
         comboBox_2->addItem(QString());
         comboBox_2->setObjectName("comboBox_2");
-        comboBox_2->setGeometry(QRect(50, 280, 171, 22));
-        lineEdit_exporter = new QLineEdit(centralwidget);
-        lineEdit_exporter->setObjectName("lineEdit_exporter");
-        lineEdit_exporter->setEnabled(false);
-        lineEdit_exporter->setGeometry(QRect(930, 310, 101, 26));
-        lineEdit_exporter->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"	font: 9pt \"Segoe UI\";\n"
-"    border: 2px solid gray;\n"
-"    border-radius: 20px;\n"
-"    padding: 0 8px;\n"
-"    background: white;\n"
-"    selection-background-color: darkgray;\n"
+        comboBox_2->setGeometry(QRect(50, 250, 171, 22));
+        comboBox_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
 "}"));
         pushButton_Modifier = new QPushButton(centralwidget);
         pushButton_Modifier->setObjectName("pushButton_Modifier");
@@ -443,7 +425,7 @@ public:
 "}"));
         progressBar_2 = new QProgressBar(centralwidget);
         progressBar_2->setObjectName("progressBar_2");
-        progressBar_2->setGeometry(QRect(670, 460, 118, 23));
+        progressBar_2->setGeometry(QRect(670, 460, 111, 23));
         progressBar_2->setValue(24);
         pushButton_Supprimer = new QPushButton(centralwidget);
         pushButton_Supprimer->setObjectName("pushButton_Supprimer");
@@ -497,11 +479,122 @@ public:
 "}"));
         tableView = new QTableView(centralwidget);
         tableView->setObjectName("tableView");
-        tableView->setGeometry(QRect(510, 240, 256, 192));
+        tableView->setGeometry(QRect(510, 240, 381, 191));
+        lineEdit_recherche = new QLineEdit(centralwidget);
+        lineEdit_recherche->setObjectName("lineEdit_recherche");
+        lineEdit_recherche->setGeometry(QRect(520, 110, 171, 22));
+        lineEdit_recherche->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+"	font: 11pt \"Segoe UI\";\n"
+"    border: 2px solid gray;\n"
+"    border-radius: 10px;\n"
+"    padding: 0 8px;\n"
+"    background: white;\n"
+"    selection-background-color: darkgray;\n"
+"}"));
+        pushButton_Rechercher = new QPushButton(centralwidget);
+        pushButton_Rechercher->setObjectName("pushButton_Rechercher");
+        pushButton_Rechercher->setGeometry(QRect(520, 150, 121, 24));
+        pushButton_Rechercher->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_ExporterPDF = new QPushButton(centralwidget);
+        pushButton_ExporterPDF->setObjectName("pushButton_ExporterPDF");
+        pushButton_ExporterPDF->setGeometry(QRect(520, 190, 151, 24));
+        pushButton_ExporterPDF->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_Historique = new QPushButton(centralwidget);
+        pushButton_Historique->setObjectName("pushButton_Historique");
+        pushButton_Historique->setGeometry(QRect(260, 470, 181, 24));
+        pushButton_Historique->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
+        pushButton_TestWebhook = new QPushButton(centralwidget);
+        pushButton_TestWebhook->setObjectName("pushButton_TestWebhook");
+        pushButton_TestWebhook->setGeometry(QRect(293, 520, 121, 24));
+        pushButton_TestWebhook->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 14pt \"Segoe UI\";\n"
+"	color: rgb(255, 255, 255);\n"
+"    border: 2px solid white;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #00a2c6, stop: 1 #dadbde);\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+"}\n"
+"\n"
+"QPushButton:flat {\n"
+"    border: none; /* no border for a flat push button */\n"
+"}\n"
+"\n"
+"QPushButton:default {\n"
+"    border-color: navy; /* make the default button prominent */\n"
+"}"));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 977, 22));
         menuGservice = new QMenu(menubar);
         menuGservice->setObjectName("menuGservice");
         MainWindow->setMenuBar(menubar);
@@ -519,9 +612,9 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        commandLinkButton->setText(QString());
-        lineEdit->setText(QCoreApplication::translate("MainWindow", "trier les services", nullptr));
-        lineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Trier les \303\251v\303\251nements ", nullptr));
+        comboBox_tri->setItemText(0, QCoreApplication::translate("MainWindow", "Afficher tout", nullptr));
+        comboBox_tri->setItemText(1, QCoreApplication::translate("MainWindow", "Trier par priorit\303\251", nullptr));
+
         pushButton_Dashboard->setText(QCoreApplication::translate("MainWindow", "Dashboard", nullptr));
         pushButton_Employes->setText(QCoreApplication::translate("MainWindow", "Employ\303\251s", nullptr));
         pushButton_Boutiques->setText(QCoreApplication::translate("MainWindow", "Boutiques", nullptr));
@@ -544,18 +637,18 @@ public:
 #endif // QT_CONFIG(whatsthis)
         lineEdit_ID->setText(QString());
         lineEdit_ID->setPlaceholderText(QCoreApplication::translate("MainWindow", "               ID", nullptr));
-        comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "disponibilit\303\251", nullptr));
-        comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "0", nullptr));
-        comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "1", nullptr));
+        comboBox_2->setItemText(0, QCoreApplication::translate("MainWindow", "les service", nullptr));
+        comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "le service le plus demander", nullptr));
 
-        comboBox->setCurrentText(QCoreApplication::translate("MainWindow", "disponibilit\303\251", nullptr));
-        comboBox_2->setItemText(0, QCoreApplication::translate("MainWindow", "le service le plus demander", nullptr));
-        comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "le service le moins demander", nullptr));
-
-        lineEdit_exporter->setPlaceholderText(QCoreApplication::translate("MainWindow", "    Exporter", nullptr));
         pushButton_Modifier->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
         pushButton_Supprimer->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
         pushButton_Ajouter->setText(QCoreApplication::translate("MainWindow", "Ajouter", nullptr));
+        lineEdit_recherche->setText(QString());
+        lineEdit_recherche->setPlaceholderText(QCoreApplication::translate("MainWindow", "RECHERCHER PAR ID", nullptr));
+        pushButton_Rechercher->setText(QCoreApplication::translate("MainWindow", "RECHERCHER", nullptr));
+        pushButton_ExporterPDF->setText(QCoreApplication::translate("MainWindow", "Exporter en PDF", nullptr));
+        pushButton_Historique->setText(QCoreApplication::translate("MainWindow", "Afficher l'historique", nullptr));
+        pushButton_TestWebhook->setText(QCoreApplication::translate("MainWindow", "test wbhook", nullptr));
         menuGservice->setTitle(QCoreApplication::translate("MainWindow", "Gservice", nullptr));
     } // retranslateUi
 
