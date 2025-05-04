@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dashboard</class>
+ <widget class="QMainWindow" name="dashboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1099</width>
+    <height>751</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background: #f0c1cd;  
+}
+
+
+
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="frame_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+    background: rgb(0, 162, 198);
+    border: 2px solid #00a2c6;
+    border-radius: 4px;
+    padding: 2px;
+}
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_TITLE_2">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>-30</y>
+       <width>811</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Imprint MT Shadow</family>
+       <pointsize>36</pointsize>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+	font: 36pt &quot;Imprint MT Shadow&quot;;
+    color: rgb(0, 162, 198);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:26pt; color:#ffffff; vertical-align:sub;&quot;&gt;Bienvenue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_gestions">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>221</width>
+      <height>671</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+    background: rgb(0, 162, 198);
+    border: 2px solid #00a2c6;
+    border-radius: 4px;
+    padding: 2px;
+}
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="pushButton_Employes">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>210</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Employés</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Boutiques">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>270</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Boutiques</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Locataires">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Locataires</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Services">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>450</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Services</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Evennements">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>390</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Evennements</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_deconnecter">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>740</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+  
+    font: 9pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 12pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>se déconnecter</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_Logo_Display">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/debug/logo.gif</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_TITLE">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>200</y>
+      <width>811</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Imprint MT Shadow</family>
+      <pointsize>36</pointsize>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+	font: 36pt &quot;Imprint MT Shadow&quot;;
+    color: rgb(0, 162, 198);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt;&quot;&gt;ShopXpert&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_TITLE_3">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>370</y>
+      <width>811</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Imprint MT Shadow</family>
+      <pointsize>36</pointsize>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+	font: 36pt &quot;Imprint MT Shadow&quot;;
+    color: rgb(0, 162, 198);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 80); /* Ajout d'un effet d'ombre */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; color:#aaffff;&quot;&gt;'Gestion simplifiée, Résultats maximisés'&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1099</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menudashboard">
+    <property name="title">
+     <string>dashboard</string>
+    </property>
+   </widget>
+   <addaction name="menudashboard"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
