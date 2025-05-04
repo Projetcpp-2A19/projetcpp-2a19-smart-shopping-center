@@ -61,7 +61,8 @@ gboutique::gboutique(QWidget *parent) :
     } else {
         qDebug() << "Erreur de connexion à l'Arduino.";
     }
-
+    toutesBoutiques = Boutique::afficher();
+    initialiserEncodages();
 
     chartView = nullptr; // Initialisation
     chart = nullptr;
@@ -205,6 +206,7 @@ void gboutique::on_tableWidget_Boutique_clicked(const QModelIndex &index)
 
     // Afficher les détails de la boutique dans le formulaire
     afficherBoutique(b);
+    afficherRecommandations();
 }
 
 
@@ -414,58 +416,98 @@ void gboutique::on_pushButton_exporter_boutiques_clicked()
         return;
     }
 
-    QSqlQuery query;
-    query.prepare("SELECT ID_BOUTIQUE, NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT, HORAIRE_OUVERTURE, ID_LOCATAIRE, ID_EMP FROM boutiques");
-    if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur", "Erreur lors de la récupération des données des boutiques : " + query.lastError().text());
-        return;
-    }
-
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(filePath);
-    printer.setPageMargins(QMarginsF(20, 20, 20, 20));
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageMargins(QMarginsF(20, 20, 20, 20)); // Marges en points (1/72 inch)
 
-    QPainter painter(&printer);
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        QMessageBox::critical(this, "Erreur", "Impossible de créer le PDF");
+        return;
+    }
+
+    // Configuration des polices
     QFont titleFont("Arial", 16, QFont::Bold);
-    QFont headerFont("Arial", 12, QFont::Bold);
-    QFont contentFont("Arial", 10);
+    QFont headerFont("Arial", 10, QFont::Bold);
+    QFont contentFont("Arial", 9);
 
+    // Dimensions utiles
+    const QRectF pageRect = printer.pageRect(QPrinter::Point);
+    const int PAGE_WIDTH = pageRect.width();    const int LINE_HEIGHT = 20;
+    const int MARGIN = 40;
+    int yPos = MARGIN;
+
+    // Entête
     painter.setFont(titleFont);
-    painter.drawText(200, 50, "Liste des Boutiques");
+    QRect titleRect(0, yPos, PAGE_WIDTH, 30);
+    painter.drawText(titleRect, Qt::AlignCenter, "Liste des Boutiques");
+    yPos += 40;
 
+    // Ligne de séparation
+    painter.drawLine(MARGIN, yPos, PAGE_WIDTH - MARGIN, yPos);
+    yPos += 10;
+
+    // En-têtes de colonnes
     painter.setFont(headerFont);
-    int y = 100;
-    int x = 50;
-    int columnWidth = 100;
+    QStringList headers = {"ID", "Nom", "Type", "Localisation", "Surface", "Montant", "État"};
+    QVector<int> columnWidths = {50, 120, 100, 120, 60, 80, 80};
 
-    painter.drawText(x, y, "ID");
-    painter.drawText(x + columnWidth, y, "Nom");
-    painter.drawText(x + 2 * columnWidth, y, "Type");
-    painter.drawText(x + 3 * columnWidth, y, "Localisation");
-    painter.drawText(x + 4 * columnWidth, y, "Surface");
-    painter.drawText(x + 5 * columnWidth, y, "Montant");
-    painter.drawText(x + 6 * columnWidth, y, "État");
-    painter.drawText(x + 7 * columnWidth, y, "Horaire d'Ouverture");
-        painter.drawText(x + 8 * columnWidth, y, "ID Locataire");
-    painter.drawText(x + 9 * columnWidth, y, "ID EMP");
+    // Ajustement dynamique des colonnes
+    int totalWidth = std::accumulate(columnWidths.begin(), columnWidths.end(), 0);
+    if (totalWidth > (PAGE_WIDTH - 2*MARGIN)) {
+        double scaleFactor = (PAGE_WIDTH - 2*MARGIN) / (double)totalWidth;
+        for (int& width : columnWidths) width *= scaleFactor;
+    }
 
-    painter.drawLine(50, y + 5, 950, y + 5);
+    // Dessin des en-têtes
+    int xPos = MARGIN;
+    for (int i = 0; i < headers.size(); ++i) {
+        QRect rect(xPos, yPos, columnWidths[i], LINE_HEIGHT);
+        painter.drawText(rect, Qt::AlignLeft | Qt::TextWordWrap, headers[i]);
+        xPos += columnWidths[i] + 10;
+    }
+    yPos += LINE_HEIGHT + 10;
+
+    // Contenu
+    QSqlQuery query;
+    query.prepare("SELECT ID_BOUTIQUE, NOM, TYPE, LOCALISATION, SURFACE, MONTANT, ETAT FROM boutiques");
+    if (!query.exec()) {
+        painter.end();
+        QMessageBox::critical(this, "Erreur", "Erreur de requête : " + query.lastError().text());
+        return;
+    }
 
     painter.setFont(contentFont);
-    y += 20;
+    QFontMetrics fm(contentFont);
+
     while (query.next()) {
-        painter.drawText(x, y, query.value("ID_BOUTIQUE").toString());
-        painter.drawText(x + columnWidth, y, query.value("NOM").toString());
-        painter.drawText(x + 2 * columnWidth, y, query.value("TYPE").toString());
-        painter.drawText(x + 3 * columnWidth, y, query.value("LOCALISATION").toString());
-        painter.drawText(x + 4 * columnWidth, y, query.value("SURFACE").toString());
-        painter.drawText(x + 5 * columnWidth, y, query.value("MONTANT").toString());
-        painter.drawText(x + 6 * columnWidth, y, query.value("ETAT").toString());
-        painter.drawText(x + 7 * columnWidth, y, query.value("HORAIRE_OUVERTURE").toString());
-        painter.drawText(x + 8 * columnWidth, y, query.value("ID_LOCATAIRE").toString());
-        painter.drawText(x + 9 * columnWidth, y, query.value("ID_EMP").toString());
-        y += 20;
+        // Vérifier l'espace sur la page
+        if (yPos > (pageRect.height() - MARGIN)) {
+            printer.newPage();
+            yPos = MARGIN;
+        }
+
+        xPos = MARGIN;
+        for (int col = 0; col < headers.size(); ++col) {
+            QString text = query.value(col).toString();
+
+            // Alignement spécifique par colonne
+            Qt::AlignmentFlag align = (col == 4 || col == 5) ? Qt::AlignRight : Qt::AlignLeft;
+
+            QRect rect(xPos, yPos, columnWidths[col], LINE_HEIGHT);
+            painter.drawText(rect, align | Qt::TextWordWrap, text);
+
+            // Ajustement position X
+            xPos += columnWidths[col] + 10;
+        }
+
+        yPos += LINE_HEIGHT + 5;
+
+        // Ligne séparatrice
+        painter.drawLine(MARGIN, yPos, PAGE_WIDTH - MARGIN, yPos);
+        yPos += 10;
     }
 
     painter.end();
@@ -692,6 +734,118 @@ void gboutique::sendCommandToArduino(const QString &command) {
         qDebug() << "Commande envoyée :" << data.trimmed();
     }
 }
+void gboutique::initialiserEncodages() {
+    // Encodage des catégories
+    QSet<QString> types, localisations;
+
+    foreach(const Boutique& b, toutesBoutiques) {
+        types.insert(b.getType());
+        localisations.insert(b.getLocalisation());
+    }
+
+    int index = 0;
+    foreach(const QString& type, types) {
+        typeEncoding[type] = index++;
+    }
+
+    index = 0;
+    foreach(const QString& loc, localisations) {
+        localisationEncoding[loc] = index++;
+    }
+}
+
+QVector<double> gboutique::normaliserCaracteristiques(const Boutique& b) {
+    // Normalisation Min-Max
+    static double minSurface = 0, maxSurface = 0;
+    static double minMontant = 0, maxMontant = 0;
+
+    // Calculer une fois les min/max
+    static bool initialized = false;
+    if(!initialized) {
+        foreach(const Boutique& bout, toutesBoutiques) {
+            if(bout.getSurface() < minSurface) minSurface = bout.getSurface();
+            if(bout.getSurface() > maxSurface) maxSurface = bout.getSurface();
+            if(bout.getMontant() < minMontant) minMontant = bout.getMontant();
+            if(bout.getMontant() > maxMontant) maxMontant = bout.getMontant();
+        }
+        initialized = true;
+    }
+
+    // Vecteur de caractéristiques normalisées [type, localisation, surface, montant]
+    QVector<double> features(4);
+
+    // Encodage one-hot simplifié
+    features[0] = typeEncoding[b.getType()] / (double)typeEncoding.size();
+    features[1] = localisationEncoding[b.getLocalisation()] / (double)localisationEncoding.size();
+
+    // Normalisation surface (0-1)
+    features[2] = (b.getSurface() - minSurface) / (maxSurface - minSurface);
+
+    // Normalisation montant (0-1)
+    features[3] = (b.getMontant() - minMontant) / (maxMontant - minMontant);
+
+    return features;
+}
+
+double gboutique::calculerDistance(const Boutique& a, const Boutique& b) {
+    QVector<double> aFeatures = normaliserCaracteristiques(a);
+    QVector<double> bFeatures = normaliserCaracteristiques(b);
+
+    double distance = 0.0;
+    for(int i = 0; i < aFeatures.size(); ++i) {
+        distance += pow(aFeatures[i] - bFeatures[i], 2);
+    }
+    return sqrt(distance);
+}
+
+QList<Boutique> gboutique::trouverVoisinsKNN(const Boutique& target, int k) {
+    QList<QPair<double, Boutique>> distances;
+
+    foreach(const Boutique& b, toutesBoutiques) {
+        if(b.getId() == target.getId()) continue;
+        double dist = calculerDistance(target, b);
+        distances.append(qMakePair(dist, b));
+    }
+
+    // Trier par distance
+    std::sort(distances.begin(), distances.end(),
+              [](const QPair<double, Boutique>& a, const QPair<double, Boutique>& b) {
+                  return a.first < b.first;
+              });
+
+    // Récupérer les k premiers
+    QList<Boutique> voisins;
+    for(int i = 0; i < qMin(k, distances.size()); ++i) {
+        voisins.append(distances[i].second);
+    }
+
+    return voisins;
+}
+
+void gboutique::afficherRecommandations() {
+    QModelIndex index = ui->tableWidget_Boutique->currentIndex();
+    if(!index.isValid()) return;
+
+    QString id = ui->tableWidget_Boutique->item(index.row(), 0)->text();
+    Boutique cible = Boutique::getById(id);
+
+    QList<Boutique> recommandations = trouverVoisinsKNN(cible, 3);
+
+    ui->listWidget_Recommandations->clear();
+    foreach(const Boutique& b, recommandations) {
+        QString info = QString("%1\nType: %2\nLocalisation: %3\nSimilarité: %4%")
+                           .arg(b.getNom())
+                           .arg(b.getType())
+                           .arg(b.getLocalisation())
+                           .arg(QString::number(calculerSimilarite(cible, b) * 100, 'f', 1));
+
+        ui->listWidget_Recommandations->addItem(info);
+    }
+}
+double gboutique::calculerSimilarite(const Boutique& a, const Boutique& b) {
+    return 1.0 / (1.0 + calculerDistance(a, b));
+}
+
 void gboutique::on_pushButton_deconnecter_clicked()
 {
     // Déconnexion

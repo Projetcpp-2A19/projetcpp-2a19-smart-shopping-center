@@ -58,7 +58,7 @@ int Arduino::connect_arduino()
     }
 }
 
-/*int Arduino::close_arduino()
+int Arduino::close_arduino()
 {
     if (serial->isOpen()) {
         serial->close();
@@ -67,7 +67,7 @@ int Arduino::connect_arduino()
     }
     qDebug() << "Le port série est déjà fermé.";
     return 1; // Le port était déjà fermé
-}*/
+}
 
 QByteArray Arduino::read_from_arduino()
 {

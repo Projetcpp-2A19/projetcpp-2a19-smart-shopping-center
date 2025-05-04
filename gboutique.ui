@@ -935,8 +935,8 @@ QPushButton:default {
    <widget class="QLineEdit" name="line_IDLOCATAIREboutique_2">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>740</y>
+      <x>200</x>
+      <y>760</y>
       <width>281</width>
       <height>30</height>
      </rect>
@@ -955,6 +955,76 @@ QPushButton:default {
     </property>
     <property name="placeholderText">
      <string>        Entrez l'id locataire</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_Recommandations">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>670</y>
+      <width>221</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QListWidget {
+    background-color: #FFFFFF; /* Fond blanc */
+    border: 1px solid #E0E0E0; /* Bordure grise légère */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 5px; /* Espace interne */
+    font-family: &quot;Segoe UI&quot;, Arial, sans-serif; /* Police moderne */
+    font-size: 14px;
+    color: #333333; /* Couleur texte principal */
+    outline: none; /* Supprime le contour de focus */
+}
+
+/* Style des éléments individuels */
+QListWidget::item {
+    background: transparent;
+    border-bottom: 1px solid #F5F5F5; /* Séparateur entre éléments */
+    padding: 12px 15px; /* Espacement vertical/horizontal */
+    margin: 2px 0; /* Marge externe */
+}
+
+/* Au survol de la souris */
+QListWidget::item:hover {
+    background-color: #F8F9FA; /* Gris très clair */
+    border-radius: 6px;
+}
+
+/* Élément sélectionné */
+QListWidget::item:selected {
+    background-color: #E3F2FD; /* Bleu clair pour sélection */
+    color: #1976D2; /* Bleu plus foncé */
+    border: none;
+}
+
+/* Barre de défilement verticale */
+QScrollBar:vertical {
+    border: none;
+    background: #FAFAFA; /* Fond gris très clair */
+    width: 10px; /* Largeur réduite */
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #BDBDBD; /* Couleur de la poignée */
+    border-radius: 5px;
+    min-height: 30px; /* Hauteur minimale */
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9E9E9E; /* Couleur au survol */
+}
+
+/* Suppression des flèches */
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    height: 0;
+}
+</string>
     </property>
    </widget>
   </widget>

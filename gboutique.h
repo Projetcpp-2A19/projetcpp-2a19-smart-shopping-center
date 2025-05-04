@@ -9,6 +9,7 @@
 #include <QtCharts/QPieSeries>
 #include "arduino.h"
 #include <QRegularExpression>
+#include <QMap>
 
 
 namespace Ui {
@@ -52,6 +53,16 @@ private:
     void sendCommandToArduino(const QString &command);
     void checkLocataireExistence(const QString &idLocataire);
     void keyPressEvent(QKeyEvent *event);
+    QList<Boutique> toutesBoutiques;
+    QMap<QString, int> typeEncoding;
+    QMap<QString, int> localisationEncoding;
+
+    QVector<double> normaliserCaracteristiques(const Boutique& b);
+    double calculerDistance(const Boutique& a, const Boutique& b);
+    QList<Boutique> trouverVoisinsKNN(const Boutique& target, int k = 3);
+    void afficherRecommandations();
+    void initialiserEncodages();
+    double calculerSimilarite(const Boutique& a, const Boutique& b);
 
 
 };

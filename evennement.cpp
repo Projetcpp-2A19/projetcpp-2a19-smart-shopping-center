@@ -211,7 +211,7 @@ bool Evennement::ajout(QString nom, QString capacite, QString type, QString prix
         return false;
     }
 */
-    int idLocataireInt = 63;
+    int idLocataireInt = 1;
 
     query.bindValue(":idLocataire", idLocataireInt);
     query.bindValue(":identifiant", IDENTIFIANT);

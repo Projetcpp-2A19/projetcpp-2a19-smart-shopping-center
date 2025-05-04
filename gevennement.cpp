@@ -28,28 +28,7 @@ GEvennement::GEvennement(QWidget *parent)
     setupUi();
     ui->centralwidget->setStyleSheet("QWidget#centralwidget { background-color:#f0c1cd; }");
 
-    ui->lbl_Logo_Display->setScaledContents(true);
-    ui->lbl_Logo_Display->setScaledContents(true);
 
-    // Charger l'image principale
-    QString imagePath = QCoreApplication::applicationDirPath() + "/photo.jpg";
-    QPixmap pixmap(imagePath);
-    if (!pixmap.isNull()) {
-        ui->lbl_Logo_Display->setPixmap(pixmap);
-    } else {
-        //QMessageBox::warning(this, "Erreur", "Impossible de charger l'image : " + imagePath);
-    }
-    ui->lbl_Logo_Display->setAlignment(Qt::AlignCenter);
-
-    // Charger le logo
-    QString logoPath = QCoreApplication::applicationDirPath() + "/logo.gif";
-    QPixmap logoPixmap(logoPath);
-    if (!logoPixmap.isNull()) {
-        ui->lbl_Logo_Display->setPixmap(logoPixmap);
-    } else {
-        QMessageBox::warning(this, "Erreur", "Impossible de charger le logo : " + logoPath);
-    }
-    ui->lbl_Logo_Display->setAlignment(Qt::AlignCenter);
 
     // Enregistrer les types QML nécessaires
     qRegisterMetaType<QGeoCoordinate>();

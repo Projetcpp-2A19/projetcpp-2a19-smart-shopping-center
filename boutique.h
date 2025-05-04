@@ -24,6 +24,7 @@ private:
 public:
     // Constructeurs
     Boutique();
+    static QList<Boutique> afficher();
     Boutique(QString nom, QString type, QString localisation,
              double surface, double montant, QString etat, QString horaire);
 
@@ -56,7 +57,6 @@ public:
     static bool ajouter(const Boutique &b);
     static bool modifier(const Boutique &b);
     static bool supprimer(const QString &id);
-    static QList<Boutique> afficher();
     static Boutique getById(QString id);
 
 };

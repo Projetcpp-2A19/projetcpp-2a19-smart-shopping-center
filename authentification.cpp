@@ -20,32 +20,23 @@ Arduino arduino;
 
 bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
     if (!QSqlDatabase::database().isOpen()) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("Erreur");
-        msgBox.setText("Base de données non connectée.");
-        msgBox.setStyleSheet("QMessageBox { background-color: #ff66b2; } QLabel { color: white; } QPushButton { color: white; background-color: #3366cc; }");
-        msgBox.exec();
+        QMessageBox::critical(nullptr, "Erreur", "Base de données non connectée.");
         return false;
     }
 
     if (arduino.connect_arduino() == -1) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("Erreur Arduino");
-        msgBox.setText("Impossible de connecter la carte Arduino.");
-        msgBox.setStyleSheet("QMessageBox { background-color: #ff66b2; } QLabel { color: white; } QPushButton { color: white; background-color: #3366cc; }");
-        msgBox.exec();
+        QMessageBox::critical(nullptr, "Erreur Arduino", "Impossible de connecter la carte Arduino.");
         return false;
     }
 
     int attempts = 0;
-    bool fingerprintAuthenticated = false;
+    bool isAuthenticated = false;
 
-    while (attempts < 2) {
+    while (attempts < 2 && !isAuthenticated) {
         QDialog authDialog;
         authDialog.setWindowTitle("Authentification");
         authDialog.resize(400, 400);
         authDialog.setModal(true);
-
         authDialog.setStyleSheet(R"(
             QDialog {
                 background-color: #ffccff;
@@ -83,8 +74,6 @@ bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
         QPushButton *forgotPasswordButton = new QPushButton("Mot de passe oublié ?", &authDialog);
 
         QVBoxLayout *layout = new QVBoxLayout(&authDialog);
-        layout->setSpacing(15);
-        layout->setContentsMargins(30, 30, 30, 30);
         layout->addWidget(emailLineEdit);
         layout->addWidget(passwordLineEdit);
         layout->addWidget(scanFingerprintButton);
@@ -92,56 +81,53 @@ bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
         layout->addWidget(forgotPasswordButton);
         authDialog.setLayout(layout);
 
-        QObject::connect(&authDialog, &QDialog::rejected, [&]() {
-            attempts = 2;
-        });
-
-        // Connexion par empreinte
+        // Authentification par empreinte
         QObject::connect(scanFingerprintButton, &QPushButton::clicked, [&]() {
             arduino.write_to_arduino("SCAN\n");
-            QByteArray idEmpreinteData = arduino.read_from_arduino();
+            QByteArray idData = arduino.read_from_arduino();
+            idData = idData.trimmed();  // Nettoyer la donnée reçue
 
-            if (idEmpreinteData.isEmpty()) {
-                QMessageBox::warning(&authDialog, "Erreur", "Aucune empreinte détectée.");
+            if (idData.isEmpty()) {
+                QMessageBox::warning(&authDialog, "Erreur", "Aucune réponse de l'Arduino.");
                 return;
             }
 
-            int fingerprintID = idEmpreinteData.toInt();
+            int fingerprintID = idData.toInt();
             if (fingerprintID == -1) {
                 QMessageBox::warning(&authDialog, "Erreur", "Empreinte non reconnue.");
                 return;
             }
 
             QSqlQuery query;
-            query.prepare("SELECT NOM, EMAIL, POSTE FROM EMPLOYES WHERE ID_EMPREINTE = :id");
-            query.bindValue(":id", QString::number(fingerprintID));
+            query.prepare("SELECT NOM, POSTE FROM EMPLOYES WHERE ID_EMPREINTE = :id");
+            query.bindValue(":id", fingerprintID);
 
             if (!query.exec()) {
-                QMessageBox::critical(&authDialog, "Erreur SQL", "Échec de la requête : " + query.lastError().text());
+                QMessageBox::critical(&authDialog, "Erreur SQL", query.lastError().text());
                 return;
             }
 
             if (query.next()) {
+                QString nom = query.value("NOM").toString();
                 QString poste = query.value("POSTE").toString();
-                QString nomComplet = query.value("NOM").toString(); // Utilisation du champ NOM
 
                 if (poste == posteAutorise) {
-                    // Envoi à Arduino
-                    arduino.write_to_arduino("Bienvenue, " + nomComplet.toUtf8() + "\n");
+                    QString message = "Bienvenue, " + nom + "\n";
+                    arduino.write_to_arduino(message.toUtf8());
 
-                    // Affichage du message dans une boite de dialogue
-                    QMessageBox::information(&authDialog, "Succès", "Connexion avec empreinte réussie !");
-                    fingerprintAuthenticated = true;
+                    QMessageBox::information(&authDialog, "Succès", "Bienvenue " + nom + " !");
+                    isAuthenticated = true;
                     authDialog.accept();
                 } else {
+                    arduino.write_to_arduino("POSTE NON AUTORISE");
                     QMessageBox::warning(&authDialog, "Refusé", "Poste non autorisé.");
                 }
             } else {
-                QMessageBox::warning(&authDialog, "Erreur", "Aucun utilisateur trouvé.");
+                QMessageBox::warning(&authDialog, "Erreur", "Empreinte inconnue.");
             }
         });
 
-        // Connexion par email et mot de passe
+        // Authentification classique
         QObject::connect(loginButton, &QPushButton::clicked, [&]() {
             QString email = emailLineEdit->text().trimmed();
             QString password = passwordLineEdit->text().trimmed();
@@ -156,7 +142,7 @@ bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
             query.bindValue(":email", email);
 
             if (!query.exec()) {
-                QMessageBox::critical(&authDialog, "Erreur SQL", "Erreur lors de la requête : " + query.lastError().text());
+                QMessageBox::critical(&authDialog, "Erreur SQL", query.lastError().text());
                 return;
             }
 
@@ -167,12 +153,14 @@ bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
 
                 if (mdp == password) {
                     if (poste == posteAutorise) {
-                        // Envoi à Arduino
-                        arduino.write_to_arduino("Bienvenue, " + nom.toUtf8() + "\n");
+                        QString message = "Bienvenue, " + nom + "\n";
+                        arduino.write_to_arduino(message.toUtf8());
 
-                        QMessageBox::information(&authDialog, "Succès", "Connexion réussie !");
+                        QMessageBox::information(&authDialog, "Succès", "Bienvenue " + nom + " !");
+                        isAuthenticated = true;
                         authDialog.accept();
                     } else {
+                        arduino.write_to_arduino("POSTE NON AUTORISE");
                         QMessageBox::warning(&authDialog, "Refusé", "Poste non autorisé.");
                     }
                 } else {
@@ -180,26 +168,26 @@ bool gemploye::authentifierUtilisateur(const QString& posteAutorise) {
                     attempts++;
                 }
             } else {
-                QMessageBox::warning(&authDialog, "Erreur", "Aucun utilisateur trouvé.");
+                QMessageBox::warning(&authDialog, "Erreur", "Utilisateur introuvable.");
                 attempts++;
             }
         });
 
-        // Mot de passe oublié
         QObject::connect(forgotPasswordButton, &QPushButton::clicked, [&]() {
             authDialog.close();
             motDePasseOublie();
         });
 
-        int result = authDialog.exec();
+        QObject::connect(&authDialog, &QDialog::rejected, [&]() {
+            attempts = 2;
+        });
 
-        if (result == QDialog::Accepted) {
-            return true;
+        if (authDialog.exec() == QDialog::Rejected || attempts >= 2) {
+            return false;
         }
     }
 
-    QMessageBox::critical(nullptr, "Erreur", "Échec de la connexion après 2 tentatives.");
-    return false;
+    return true;
 }
 
 
@@ -269,33 +257,45 @@ void gemploye::motDePasseOublie() {
 }
 
 void gemploye::envoyerSMSCode(const QString &phoneNumber, const QString &resetCode) {
-    QString accountSID = "AC6fec22b2984b9ffe0655eeb40ee721ce";
-    QString authToken = "58df0660acc56e1ee61c5e50bd21ccb6";
-    QString twilioNumber = "+19898229939";
+    QString accountSID = "AC23ecaf784458972a0d603f17b12bd5c6";
+    QString authToken = "37fa9015b344ec8d7b4fec782e5167a6";
+    QString twilioNumber = "+14127252626";
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QString message = "Code de réinitialisation : " + resetCode;
 
+    // Construction de l'URL de l'API Twilio
     QUrl url("https://api.twilio.com/2010-04-01/Accounts/" + accountSID + "/Messages.json");
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
+    // Format international obligatoire : +216 suivi du numéro, sans espace ni caractères spéciaux
+    QString fullNumber = phoneNumber;
+    if (!phoneNumber.startsWith("+")) {
+        fullNumber = "+216" + phoneNumber;
+    }
+
     QUrlQuery params;
-    params.addQueryItem("To", "+216" + phoneNumber); // s'assurer que le numéro est bien au format tunisien
+    params.addQueryItem("To", "+21651907098");
     params.addQueryItem("From", twilioNumber);
     params.addQueryItem("Body", message);
 
-    QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
-    QString credentials = accountSID + ":" + authToken;
-    request.setRawHeader("Authorization", "Basic " + QByteArray(credentials.toUtf8()).toBase64());
+    QByteArray postData = params.toString(QUrl::FullyEncoded).toUtf8();
+
+    // Authentification Basic
+    QByteArray auth = (accountSID + ":" + authToken).toUtf8().toBase64();
+    request.setRawHeader("Authorization", "Basic " + auth);
 
     QNetworkReply *reply = manager->post(request, postData);
+
     connect(reply, &QNetworkReply::finished, [reply]() {
         if (reply->error() == QNetworkReply::NoError) {
-            qDebug() << "SMS envoyé avec succès.";
+            qDebug() << "✅ SMS envoyé avec succès.";
         } else {
-            qDebug() << "Erreur d'envoi du SMS :" << reply->errorString();
+            qDebug() << "❌ Erreur d'envoi du SMS :" << reply->errorString();
+            qDebug() << "Réponse brute :" << reply->readAll();  // Affiche le corps d'erreur JSON renvoyé par Twilio
         }
         reply->deleteLater();
     });
 }
+

@@ -535,9 +535,9 @@ void GLocataire::sendConfirmationEmail(const QString &recipientEmail, const QStr
     qDebug() << "Démarrage de l'envoi d'email via Mailjet à:" << recipientEmail;
 
     // Configuration Mailjet
-    const QString apiKey = "353560aceeffc08e0d03d22686f7f685";
-    const QString apiSecret = "873de1f24891f07f52bb859d8e07dcd3";
-    const QString senderEmail = "c8b601g2@gmail.com";
+    const QString apiKey = "d68921903db19d0126ec76325a35d5cd";
+    const QString apiSecret = "c847d548bcdc0e467896c2e7a0e6c817";
+    const QString senderEmail = "riahi.khaoulariahi@gmail.com";
     const QString senderName = "GLocataire";
 
     // Préparation de la requête HTTP
