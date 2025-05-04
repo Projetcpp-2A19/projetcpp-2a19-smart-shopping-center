@@ -6,8 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>1098</width>
     <height>770</height>
+=======
+    <width>977</width>
+    <height>703</height>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,6 +68,255 @@
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
     </property>
+<<<<<<< HEAD
+=======
+    <widget class="QPushButton" name="pushButton_Dashboard">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Dashboard</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Employes">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Employés</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Boutiques">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>140</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Boutiques</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Locataires">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>190</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Locataires</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Services">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>240</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Services</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Evennements">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>290</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    font: 16pt &quot;Segoe UI&quot;;
+    color: rgb(255, 255, 255);
+    border: 2px solid white;
+    border-radius: 6px;
+    background-color: #00a2c6;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    font: 18pt &quot;Segoe UI&quot;; /* Agrandir le texte au survol */
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* pas de bordure pour un bouton plat */
+}
+
+QPushButton:default {
+    border-color: navy; /* rendre le bouton par défaut plus visible */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Evennements</string>
+     </property>
+    </widget>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     <widget class="QPushButton" name="pushButton_deconnecter">
      <property name="geometry">
       <rect>
@@ -103,6 +357,7 @@ QPushButton:default {
       <string>se déconnecter</string>
      </property>
     </widget>
+<<<<<<< HEAD
     <widget class="QLabel" name="lbl_Logo_Display">
      <property name="geometry">
       <rect>
@@ -122,12 +377,19 @@ QPushButton:default {
       <bool>true</bool>
      </property>
     </widget>
+=======
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
    </widget>
    <widget class="QLabel" name="label_TITLE">
     <property name="geometry">
      <rect>
+<<<<<<< HEAD
       <x>230</x>
       <y>20</y>
+=======
+      <x>210</x>
+      <y>10</y>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
       <width>581</width>
       <height>81</height>
      </rect>
@@ -201,7 +463,11 @@ font: 700 27pt &quot;Segoe UI&quot;;</string>
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
      </property>
@@ -227,7 +493,11 @@ font: 700 27pt &quot;Segoe UI&quot;;</string>
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
      </property>
@@ -253,7 +523,11 @@ font: 700 27pt &quot;Segoe UI&quot;;</string>
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
      </property>
@@ -279,7 +553,11 @@ font: 700 27pt &quot;Segoe UI&quot;;</string>
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
      </property>
@@ -308,7 +586,11 @@ font: 700 27pt &quot;Segoe UI&quot;;</string>
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
      </property>
@@ -513,7 +795,11 @@ QPushButton:default {
     border: 2px solid gray;
     border-radius: 10px;
     padding: 0 8px;
+<<<<<<< HEAD
     background: black;
+=======
+    background: white;
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     selection-background-color: darkgray;
 }</string>
     </property>
@@ -529,7 +815,11 @@ QPushButton:default {
      <rect>
       <x>520</x>
       <y>150</y>
+<<<<<<< HEAD
       <width>161</width>
+=======
+      <width>121</width>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
       <height>24</height>
      </rect>
     </property>
@@ -566,7 +856,11 @@ QPushButton:default {
      <rect>
       <x>520</x>
       <y>190</y>
+<<<<<<< HEAD
       <width>191</width>
+=======
+      <width>151</width>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
       <height>24</height>
      </rect>
     </property>
@@ -672,6 +966,7 @@ QPushButton:default {
      <string>test wbhook</string>
     </property>
    </widget>
+<<<<<<< HEAD
    <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
@@ -697,14 +992,21 @@ QPushButton:default {
      <enum>QFrame::Shadow::Raised</enum>
     </property>
    </widget>
+=======
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
+<<<<<<< HEAD
      <width>1098</width>
      <height>25</height>
+=======
+     <width>977</width>
+     <height>22</height>
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
     </rect>
    </property>
    <widget class="QMenu" name="menuGservice">

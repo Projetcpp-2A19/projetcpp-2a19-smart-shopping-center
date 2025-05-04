@@ -1,0 +1,50 @@
+Date : 2025-04-13 17:54:19
+ID_SERVICE : 52
+Action     : Modification
+Ancien statut : 1
+Nouveau statut : 0
+---------------------------------------------
+Date : 2025-04-13 17:55:22
+ID_SERVICE : 5112
+Action     : Modification
+Ancien statut : 0
+Nouveau statut : 1
+---------------------------------------------
+Date : 2025-04-13 18:57:12
+ID_SERVICE : 5112
+Action     : Modification
+Ancien statut : 1
+Nouveau statut : 1
+---------------------------------------------
+Date : 2025-04-13 18:59:08
+ID_SERVICE : 5112
+Action     : Modification
+Ancien statut : 1
+Nouveau statut : 1
+---------------------------------------------
+Date : 2025-04-14 09:18:48
+ID_SERVICE : 5112
+Action     : Modification
+Ancien statut : 1
+Nouveau statut : 0
+---------------------------------------------
+Date : 2025-04-14 09:19:05
+ID_SERVICE : 5112
+Action     : Modification
+Ancien statut : 0
+Nouveau statut : 0
+---------------------------------------------
+Date : 2025-04-15 08:24:26
+Action : SUPPRESSION
+ID_SERVICE : 1236
+Type : homme
+Cible : adulte
+Statut : 1
+Priorité : 1
+---------------------------------------------
+Date : 2025-04-15 13:22:34
+ID_SERVICE : 1235
+Action     : Modification
+Ancien statut : 1
+Nouveau statut : 1
+---------------------------------------------

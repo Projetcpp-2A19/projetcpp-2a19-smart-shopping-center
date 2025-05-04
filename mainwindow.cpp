@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     manager = new QNetworkAccessManager(this);
+<<<<<<< HEAD
     // Activer l'adaptation des images à la taille des labels
     ui->lbl_Logo_Display->setScaledContents(true);
     ui->lbl_Logo_Display->setScaledContents(true);
@@ -41,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
     }
     ui->lbl_Logo_Display->setAlignment(Qt::AlignCenter);
 
+=======
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
 
 
     // Afficher les services au démarrage
@@ -413,10 +416,13 @@ void MainWindow::on_pushButton_TestWebhook_clicked()
     envoyerNotification("TEST", "1", "0.9", "homme", "adulte");
 
 }
+<<<<<<< HEAD
 void MainWindow::on_pushButton_deconnecter_clicked()
 {
     // Déconnexion
     QMessageBox::information(this, "Déconnexion", "À bientôt!");
     close();
 }
+=======
+>>>>>>> 8e8154f50e00950fb99a2f5f6515142693c4f1c2
 
